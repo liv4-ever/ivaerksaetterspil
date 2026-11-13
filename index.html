@@ -117,4 +117,934 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <div id="
+            <div id="roomCodeHeaderBadge" class="hidden bg-indigo-100 border border-indigo-300 text-indigo-950 px-3.5 py-1.5 rounded-full text-xs font-extrabold">
+                Rumkode: <span id="headerRoomCode" class="text-indigo-700 tracking-widest">----</span>
+            </div>
+            <button type="button" id="btnToggleSound" onclick="toggleSound()" class="bg-stone-100 hover:bg-stone-200 border border-stone-300 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-700 flex items-center gap-1.5 transition">
+                <span id="soundIcon">🔊</span> <span id="soundText">Lyd til</span>
+            </button>
+            <div id="roundBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-950 px-4 py-1.5 rounded-full text-sm font-extrabold">
+                Uge <span id="currentRoundDisplay" class="text-emerald-700">1</span> af <span id="maxRoundsDisplay">10</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6">
+
+        <!-- SCREEN 1: SETUP & MULTIPLAYER HUB -->
+        <section id="setupScreen" class="max-w-3xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">Åbn din butik på Handelsgaden</h2>
+            <p class="text-slate-600 text-sm mb-6">Spil alene mod AI-butikker, opret et fælles klasserum på storskærmen, eller tilslut dig fra din egen enhed.</p>
+
+            <!-- 3-Way Mode Selector -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-6">
+                <button type="button" onclick="SoundFX.click(); setGameMode('solo')" id="btnModeSolo" class="p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left transition">
+                    <div class="text-xl mb-1">👤</div>
+                    <div class="font-extrabold text-slate-900 text-sm mb-1">Solo (Mod AI)</div>
+                    <div class="text-xs text-slate-600">Spil alene mod 3 AI-butikker på din egen skærm.</div>
+                </button>
+                <button type="button" onclick="SoundFX.click(); setGameMode('host')" id="btnModeHost" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition">
+                    <div class="text-xl mb-1">🖥️</div>
+                    <div class="font-extrabold text-slate-900 text-sm mb-1">Opret spil (Vært)</div>
+                    <div class="text-xs text-slate-600">Storskærm med rumkode, hvor eleverne joiner fra egne enheder.</div>
+                </button>
+                <button type="button" onclick="SoundFX.click(); setGameMode('join')" id="btnModeJoin" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition">
+                    <div class="text-xl mb-1">📱</div>
+                    <div class="font-extrabold text-slate-900 text-sm mb-1">Deltag i spil (Elev)</div>
+                    <div class="text-xs text-slate-600">Indtast 4-cifret rumkode og styr din bod fra din egen enhed.</div>
+                </button>
+            </div>
+
+            <!-- SUB-PANEL A: SOLO SETUP -->
+            <div id="soloSetupPanel" class="space-y-6">
+                <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <div class="text-sm font-extrabold text-slate-800">Antal uger i spillet:</div>
+                        <div class="text-xs text-slate-500">Flere uger giver tid til at bygge lager og strategi.</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="SoundFX.click(); setMaxRounds(8)" class="rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">8 uger</button>
+                        <button type="button" onclick="SoundFX.click(); setMaxRounds(10)" class="rnd-len-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm">10 uger</button>
+                        <button type="button" onclick="SoundFX.click(); setMaxRounds(12)" class="rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">12 uger</button>
+                    </div>
+                </div>
+
+                <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Din virksomheds navn</label>
+                        <input type="text" id="soloTeamName" value="Nordic Streetwear" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Hvad sælger I?</label>
+                        <input type="text" id="soloTeamProd" value="Custom T-shirts" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
+                    </div>
+                </div>
+
+                <button type="button" onclick="startSoloGame()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-lg transition shadow-lg shadow-emerald-600/20">
+                    Slå markisen op og start solo-spil
+                </button>
+            </div>
+
+            <!-- SUB-PANEL B: HOST LOBBY SETUP -->
+            <div id="hostSetupPanel" class="hidden space-y-6">
+                <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <div class="text-sm font-extrabold text-slate-800">Antal uger i spillet:</div>
+                        <div class="text-xs text-slate-500">Vælg varighed før du åbner rummet.</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="SoundFX.click(); setMaxRounds(8)" class="rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">8 uger</button>
+                        <button type="button" onclick="SoundFX.click(); setMaxRounds(10)" class="rnd-len-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm">10 uger</button>
+                        <button type="button" onclick="SoundFX.click(); setMaxRounds(12)" class="rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">12 uger</button>
+                    </div>
+                </div>
+
+                <div id="hostCreateBox">
+                    <button type="button" onclick="createHostRoom()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-2xl text-lg transition shadow-lg shadow-indigo-600/20">
+                        Opret spilrum og generér rumkode
+                    </button>
+                </div>
+
+                <!-- Active Host Lobby -->
+                <div id="hostLobbyActive" class="hidden bg-indigo-50/80 border-2 border-indigo-300 rounded-2xl p-6 space-y-5 animate-pop">
+                    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-indigo-200 pb-4">
+                        <div>
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">Del denne kode med eleverne</span>
+                            <div id="lobbyRoomCodeDisplay" class="text-4xl md:text-5xl font-black text-indigo-950 tracking-widest mt-1">----</div>
+                        </div>
+                        <div class="text-right">
+                            <span id="hostConnectionStatus" class="inline-flex items-center gap-1.5 text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Klar til spillere
+                            </span>
+                            <div class="text-xs text-slate-600 mt-2">Eleverne åbner samme webadresse og vælger <strong>Deltag i spil</strong>.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2">Tilmeldte virksomheder (<span id="lobbyPlayerCount">0</span>):</div>
+                        <div id="lobbyPlayersList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 min-h-[52px]">
+                            <div class="text-xs text-slate-500 italic col-span-2 py-3">Venter på at den første elev eller gruppe logger på...</div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="btnStartHostedGame" onclick="startHostedGame()" disabled class="w-full py-4 bg-stone-300 text-stone-500 font-extrabold rounded-2xl text-base transition cursor-not-allowed">
+                        Venter på mindst 1 hold...
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUB-PANEL C: JOIN AS CLIENT / STUDENT -->
+            <div id="joinSetupPanel" class="hidden space-y-5">
+                <div id="joinFormBox" class="space-y-4">
+                    <div class="bg-indigo-50/70 p-4 rounded-2xl border border-indigo-200">
+                        <label class="block text-xs font-extrabold uppercase text-indigo-900 mb-1">4-cifret rumkode fra storskærmen</label>
+                        <input type="text" id="joinRoomCodeInput" maxlength="4" placeholder="F.eks. 4829" class="w-full bg-white border-2 border-indigo-300 rounded-xl px-4 py-3 text-2xl font-black tracking-widest text-center text-indigo-950 uppercase focus:outline-none focus:border-indigo-600">
+                    </div>
+
+                    <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Jeres virksomhedsnavn</label>
+                            <input type="text" id="joinTeamName" placeholder="F.eks. Struer Streetfood" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Hvad sælger I?</label>
+                            <input type="text" id="joinTeamProd" placeholder="F.eks. Hjemmelavet burger" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
+                        </div>
+                    </div>
+
+                    <div id="joinErrorMsg" class="hidden text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 p-3 rounded-xl"></div>
+
+                    <button type="button" id="btnJoinRoom" onclick="joinHostRoom()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-lg transition shadow-lg shadow-emerald-600/20">
+                        Forbind til spillet
+                    </button>
+                </div>
+
+                <!-- Client Waiting Room -->
+                <div id="clientWaitingBox" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-6 text-center space-y-3 animate-pop">
+                    <div class="text-4xl">🏪</div>
+                    <h3 class="text-xl font-extrabold text-emerald-950">Du er inde i spillet!</h3>
+                    <p class="text-sm text-emerald-800">Din bod <strong id="clientRegisteredName"></strong> er klar på Handelsgaden. Venter på at læreren starter uge 1 på storskærmen...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: ACTIVE GAME -->
+        <section id="gameScreen" class="hidden space-y-6">
+
+            <!-- ILLUSTRATED MARKET STREET SCENE -->
+            <div id="marketStreetScene" class="rounded-3xl overflow-hidden border border-stone-300 shadow-lg transition-colors duration-700 bg-gradient-to-b from-sky-200 via-sky-100 to-amber-100">
+                <div class="px-6 pt-5 pb-3 flex flex-wrap justify-between items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <span id="weatherEmoji" class="text-4xl drop-shadow-sm">🌤️</span>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider bg-white/80 text-slate-700 px-2.5 py-0.5 rounded-full">Uge <span id="streetRoundNum">1</span></span>
+                                <span id="streetWeatherStatus" class="text-xs font-bold text-slate-700">Gaden gør klar til handel</span>
+                            </div>
+                            <h2 id="eventTitle" class="text-lg md:text-xl font-extrabold text-slate-900">Normal handelsuge</h2>
+                            <p id="eventDesc" class="text-xs text-slate-700 max-w-2xl">Ingen uforudsete forstyrrelser i byen denne uge.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 text-xs font-bold">
+                        <div class="bg-white/90 backdrop-blur px-3 py-2 rounded-xl border border-stone-200 shadow-sm">
+                            Råvarepris: <span id="currentCostDisplay" class="text-slate-900 font-extrabold">20 kr.</span>
+                        </div>
+                        <div class="bg-white/90 backdrop-blur px-3 py-2 rounded-xl border border-stone-200 shadow-sm">
+                            Husleje: <span id="currentFixedDisplay" class="text-slate-900 font-extrabold">200 kr.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Storefronts Row -->
+                <div class="px-6 pt-4 pb-0">
+                    <div id="streetBoothsRow" class="grid grid-cols-2 md:grid-cols-4 gap-4 items-end"></div>
+                </div>
+
+                <!-- Cobblestone Street Pavement -->
+                <div class="bg-stone-700 border-t-4 border-stone-600 px-6 py-2.5 flex items-center justify-between text-xs text-stone-200">
+                    <div class="flex items-center gap-2 font-medium">
+                        <span>🚶‍♀️🚶‍♂️🛍️</span>
+                        <span>Kunderne går altid til det mest attraktive tilbud først.</span>
+                    </div>
+                    <div class="hidden sm:block text-stone-400 font-semibold">Handelsgaden</div>
+                </div>
+            </div>
+
+            <!-- HOST LIVE MONITOR PANEL (Only visible on Host screen during decision phase) -->
+            <div id="hostMonitorPanel" class="hidden bg-white border-2 border-indigo-300 rounded-3xl p-6 md:p-8 shadow-xl space-y-5">
+                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-stone-200 pb-4">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Lærerens overblik • Uge <span id="hostMonitorRound">1</span></span>
+                        <h3 class="text-2xl font-extrabold text-slate-900">Eleverne forbereder deres boder...</h3>
+                        <p class="text-xs text-slate-500">Når alle hold har låst deres valg på egne enheder, åbner markedet automatisk.</p>
+                    </div>
+                    <button type="button" onclick="forceResolveHostedRound()" class="px-5 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-sm">
+                        Tving runden i gang nu →
+                    </button>
+                </div>
+
+                <div id="hostSubmissionStatusGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+            </div>
+
+            <!-- CLIENT WAITING AFTER SUBMITTING DECISION -->
+            <div id="clientSubmittedWaitPanel" class="hidden bg-white border-2 border-emerald-300 rounded-3xl p-8 text-center shadow-xl space-y-3 animate-pop">
+                <div class="text-4xl">🔒</div>
+                <h3 class="text-2xl font-extrabold text-slate-900">Din bod er låst og klar!</h3>
+                <p class="text-sm text-slate-600 max-w-md mx-auto">Venter på at de sidste hold på gaden bliver færdige, så terningen kan kastes...</p>
+            </div>
+
+            <!-- DECISION WORKBENCH (Visible in Solo mode & on Client/Student devices) -->
+            <div id="decisionPanel" class="bg-white border border-stone-200 rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-stone-200">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600">Forbered din bod</span>
+                        <h3 id="activeTeamHeading" class="text-2xl font-extrabold text-slate-900">Din bod</h3>
+                        <p id="activeTeamSub" class="text-xs text-slate-500">Produkt: Custom T-shirts • Kassebeholdning: 1.000 kr.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div id="carriedStockPill" class="hidden bg-sky-50 border border-sky-200 text-sky-800 px-3 py-1.5 rounded-xl text-xs font-bold">
+                            📦 Overført fra sidste uge: <span id="carriedStockCount">0</span> stk.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP A: MANDATORY WEEKLY DILEMMA CARD -->
+                <div class="bg-amber-50/90 border-2 border-amber-300 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800 bg-amber-200/70 px-2.5 py-0.5 rounded-full">Ugens dilemma • Tag stilling</span>
+                        <span id="dilemmaStatusTag" class="text-xs font-bold text-amber-700">Vælg en løsning for at låse boden op</span>
+                    </div>
+                    <h4 id="dilemmaTitle" class="text-base font-extrabold text-slate-900">Leverandøren tilbyder et restparti</h4>
+                    <p id="dilemmaText" class="text-xs text-slate-700 leading-relaxed">En grossist har et parti råvarer til halv pris, men kvaliteten svinger.</p>
+                    <div id="dilemmaOptions" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1"></div>
+                </div>
+
+                <!-- Optional Market Research Reveal Box -->
+                <div id="forecastRevealBox" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-4 animate-pop">
+                    <div class="text-xs font-extrabold uppercase text-indigo-700 mb-1">🔭 Vejrudsigt & Kundeanalyse afsløret!</div>
+                    <p id="forecastRevealText" class="text-sm text-slate-900 font-bold"></p>
+                </div>
+
+                <!-- STEP B: PRODUCTION & PRICE SLIDERS -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1">
+                                <label class="text-base font-extrabold text-slate-900">1. Ny produktion til hylden</label>
+                                <span id="qtyBadge" class="text-2xl font-extrabold text-emerald-600">15 stk.</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-3">Fremstillingspris: <strong class="unitCostInline text-slate-800">20</strong> kr./stk. (+ evt. overført lager)</p>
+                            
+                            <input type="range" id="inputQty" min="0" max="60" value="15" oninput="handleSliderChange('qty')" class="w-full my-2">
+                            <div class="flex justify-between text-[11px] text-slate-400 font-semibold">
+                                <span>0 stk.</span>
+                                <span>30 stk.</span>
+                                <span>60 stk.</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white border border-stone-200 rounded-xl p-3">
+                            <div class="text-[11px] font-bold uppercase text-slate-500 mb-2 flex justify-between">
+                                <span>Samlet antal varer klar til salg: <strong id="totalReadyStock" class="text-slate-900">15 stk.</strong></span>
+                                <span class="text-amber-700 font-extrabold">Produktion: <span id="calcProdCost">300 kr.</span></span>
+                            </div>
+                            <div id="visualShelf" class="flex flex-wrap gap-1.5 min-h-[34px] items-center"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1">
+                                <label class="text-base font-extrabold text-slate-900">2. Skriv dit prisskilt</label>
+                                <span id="priceBadge" class="text-2xl font-extrabold text-amber-600">45 kr.</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-3">Laveste pris sælger først – medmindre du satser på luksus og blikfang.</p>
+                            
+                            <input type="range" id="inputPrice" min="15" max="120" value="45" oninput="handleSliderChange('price')" class="w-full price-slider my-2">
+                            <div class="flex justify-between text-[11px] text-slate-400 font-semibold">
+                                <span>15 kr. (Lavpris)</span>
+                                <span>65 kr. (Mellem)</span>
+                                <span>120 kr. (Eksklusiv)</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white border border-stone-200 rounded-xl p-3 flex items-center justify-between">
+                            <div>
+                                <div class="text-[11px] font-bold uppercase text-slate-400">Fortjeneste pr. solgt vare:</div>
+                                <div id="calcMargin" class="text-lg font-extrabold text-emerald-600">+25 kr.</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[11px] font-bold uppercase text-slate-400">Salg før overskud:</div>
+                                <div id="calcBreakEven" class="text-sm font-extrabold text-slate-800">Mindst 8 stk.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP C: EXPANDED BUSINESS TOOLBOX -->
+                <div>
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">3. Tilkøb & Driftsvalg til din forretning</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
+                            <div class="flex items-start justify-between gap-2 mb-2">
+                                <span class="text-xl">✨</span>
+                                <input type="checkbox" id="chkQuality" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
+                            </div>
+                            <div>
+                                <div class="font-extrabold text-xs text-slate-900">Luksus-kvalitet</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Kunder betaler op til <strong>+15 kr.</strong> mere for dine varer.</div>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">+10 kr. pr. produceret stk.</div>
+                        </label>
+
+                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
+                            <div class="flex items-start justify-between gap-2 mb-2">
+                                <span class="text-xl">📣</span>
+                                <input type="checkbox" id="chkMarketing" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
+                            </div>
+                            <div>
+                                <div class="font-extrabold text-xs text-slate-900">Blikfang & Sælger</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Vinder kunder ved pris-lighed + løfter betalingsvilje med <strong>+10 kr.</strong></div>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">120 kr. fast</div>
+                        </label>
+
+                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
+                            <div class="flex items-start justify-between gap-2 mb-2">
+                                <span class="text-xl">❄️</span>
+                                <input type="checkbox" id="chkStorage" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
+                            </div>
+                            <div>
+                                <div class="font-extrabold text-xs text-slate-900">Lagersikring</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Redder <strong>50 % af usolgte varer</strong> til næste uge i stedet for spild.</div>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">100 kr. fast</div>
+                        </label>
+
+                        <div id="researchBtnWrapper" class="flex">
+                            <button type="button" id="btnBuyResearch" onclick="buyMarketResearch()" class="w-full flex flex-col justify-between p-3.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 transition text-left">
+                                <div class="flex items-start justify-between gap-2 mb-2 w-full">
+                                    <span class="text-xl">🔭</span>
+                                    <span class="text-[10px] font-extrabold uppercase bg-indigo-600 text-white px-2 py-0.5 rounded-full">Afslør nu</span>
+                                </div>
+                                <div>
+                                    <div class="font-extrabold text-xs text-indigo-950">Vejr- & kundeanalyse</div>
+                                    <div class="text-[11px] text-indigo-800/80 mt-0.5 leading-snug">Se ugens terningeslag og kundetal før du beslutter dig.</div>
+                                </div>
+                                <div class="mt-2 pt-2 border-t border-indigo-200/80 text-[11px] font-extrabold text-indigo-700 w-full">100 kr. engangsbeløb</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Bar -->
+                <div class="pt-4 border-t border-stone-200 flex flex-wrap justify-between items-center gap-4">
+                    <div class="text-xs text-slate-600">
+                        Samlet udlæg før salg (inkl. husleje): <strong id="calcTotalOutlay" class="text-slate-900 text-base">500 kr.</strong>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span id="autopilotHint" class="text-xs text-amber-700 font-bold">Vælg svar på ugens dilemma først</span>
+                        <button type="button" onclick="submitTeamDecision()" id="btnSubmitTurn" disabled class="px-7 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition cursor-not-allowed">
+                            Lås min bod og gør klar til handel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 2B: VISUAL STREET RESULTS & CENTERED 3D DICE -->
+            <div id="roundResultPanel" class="hidden bg-white border-2 border-amber-400 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+                
+                <!-- Prominent Centered 3D Dice Banner -->
+                <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-6">
+                        <div class="scene shrink-0">
+                            <div class="cube" id="diceCube">
+                                <div class="cube__face cube__face--1">
+                                    <div></div><div></div><div></div>
+                                    <div></div><div class="pip"></div><div></div>
+                                    <div></div><div></div><div></div>
+                                </div>
+                                <div class="cube__face cube__face--2">
+                                    <div class="pip"></div><div></div><div></div>
+                                    <div></div><div></div><div></div>
+                                    <div></div><div></div><div class="pip"></div>
+                                </div>
+                                <div class="cube__face cube__face--3">
+                                    <div class="pip"></div><div></div><div></div>
+                                    <div></div><div class="pip"></div><div></div>
+                                    <div></div><div></div><div class="pip"></div>
+                                </div>
+                                <div class="cube__face cube__face--4">
+                                    <div class="pip"></div><div></div><div class="pip"></div>
+                                    <div></div><div></div><div></div>
+                                    <div class="pip"></div><div></div><div class="pip"></div>
+                                </div>
+                                <div class="cube__face cube__face--5">
+                                    <div class="pip"></div><div></div><div class="pip"></div>
+                                    <div></div><div class="pip"></div><div></div>
+                                    <div class="pip"></div><div></div><div class="pip"></div>
+                                </div>
+                                <div class="cube__face cube__face--6">
+                                    <div class="pip"></div><div></div><div class="pip"></div>
+                                    <div class="pip"></div><div></div><div class="pip"></div>
+                                    <div class="pip"></div><div></div><div class="pip"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Terningen er kastet • Uge <span id="resRoundNum">1</span></span>
+                            <h3 id="resWeatherTitle" class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-0.5">Solskin & god stemning</h3>
+                            <p class="text-sm text-slate-700 mt-1">
+                                <strong id="resTotalDemand" class="text-emerald-700">40 kunder</strong> gik på gaden • 
+                                Basis maks. pris: <strong id="resMaxPrice" class="text-amber-700">65 kr.</strong>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="nextRoundBtnContainer">
+                        <button type="button" onclick="SoundFX.click(); nextRound()" id="btnNextRound" class="w-full md:w-auto px-7 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-emerald-600/20 shrink-0">
+                            Fortsæt til næste uge →
+                        </button>
+                    </div>
+                    <div id="clientNextRoundWaitNote" class="hidden text-xs font-bold text-amber-800 bg-amber-100 border border-amber-300 px-4 py-3 rounded-xl">
+                        Venter på at læreren starter næste uge...
+                    </div>
+                </div>
+
+                <!-- Visual Storefront Cards -->
+                <div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Sådan gik salget i boderne</h4>
+                        <div class="flex items-center gap-3 text-[11px] font-semibold text-slate-600">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span> Solgt</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-sky-400 inline-block"></span> Gemt på lager</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-rose-400 inline-block"></span> Spild</span>
+                        </div>
+                    </div>
+                    <div id="visualStorefrontsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- Live Chart -->
+            <div class="bg-white border border-stone-200 rounded-3xl p-5 shadow-sm">
+                <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-3">Udvikling i kassebeholdning gennem ugerne (kr.)</h4>
+                <div class="h-56 w-full">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SCREEN 3: FINAL GAME OVER -->
+        <section id="endScreen" class="hidden max-w-4xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3.5 py-1 rounded-full">Sæsonen er slut</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">Endelig stilling på Handelsgaden</h2>
+                <p class="text-slate-600 text-sm">Her er det samlede resultat efter alle ugerne.</p>
+            </div>
+
+            <div id="podiumGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+
+            <div class="bg-amber-50/80 rounded-2xl p-5 border border-amber-200">
+                <h3 class="font-extrabold text-slate-900 mb-2 text-xs uppercase tracking-wider">Opsummering til klassen</h3>
+                <ul class="text-sm text-slate-700 space-y-1.5 list-disc pl-5">
+                    <li><strong>Strategi over tid:</strong> Hvem formåede at opbygge en stabil forretning frem for blot at vinde en enkelt uge?</li>
+                    <li><strong>Kvalitet vs. Lavpris:</strong> Kunne det betale sig at satse på dyre råvarer og høj pris, eller vandt volumen?</li>
+                    <li><strong>Risikostyring:</strong> Hvilken forskel gjorde lagersikring og dilemma-valgene undervejs?</li>
+                </ul>
+            </div>
+
+            <div class="flex justify-center pt-2">
+                <button type="button" onclick="location.reload()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm transition shadow-lg">
+                    Start et nyt spil
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- SYNTHETIC WEB AUDIO ENGINE ---
+        let soundEnabled = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
+            document.getElementById('soundText').textContent = soundEnabled ? 'Lyd til' : 'Lyd fra';
+            if (soundEnabled) SoundFX.click();
+        }
+
+        const SoundFX = {
+            ensureCtx() { if (audioCtx.state === 'suspended') audioCtx.resume(); },
+            click() {
+                if (!soundEnabled) return;
+                this.ensureCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.04);
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.045);
+            },
+            tick(pitch = 400) {
+                if (!soundEnabled) return;
+                this.ensureCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(pitch, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.025);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.03);
+            },
+            diceRoll() {
+                if (!soundEnabled) return;
+                this.ensureCtx();
+                const hits = [0, 0.09, 0.19, 0.31, 0.45, 0.62, 0.82];
+                hits.forEach((delay, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(160 + (idx % 3) * 45, audioCtx.currentTime + delay);
+                    osc.frequency.exponentialRampToValueAtTime(65, audioCtx.currentTime + delay + 0.06);
+                    gain.gain.setValueAtTime(0.13, audioCtx.currentTime + delay);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + 0.06);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + delay); osc.stop(audioCtx.currentTime + delay + 0.065);
+                });
+            },
+            cashRegister() {
+                if (!soundEnabled) return;
+                this.ensureCtx();
+                [987.77, 1318.51].forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    const start = audioCtx.currentTime + i * 0.11;
+                    osc.frequency.setValueAtTime(freq, start);
+                    gain.gain.setValueAtTime(0.16, start);
+                    gain.gain.exponentialRampToValueAtTime(0.001, start + 0.45);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(start); osc.stop(start + 0.46);
+                });
+            },
+            loss() {
+                if (!soundEnabled) return;
+                this.ensureCtx();
+                [240, 175].forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    const start = audioCtx.currentTime + i * 0.18;
+                    osc.frequency.setValueAtTime(freq, start);
+                    gain.gain.setValueAtTime(0.09, start);
+                    gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(start); osc.stop(start + 0.36);
+                });
+            }
+        };
+
+        // --- GAME DATA ---
+        let maxRounds = 10;
+        const STARTING_CASH = 1000;
+        const BASE_UNIT_COST = 20;
+        const BASE_FIXED_COST = 200;
+        const COLORS = ['#059669', '#2563eb', '#d97706', '#db2777', '#7c3aed', '#0891b2', '#ea580c', '#4f46e5'];
+
+        const EVENTS = [
+            { title: "Normal handelsuge", desc: "Rolig stemning på gaden. Kunderne kigger på både pris og kvalitet.", costMod: 0, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-sky-200 via-sky-100 to-amber-100", icon: "🌤️" },
+            { title: "Råvaremangel i byen", desc: "Leverandørerne hæver prisen! Råvarer koster +8 kr. ekstra pr. stk. i denne uge.", costMod: 8, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-slate-300 via-slate-200 to-amber-100", icon: "📦" },
+            { title: "Byfest & Gadefestival", desc: "Massiv tilstrømning af glade gæster! 45 % flere kunder på gaden i denne uge.", costMod: 0, fixedMod: 0, demandMult: 1.45, maxPriceMod: 10, sky: "from-amber-200 via-yellow-100 to-orange-100", icon: "🎪" },
+            { title: "Højere el- og stadepladsleje", desc: "Kommunen og elselskabet hæver de faste udgifter med +100 kr. denne uge.", costMod: 0, fixedMod: 100, demandMult: 1.0, maxPriceMod: 0, sky: "from-sky-200 via-slate-100 to-amber-100", icon: "⚡" },
+            { title: "Billigere indkøbsaftale", desc: "Råvarepriserne falder med -5 kr. pr. stk. i denne uge. God mulighed for høj avance!", costMod: -5, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-emerald-200 via-sky-100 to-amber-100", icon: "📉" },
+            { title: "Smalhals sidst på måneden", desc: "Folk sparer på pengene. Kundernes betalingsvilje falder med -10 kr.", costMod: 0, fixedMod: 0, demandMult: 0.85, maxPriceMod: -10, sky: "from-slate-300 via-stone-200 to-amber-100", icon: "🌧️" },
+            { title: "Trend på TikTok & Instagram", desc: "Jeres produkttype trender vildt! Kunderne betaler glædeligt +12 kr. mere.", costMod: 0, fixedMod: 0, demandMult: 1.2, maxPriceMod: 12, sky: "from-rose-200 via-amber-100 to-yellow-100", icon: "🔥" }
+        ];
+
+        const DILEMMAS = [
+            {
+                title: "Restparti fra en lukket grossist",
+                text: "En sælger tilbyder billige materialer i denne uge, men der er risiko for, at nogle varer er skæve.",
+                optA: { label: "Tag chancen (-6 kr. pr. vare, men 20 % kasseres)", costMod: -6, defectRate: 0.20, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 },
+                optB: { label: "Køb normale råvarer (Ingen risiko)", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Lokal mikro-influencer kigger forbi",
+                text: "En lokal profil med 15.000 følgere tilbyder at nævne din bod i en story mod betaling.",
+                optA: { label: "Betal 90 kr. (+4 garanterede kunder til din bod)", costMod: 0, defectRate: 0, cashMod: -90, maxPriceBonus: 5, demandBonus: 4 },
+                optB: { label: "Tak nej og spar pengene", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Ekstra åbningstid lørdag aften",
+                text: "Du kan holde boden åben 3 timer ekstra. Det koster lidt i strøm og forplejning.",
+                optA: { label: "Hold åbent (-70 kr. i drift, +3 ekstra kunder)", costMod: 0, defectRate: 0, cashMod: -70, maxPriceBonus: 0, demandBonus: 3 },
+                optB: { label: "Luk til normal tid", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Smagsprøver / Gratis vareprøver",
+                text: "Vil du dele gratis prøver ud foran boden for at lokke forbipasserende indenfor?",
+                optA: { label: "Del prøver ud (-60 kr., kunder betaler +8 kr. mere)", costMod: 0, defectRate: 0, cashMod: -60, maxPriceBonus: 8, demandBonus: 0 },
+                optB: { label: "Ingen gratis prøver i denne uge", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Miljøvenlig emballage",
+                text: "Du kan skifte til bæredygtig indpakning i denne uge. Det koster lidt ekstra pr. vare.",
+                optA: { label: "Vælg grøn profil (+4 kr./vare, +7 kr. betalingsvilje)", costMod: 4, defectRate: 0, cashMod: 0, maxPriceBonus: 7, demandBonus: 0 },
+                optB: { label: "Brug standardemballage", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Lyn-rabat til stamkunder",
+                text: "Vil du udlodde et gavekort på 80 kr. blandt dagens handlende for at skabe kø?",
+                optA: { label: "Udlod gavekort (-80 kr., +4 ekstra kunder)", costMod: 0, defectRate: 0, cashMod: -80, maxPriceBonus: 0, demandBonus: 4 },
+                optB: { label: "Kør uden konkurrence", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            }
+        ];
+
+        const DICE_OUTCOMES = [
+            { roll: 1, label: "Regnvejr & tomme gader", baseMaxPrice: 38, baseDemandPerTeam: 4.0, icon: "⛈️" },
+            { roll: 2, label: "Stille hverdag", baseMaxPrice: 52, baseDemandPerTeam: 7.0, icon: "🌥️" },
+            { roll: 3, label: "Almindelig handelsdag", baseMaxPrice: 55, baseDemandPerTeam: 7.5, icon: "⛅" },
+            { roll: 4, label: "Solskin & god handel", baseMaxPrice: 68, baseDemandPerTeam: 10.5, icon: "☀️" },
+            { roll: 5, label: "Lønningsdag i byen", baseMaxPrice: 72, baseDemandPerTeam: 11.5, icon: "💸" },
+            { roll: 6, label: "Kæmpe kundestorm!", baseMaxPrice: 95, baseDemandPerTeam: 15.5, icon: "🎉" }
+        ];
+
+        // --- GLOBAL STATE ---
+        let gameMode = 'solo'; // 'solo' | 'host' | 'join'
+        let currentRound = 1;
+        let teams = [];
+        let roundEvent = null;
+        let roundDice = null;
+        let currentDilemma = null;
+        let selectedDilemmaOption = null;
+        let chartInstance = null;
+        let lastSliderTick = 0;
+
+        // PeerJS Multiplayer State
+        const PEER_PREFIX = 'handelsgaden-dk-';
+        let peer = null;
+        let roomCode = '';
+        let hostConnections = {}; // peerId -> DataConnection
+        let clientConn = null;
+        let myTeamId = 0;
+        let roundResolvedFlag = false;
+
+        // --- SETUP UI ---
+        function setGameMode(mode) {
+            gameMode = mode;
+            ['solo', 'host', 'join'].forEach(m => {
+                const btn = document.getElementById(`btnMode${m.charAt(0).toUpperCase() + m.slice(1)}`);
+                const panel = document.getElementById(`${m}SetupPanel`);
+                if (m === mode) {
+                    btn.className = "p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left transition";
+                    panel.classList.remove('hidden');
+                } else {
+                    btn.className = "p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition";
+                    panel.classList.add('hidden');
+                }
+            });
+        }
+
+        function setMaxRounds(len) {
+            maxRounds = len;
+            document.querySelectorAll('.rnd-len-btn').forEach(btn => {
+                if (btn.textContent.startsWith(String(len))) {
+                    btn.className = "rnd-len-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm";
+                } else {
+                    btn.className = "rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm";
+                }
+            });
+        }
+
+        function createTeamObj(id, name, product, isAI, aiStyle, peerId = null) {
+            return {
+                id,
+                peerId,
+                name,
+                product,
+                isAI,
+                aiStyle,
+                color: COLORS[id % COLORS.length],
+                cash: STARTING_CASH,
+                carriedStock: 0,
+                history: [STARTING_CASH],
+                totalSold: 0,
+                totalWasted: 0,
+                lastPrice: null,
+                lastSold: null,
+                decision: null,
+                researchBoughtTemp: false
+            };
+        }
+
+        // --- SOLO START ---
+        function startSoloGame() {
+            SoundFX.cashRegister();
+            const userName = document.getElementById('soloTeamName').value.trim() || "Min Virksomhed";
+            const userProd = document.getElementById('soloTeamProd').value.trim() || "Eget Produkt";
+            myTeamId = 0;
+            teams = [
+                createTeamObj(0, userName, userProd, false, 'human'),
+                createTeamObj(1, "Lavpris-Boden (AI)", userProd, true, 'budget'),
+                createTeamObj(2, "Luksus-Studiet (AI)", userProd, true, 'premium'),
+                createTeamObj(3, "Gadehjørnet ApS (AI)", userProd, true, 'balanced')
+            ];
+
+            currentRound = 1;
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            document.getElementById('roundBadge').classList.remove('hidden');
+            document.getElementById('maxRoundsDisplay').textContent = maxRounds;
+
+            initChart();
+            prepareSoloRound();
+        }
+
+        // --- HOST MULTIPLAYER FLOW ---
+        function createHostRoom() {
+            SoundFX.click();
+            roomCode = String(Math.floor(1000 + Math.random() * 9000));
+            document.getElementById('hostCreateBox').classList.add('hidden');
+            document.getElementById('hostLobbyActive').classList.remove('hidden');
+            document.getElementById('lobbyRoomCodeDisplay').textContent = roomCode;
+            document.getElementById('headerRoomCode').textContent = roomCode;
+            document.getElementById('roomCodeHeaderBadge').classList.remove('hidden');
+
+            teams = [];
+            hostConnections = {};
+
+            peer = new Peer(PEER_PREFIX + roomCode);
+            peer.on('open', () => {
+                document.getElementById('hostConnectionStatus').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Online • Klar til spillere`;
+            });
+
+            peer.on('error', (err) => {
+                alert("Kunne ikke oprette rumforbindelse (" + err.type + "). Prøv at genindlæse siden.");
+            });
+
+            peer.on('connection', (conn) => {
+                conn.on('data', (msg) => handleHostMessage(conn, msg));
+                conn.on('close', () => {
+                    delete hostConnections[conn.peer];
+                    updateHostLobbyUI();
+                });
+            });
+        }
+
+        function handleHostMessage(conn, msg) {
+            if (msg.type === 'JOIN') {
+                // Check if team already exists or add new
+                let existing = teams.find(t => t.peerId === conn.peer);
+                if (!existing) {
+                    const newId = teams.length;
+                    existing = createTeamObj(newId, msg.name, msg.product, false, 'human', conn.peer);
+                    teams.push(existing);
+                } else {
+                    existing.name = msg.name;
+                    existing.product = msg.product;
+                }
+                hostConnections[conn.peer] = conn;
+                SoundFX.tick(600);
+                conn.send({ type: 'WELCOME', teamId: existing.id, maxRounds });
+                updateHostLobbyUI();
+            } else if (msg.type === 'BUY_RESEARCH') {
+                const t = teams.find(x => x.id === msg.teamId);
+                if (t) {
+                    t.researchBoughtTemp = true;
+                    const adjMax = Math.max(25, roundDice.baseMaxPrice + roundEvent.maxPriceMod);
+                    const adjDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
+                    conn.send({
+                        type: 'RESEARCH_RESULT',
+                        text: `Vejrudsigten siger "${roundDice.label}" (Terning: ${roundDice.roll}). Der kommer ca. ${adjDemand} kunder på gaden, og deres basis-smertegrænse er ${adjMax} kr.`
+                    });
+                }
+            } else if (msg.type === 'SUBMIT_DECISION') {
+                const t = teams.find(x => x.id === msg.teamId);
+                if (t && !roundResolvedFlag) {
+                    t.decision = msg.decision;
+                    SoundFX.tick(520);
+                    renderHostMonitorGrid();
+                    // Auto-resolve if all connected teams have submitted
+                    const allDone = teams.every(team => team.decision !== null);
+                    if (allDone && teams.length > 0) {
+                        resolveHostedRound();
+                    }
+                }
+            }
+        }
+
+        function updateHostLobbyUI() {
+            document.getElementById('lobbyPlayerCount').textContent = teams.length;
+            const list = document.getElementById('lobbyPlayersList');
+            if (teams.length === 0) {
+                list.innerHTML = `<div class="text-xs text-slate-500 italic col-span-2 py-3">Venter på at den første elev eller gruppe logger på...</div>`;
+                return;
+            }
+            list.innerHTML = teams.map(t => `
+                <div class="bg-white border border-indigo-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-3.5 h-3.5 rounded-full shrink-0" style="background:${t.color}"></span>
+                        <div>
+                            <div class="font-extrabold text-xs text-slate-900">${t.name}</div>
+                            <div class="text-[11px] text-slate-500">${t.product}</div>
+                        </div>
+                    </div>
+                    <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">Klar</span>
+                </div>
+            `).join('');
+
+            const btn = document.getElementById('btnStartHostedGame');
+            if (teams.length >= 1) {
+                btn.disabled = false;
+                btn.className = "w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base transition shadow-lg cursor-pointer";
+                btn.textContent = `Start spillet med ${teams.length} virksomhed${teams.length > 1 ? 'er' : ''} →`;
+            }
+        }
+
+        function broadcastToClients(payload) {
+            Object.values(hostConnections).forEach(conn => {
+                if (conn.open) conn.send(payload);
+            });
+        }
+
+        function startHostedGame() {
+            if (teams.length === 0) return;
+            SoundFX.cashRegister();
+            currentRound = 1;
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            document.getElementById('roundBadge').classList.remove('hidden');
+            document.getElementById('maxRoundsDisplay').textContent = maxRounds;
+
+            initChart();
+            prepareHostedRound();
+        }
+
+        function prepareHostedRound() {
+            roundResolvedFlag = false;
+            roundEvent = currentRound === 1 ? EVENTS[0] : EVENTS[Math.floor(Math.random() * EVENTS.length)];
+            roundDice = DICE_OUTCOMES[Math.floor(Math.random() * DICE_OUTCOMES.length)];
+
+            teams.forEach(t => {
+                t.decision = null;
+                t.researchBoughtTemp = false;
+            });
+
+            updateStreetHeaderUI();
+            renderStreetBooths(false);
+
+            document.getElementById('roundResultPanel').classList.add('hidden');
+            document.getElementById('decisionPanel').classList.add('hidden');
+            document.getElementById('hostMonitorPanel').classList.remove('hidden');
+            document.getElementById('hostMonitorRound').textContent = currentRound;
+            renderHostMonitorGrid();
+
+            broadcastToClients({
+                type: 'ROUND_START',
+                round: currentRound,
+                maxRounds,
+                event: roundEvent,
+                teams: teams
+            });
+        }
+
+        function renderHostMonitorGrid() {
+            const grid = document.getElementById('hostSubmissionStatusGrid');
+            grid.innerHTML = teams.map(t => {
+                const done = t.decision !== null;
+                return `
+                    <div class="p-4 rounded-2xl border-2 ${done ? 'border-emerald-500 bg-emerald-50/70' : 'border-stone-200 bg-stone-50'} flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3.5 h-3.5 rounded-full" style="background:${t.color}"></span>
+                            <div>
+                                <div class="font-extrabold text-sm text-slate-900">${t.name}</div>
+                                <div class="text-xs text-slate-500">${t.product}</div>
+                            </div>
+                        </div>
+                        <span class="text-xs font-extrabold px-2.5 py-1 rounded-lg ${done ? 'bg-emerald-600 text-white' : 'bg-amber-100 text-amber-800'}">
+                            ${done ? '✓ Klar' : '⏳ Tænker...'}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function forceResolveHostedRound() {
+            // Fill default passive decision for any team that hasn't submitted yet
+            const noDil = { costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 };
+            teams.forEach(t => {
+                if (!t.decision) {
+                    t.decision = { qty: 0, price: 50, quality: false, marketing: false, storage: false, researchBought: false, dilemma: noDil };
+                }
+            });
+            resolveHostedRound();
+        }
+
+        function resolveHostedRound() {
+            if (roundResolvedFlag) return;
+            roundResolvedFlag = true;
+            document.getElementById('hostMonitorPanel').classList.add('hidden');
+            const roundSummary = calculateMarketResults();
+            renderRoundResultsUI(roundSummary);
+            broadcastToClients({
+                type: 'ROUND_RESULT',
+                summary: roundSummary,
+                teams: teams
+            });
+        }
+
+        // --- CLIENT (STUDENT) MULTIPLAYER FLOW ---
+        function joinHostRoom() {
+            const code = document.getElementById('joinRoomCodeInput').value.trim();
+            const name = document.getElementById('joinTeamName').value.trim() || "Elev-virksomhed";
+            const product = document.getElementById('joinTeamProd').value.trim() || "Eget Produkt";
+            const errBox = document.getElementById('joinErrorMsg');
