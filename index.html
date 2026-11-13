@@ -43,10 +43,9 @@
 
   <!-- SCREEN 0: LANDING / WELCOME SCREEN -->
   <section id="scrWelcome" class="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-2xl my-auto">
-    <!-- Illustrated Street Header -->
     <div class="bg-gradient-to-b from-sky-300 via-sky-100 to-amber-100 p-8 md:p-12 text-center relative border-b border-stone-200">
       <div class="flex justify-center gap-4 text-4xl md:text-5xl mb-4">
-        <span>🏪</span><span>🌤️</span><span>🎪</span><span>🛍️</span>
+        <span>🏪</span><span>🌤️</span><span>🕵️</span><span>🎲</span>
       </div>
       <span class="bg-white/90 text-emerald-800 text-xs font-extrabold uppercase tracking-widest px-3.5 py-1 rounded-full border border-emerald-200 shadow-sm">
         Markedssimulator & Forretningsspil
@@ -55,27 +54,25 @@
         Handelsgaden
       </h2>
       <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium">
-        Byg din egen markedsbod fra bunden, styr uden om ugens kriser, og kæmp om gadens kunder gennem prissætning, kvalitet og psykologisk bluff.
+        Start i det små med 1 stjerne (⭐) og 1.000 kr. Vælg leverandører, opgrader boden over 3 niveauer, tilpas dig uventede hændelser – og test gade-råb og beskidte kneb mod dine rivaler!
       </p>
 
-      <!-- Decorative Mini-Booths -->
       <div class="max-w-lg mx-auto mt-8 grid grid-cols-3 gap-3 items-end">
         <div class="flex flex-col items-center">
           <div class="w-full h-4 rounded-t stripes bg-emerald-600"></div>
-          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-emerald-700 shadow-sm">⭐⭐⭐ • 1.000 kr.</div>
+          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-emerald-700 shadow-sm">⭐ Start • Niv. 1</div>
         </div>
         <div class="flex flex-col items-center">
           <div class="w-full h-4 rounded-t stripes bg-blue-600"></div>
-          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-blue-700 shadow-sm">❄️ Køledisk</div>
+          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-blue-700 shadow-sm">⚙️ Butik • Niv. 2</div>
         </div>
         <div class="flex flex-col items-center">
           <div class="w-full h-4 rounded-t stripes bg-amber-600"></div>
-          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-amber-700 shadow-sm">✨ Luksusbrand</div>
+          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-amber-700 shadow-sm">👑 Flagship • Niv. 3</div>
         </div>
       </div>
     </div>
 
-    <!-- The Two Main Action Buttons -->
     <div class="p-6 md:p-10 bg-white">
       <div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button type="button" onclick="openRulesModal()" class="py-4 px-6 rounded-2xl border-2 border-amber-400 bg-amber-50 hover:bg-amber-100 text-slate-900 font-extrabold text-base md:text-lg flex items-center justify-center gap-2.5 transition cursor-pointer shadow-sm">
@@ -88,103 +85,43 @@
     </div>
   </section>
 
-  <!-- ILLUSTRATED RULES MODAL / GUIDE -->
+  <!-- CLOUDED RULES MODAL / GUIDE (No spoiler numbers) -->
   <div id="rulesModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl border border-stone-200 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 space-y-6 my-8">
+    <div class="bg-white rounded-3xl border border-stone-200 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 space-y-5 my-8">
       
       <div class="flex justify-between items-start gap-4 border-b border-stone-200 pb-4">
         <div>
-          <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Spilvejledning</span>
-          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">Sådan spiller du Handelsgaden</h2>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Spillets rammer</span>
+          <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Regler & Principper på Handelsgaden</h2>
         </div>
         <button type="button" onclick="closeRulesModal()" class="bg-stone-100 hover:bg-stone-200 text-slate-700 font-extrabold px-3.5 py-1.5 rounded-xl text-sm cursor-pointer">✕ Luk</button>
       </div>
 
-      <!-- 1. Goal & Start -->
-      <div class="bg-stone-50 border border-stone-200 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-        <div class="md:col-span-2 space-y-1">
-          <div class="text-xs font-extrabold uppercase text-emerald-700">🎯 Målet med spillet</div>
-          <h3 class="text-lg font-extrabold text-slate-900">Stå med flest penge i kassen efter sidste uge!</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">Du styrer din egen bod gennem 8 til 12 uger. Hver uge koster det <b>200 kr. i fast husleje</b> at holde åbent, og en almindelig vare koster <b>20 kr.</b> at fremstille.</p>
+      <div class="text-xs text-slate-700 space-y-3 leading-relaxed">
+        <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
+          <div class="font-extrabold text-sm text-slate-900">🎯 Målet og Startbetingelser</div>
+          <p>I driver en markedsbod over 8 til 12 uger. Holdet med flest penge i kassen til sidst vinder. I starter på <b>Niveau 1 med 1.000 kr. og 1 stjerne (⭐)</b>. Huslejen er 200 kr. ugentligt plus drift af jeres udstyr.</p>
         </div>
-        <div class="bg-white p-3.5 rounded-xl border text-center">
-          <div class="text-2xl">💰</div>
-          <div class="font-extrabold text-sm text-slate-900 mt-1">1.000 kr.</div>
-          <div class="text-[11px] text-slate-500">Startkapital i kassen</div>
+
+        <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-1">
+          <div class="font-extrabold text-sm text-amber-950">👥 To typer kunder på gaden</div>
+          <p><b>Prisjægerne</b> kigger benhårdt på prisskiltet og handler hos den billigste først. <b>Kvalitetskøberne</b> kræver mindst 3 stjerner (⭐⭐⭐), går efter de bedste boder og er villige til at betale en højere pris. Plej jeres rygte!</p>
         </div>
-        <div class="bg-white p-3.5 rounded-xl border text-center">
-          <div class="text-2xl">⭐⭐⭐</div>
-          <div class="font-extrabold text-sm text-slate-900 mt-1">3 Stjerner</div>
-          <div class="text-[11px] text-slate-500">Dit start-omdømme</div>
+
+        <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200 space-y-1">
+          <div class="font-extrabold text-sm text-indigo-950">🚚 Leverandører & Værktøjer</div>
+          <p>Vælg mellem billige råvarer (med risiko for svingende kvalitet og uanmeldte kontrolbesøg), standard-grossisten eller luksus-leverandører, der løfter omdømmet. Opgrader boden i 3 niveauer – men pas på: alt udstyr kræver ugentlig vedligeholdelse og slides op over tid.</p>
+        </div>
+
+        <div class="bg-rose-50 p-4 rounded-2xl border border-rose-200 space-y-1">
+          <div class="font-extrabold text-sm text-rose-950">🕵️ Psykologisk spil: Gade-råb og Beskidte Kneb</div>
+          <p>Brug gade-råb til at råbe kunder op – men hvis I bluffer og lover for meget, gennemskuer kunderne jer og straffer omdømmet. I kan også betale for beskidte kneb mod konkurrenterne, men pas på: Bumerangen kan nemt ramme jer selv i nakken, hvis I bliver afsløret!</p>
         </div>
       </div>
 
-      <!-- 2. Two Customer Types -->
-      <div class="space-y-2">
-        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-500">👥 Kend dine kunder på gaden (2 kundetyper)</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-amber-50/80 border-2 border-amber-300 rounded-2xl p-4 space-y-1.5">
-            <div class="flex items-center justify-between">
-              <span class="font-extrabold text-sm text-amber-950">🏷️ 60 % Prisjægere</span>
-              <span class="bg-amber-200 text-amber-900 text-[11px] font-extrabold px-2 py-0.5 rounded-full">Går efter laveste pris</span>
-            </div>
-            <p class="text-xs text-slate-700 leading-relaxed">Prisjægerne kigger kun på prisskiltet. De handler hos den <b>billigste bod på gaden først</b>, indtil der er udsolgt, og går derefter videre til den næstbilligste.</p>
-          </div>
-          <div class="bg-indigo-50/80 border-2 border-indigo-300 rounded-2xl p-4 space-y-1.5">
-            <div class="flex items-center justify-between">
-              <span class="font-extrabold text-sm text-indigo-950">💎 40 % Kvalitetskøbere</span>
-              <span class="bg-indigo-200 text-indigo-900 text-[11px] font-extrabold px-2 py-0.5 rounded-full">Går efter flest ⭐ stjerner</span>
-            </div>
-            <p class="text-xs text-slate-700 leading-relaxed">Kvalitetskøberne går direkte til boden med <b>flest stjerner (⭐)</b>, uanset om naboen er billigere – og de er villige til at betale <b>20–40 kr. mere pr. vare</b>!</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Step by step week -->
-      <div class="space-y-2">
-        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-500">🔄 Ugens 4 trin ved din bod</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-          <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
-            <div class="font-extrabold text-slate-900 text-sm">1. Tag stilling til Ugens Dilemma</div>
-            <p class="text-slate-600">Hver uge skal I vælge mellem mulighed <b>A</b> eller <b>B</b> for at låse boden op. Pas på: Et billigt restparti giver 20 % defekte varer og koster jer <b>-1 ⭐</b> i omdømme, mens god service og influencers giver flere kunder og <b>+1 ⭐</b>.</p>
-          </div>
-          <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
-            <div class="font-extrabold text-slate-900 text-sm">2. Fyld hylden & Sæt dit prisskilt</div>
-            <p class="text-slate-600">Vælg hvor mange varer I vil producere, og sæt ugens pris. Krydser I <b>💎 Luksus-råvarer</b> af (+10 kr./stk.), får I midlertidigt <b>+1 ekstra ⭐</b> i denne uge.</p>
-          </div>
-          <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
-            <div class="font-extrabold text-slate-900 text-sm">3. Skriv et Gade-råb / Bluff</div>
-            <p class="text-slate-600">Skriv en besked i taleboblen over jeres bod på storskærmen! I må gerne bluffe konkurrenterne (f.eks. <i>"Vi sælger alt til 25 kr. i dag!"</i>, selvom jeres rigtige pris er 65 kr.).</p>
-          </div>
-          <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
-            <div class="font-extrabold text-slate-900 text-sm">4. Terningekast & Live-salg (Kl. 10–18)</div>
-            <p class="text-slate-600">Når alle er klar, ruller 3D-terningen (1 = Regnvejr, 6 = Kundestorm). Uret tæller fra kl. 10:00 til 18:00, mens varerne sælges live. Går kassen i minus, tager banken <b>20 % i strafrente</b>.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. Permanent Upgrades -->
-      <div class="space-y-2">
-        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-500">🛠️ Permanente opgraderinger (Købes én gang – gælder resten af spillet)</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
-            <div class="font-extrabold text-emerald-950 text-sm">❄️ Køledisk (350 kr.)</div>
-            <p class="text-slate-600 mt-1">Redder fast <b>60 % af dine usolgte varer</b> til næste uge. Uden køledisk smides alle usolgte varer ud!</p>
-          </div>
-          <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
-            <div class="font-extrabold text-emerald-950 text-sm">⚙️ Værkstedsmaskine (400 kr.)</div>
-            <p class="text-slate-600 mt-1">Gør din produktion mere effektiv og sænker din råvarepris med <b>-4 kr. pr. stk.</b> permanent.</p>
-          </div>
-          <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
-            <div class="font-extrabold text-emerald-950 text-sm">✨ Neonskilt & Brand (350 kr.)</div>
-            <p class="text-slate-600 mt-1">Giver dig <b>+1 permanent ⭐</b> og sikrer <b>+3 faste stamkunder</b> hver eneste uge.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="pt-4 border-t border-stone-200 flex justify-end gap-3">
-        <button type="button" onclick="closeRulesModal()" class="px-5 py-3 rounded-xl border border-stone-300 bg-stone-100 hover:bg-stone-200 text-xs font-extrabold text-slate-700 cursor-pointer">Luk vindue</button>
-        <button type="button" onclick="closeRulesModal(); goToSetupScreen();" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-extrabold text-white cursor-pointer shadow-md">Gå til Start spillet →</button>
+      <div class="pt-3 border-t border-stone-200 flex justify-end gap-3">
+        <button type="button" onclick="closeRulesModal()" class="px-5 py-2.5 rounded-xl border border-stone-300 bg-stone-100 text-xs font-extrabold text-slate-700 cursor-pointer">Tilbage</button>
+        <button type="button" onclick="closeRulesModal(); goToSetupScreen();" class="px-6 py-2.5 rounded-xl bg-emerald-600 text-xs font-extrabold text-white cursor-pointer shadow-md">Gå til Start spillet →</button>
       </div>
     </div>
   </div>
@@ -194,7 +131,7 @@
     <div class="flex justify-between items-center flex-wrap gap-2">
       <div>
         <h2 class="text-2xl font-extrabold text-slate-900">Åbn din bod på Handelsgaden</h2>
-        <p class="text-sm text-slate-600">Alle starter med <b>1.000 kr.</b> og <b>⭐⭐⭐ (3 stjerner)</b> i omdømme. Vælg spiltilstand:</p>
+        <p class="text-sm text-slate-600">Alle starter med <b>1.000 kr.</b> og <b>⭐ (1 stjerne)</b> på Niveau 1. Vælg spiltilstand:</p>
       </div>
       <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-stone-100 px-3 py-1.5 rounded-xl cursor-pointer">← Tilbage til forsiden</button>
     </div>
@@ -223,7 +160,6 @@
       </div>
     </div>
 
-    <!-- Solo Panel -->
     <div id="p_solo" class="space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-2xl border">
         <div><label class="text-xs font-bold text-slate-500">Virksomhedsnavn</label><input id="sName" value="Nordic Streetwear" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
@@ -232,7 +168,6 @@
       <button type="button" onclick="beginLocal('solo')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Start Solo-spil</button>
     </div>
 
-    <!-- Local Multi Panel -->
     <div id="p_local" class="hidden space-y-4">
       <div class="flex items-center gap-2 bg-stone-50 p-3 rounded-2xl border">
         <span class="text-xs font-bold">Antal hold:</span>
@@ -246,7 +181,6 @@
       <button type="button" onclick="beginLocal('local')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Start spil på denne skærm</button>
     </div>
 
-    <!-- Host Panel -->
     <div id="p_host" class="hidden space-y-4">
       <button type="button" id="btnOpenHost" onclick="openHostLobby()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Generér 4-cifret rumkode</button>
       <div id="hostLobby" class="hidden bg-indigo-50 border-2 border-indigo-300 rounded-2xl p-5 space-y-4">
@@ -259,7 +193,6 @@
       </div>
     </div>
 
-    <!-- Join Panel -->
     <div id="p_join" class="hidden space-y-4">
       <div id="joinForm" class="space-y-3">
         <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200">
@@ -302,7 +235,7 @@
       </div>
       <div id="boothsRow" class="px-5 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3 items-end"></div>
       <div class="bg-stone-700 text-stone-200 px-5 py-2 text-xs flex justify-between flex-wrap gap-2">
-        <span>🚶‍♀️ <b>60% Prisjægere</b> (går efter laveste pris) • 💎 <b>40% Kvalitetskøbere</b> (går efter flest ⭐ og betaler +25 kr. mere)</span>
+        <span>🚶‍♀️ <b>Prisjægere</b> handler billigst først • 💎 <b>Kvalitetskøbere</b> kræver mindst ⭐⭐⭐ og betaler mere</span>
         <span class="font-bold">Handelsgaden</span>
       </div>
     </div>
@@ -310,7 +243,7 @@
     <!-- HOST MONITOR -->
     <div id="hostMonitor" class="hidden bg-white border-2 border-indigo-300 rounded-3xl p-6 shadow-xl space-y-4">
       <div class="flex justify-between items-center border-b pb-3">
-        <div><h3 class="text-xl font-extrabold">Eleverne klargør deres boder...</h3><p class="text-xs text-slate-500">Se holdenes gade-råb/bluff oppe på boderne, efterhånden som de låser deres valg!</p></div>
+        <div><h3 class="text-xl font-extrabold">Eleverne klargør boder og kneb...</h3><p class="text-xs text-slate-500">Se holdenes gade-råb dukke op på boderne!</p></div>
         <button type="button" onclick="forceHostResolve()" class="px-4 py-2 bg-amber-500 text-slate-950 font-extrabold rounded-xl text-xs cursor-pointer">Tving runde i gang →</button>
       </div>
       <div id="hostWaitGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
@@ -320,27 +253,30 @@
     <div id="clientWait" class="hidden bg-white border-2 border-emerald-300 rounded-3xl p-8 text-center shadow-xl space-y-2">
       <div class="text-3xl">🔒</div>
       <h3 class="text-xl font-extrabold">Din bod er låst!</h3>
-      <p class="text-xs text-slate-600">Dit gade-råb vises nu på gaden. Venter på de sidste boder, før terningen kastes...</p>
+      <p class="text-xs text-slate-600">Venter på de sidste boder, før terningen og ugens skæbnekort afsløres...</p>
     </div>
 
     <!-- WORKBENCH -->
     <div id="workbench" class="bg-white border border-stone-200 rounded-3xl p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3 flex-wrap gap-2">
         <div>
-          <span class="text-xs font-extrabold text-emerald-600 uppercase">Beslutningsfase</span>
-          <h3 id="wbTeamName" class="text-xl font-extrabold text-slate-900">Din bod</h3>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-extrabold text-emerald-600 uppercase">Beslutningsfase</span>
+            <span id="wbLevelBadge" class="text-[11px] font-extrabold bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded-full">Niveau 1: Gadebod</span>
+          </div>
+          <h3 id="wbTeamName" class="text-xl font-extrabold text-slate-900 mt-0.5">Din bod</h3>
           <p id="wbSub" class="text-xs text-slate-500"></p>
         </div>
         <div class="flex items-center gap-2">
-          <span id="wbStars" class="text-xs bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl font-extrabold text-amber-900">⭐⭐⭐</span>
-          <span id="wbTurnBadge" class="text-xs bg-stone-100 border px-3 py-1.5 rounded-xl font-bold">Din tur</span>
+          <span id="wbStars" class="text-xs bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl font-extrabold text-amber-900">⭐</span>
+          <span id="wbSlots" class="text-xs bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl font-extrabold text-indigo-900">Udstyr: 0/3</span>
         </div>
       </div>
 
-      <!-- Dilemma Card -->
+      <!-- STEP 1: Dilemma Card -->
       <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 space-y-2">
         <div class="flex justify-between text-xs font-extrabold text-amber-800">
-          <span>UGENS DILEMMA (PÅVIRKER OMDØMME ⭐ & DRIFT)</span>
+          <span>1. UGENS DILEMMA (PÅVIRKER OMDØMME ⭐ & DRIFT)</span>
           <span id="dilStatus">Vælg A eller B for at låse boden op</span>
         </div>
         <div id="dilTitle" class="font-extrabold text-sm text-slate-900"></div>
@@ -353,10 +289,29 @@
 
       <div id="resReveal" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-3 text-xs font-bold text-indigo-950"></div>
 
-      <!-- Sliders -->
+      <!-- STEP 2: Supplier Selection (Masked risks) -->
+      <div>
+        <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">2. Vælg Ugens Råvare-leverandør</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <button type="button" onclick="setSupplier('disc')" id="sup_disc" class="p-3 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer">
+            <div class="flex justify-between font-extrabold text-slate-900"><span>📦 Discount-Import</span><span class="text-emerald-700">Lav pris</span></div>
+            <p class="text-slate-500 mt-1">Billige råvarer, men svingende kvalitet og risiko for uanmeldt kontrol.</p>
+          </button>
+          <button type="button" onclick="setSupplier('norm')" id="sup_norm" class="p-3 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer">
+            <div class="flex justify-between font-extrabold text-slate-900"><span>🚚 Lokal Grossist</span><span class="text-slate-700">Normalpris</span></div>
+            <p class="text-slate-600 mt-1">100% sikker levering uden uforudsete overraskelser.</p>
+          </button>
+          <button type="button" onclick="setSupplier('lux')" id="sup_lux" class="p-3 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer">
+            <div class="flex justify-between font-extrabold text-slate-900"><span>💎 Luksus-Leverandør</span><span class="text-amber-700">Høj pris</span></div>
+            <p class="text-slate-500 mt-1">Eksklusive råvarer, der giver boden et løft i omdømme i denne uge.</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Sliders -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-stone-50 p-4 rounded-2xl border space-y-3">
-          <div class="flex justify-between"><span class="font-extrabold text-sm">1. Ny produktion</span><b id="lblQty" class="text-xl text-emerald-600">15 stk.</b></div>
+          <div class="flex justify-between"><span class="font-extrabold text-sm">3. Ny produktion</span><b id="lblQty" class="text-xl text-emerald-600">15 stk.</b></div>
           <input type="range" id="slQty" min="0" max="60" value="15" oninput="slide()" class="w-full accent-emerald-600 cursor-pointer">
           <div class="bg-white p-2.5 rounded-xl border text-xs flex justify-between">
             <span>Klar på disken (inkl. lager): <b id="lblReady">15 stk.</b></span>
@@ -366,58 +321,66 @@
         </div>
 
         <div class="bg-stone-50 p-4 rounded-2xl border space-y-3">
-          <div class="flex justify-between"><span class="font-extrabold text-sm">2. Dit prisskilt</span><b id="lblPrice" class="text-xl text-amber-600">45 kr.</b></div>
-          <input type="range" id="slPrice" min="15" max="120" value="45" oninput="slide()" class="w-full accent-amber-600 cursor-pointer">
+          <div class="flex justify-between"><span class="font-extrabold text-sm">4. Dit prisskilt</span><b id="lblPrice" class="text-xl text-amber-600">48 kr.</b></div>
+          <input type="range" id="slPrice" min="15" max="120" value="48" oninput="slide()" class="w-full accent-amber-600 cursor-pointer">
           <div class="bg-white p-2.5 rounded-xl border text-xs flex justify-between">
-            <span>Avance pr. salg: <b id="lblMargin" class="text-emerald-600">+25 kr.</b></span>
+            <span>Avance pr. salg: <b id="lblMargin" class="text-emerald-600">+28 kr.</b></span>
             <span>Break-even: <b id="lblBE">8 stk.</b></span>
           </div>
-          <label class="flex items-center justify-between bg-amber-50/70 border border-amber-200 p-2 rounded-xl text-xs cursor-pointer">
-            <span>💎 <b>Brug Luksus-råvarer i denne uge</b> (+1 ⭐ her og nu)</span>
-            <input type="checkbox" id="upQual" onchange="calc()" class="w-4 h-4 accent-amber-600">
-          </label>
+          <div class="flex justify-between items-center text-[11px] text-slate-500 pt-1">
+            <span>Fast husleje + udstyrsdrift: <b id="lblFixedTotal" class="text-slate-800">200 kr.</b></span>
+            <button type="button" id="btnRes" onclick="buyRes()" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-extrabold px-2.5 py-1 rounded-lg cursor-pointer">🔭 Køb Vejranalyse (100 kr.)</button>
+          </div>
         </div>
       </div>
 
-      <!-- PERMANENT INVESTMENTS & RESEARCH -->
+      <!-- STEP 4: TIERED UPGRADES -->
       <div>
-        <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">3. Permanente Bod-opgraderinger (Købes én gang – gælder resten af spillet)</div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          <div id="cardCool" onclick="togglePerm('cool')" class="p-3 rounded-2xl bg-stone-50 border-2 cursor-pointer flex flex-col justify-between">
-            <div class="flex justify-between"><span>❄️ <b>Køledisk</b></span><span id="tagCool" class="font-extrabold text-amber-700">350 kr.</span></div>
-            <span class="text-slate-500 my-1">Redder fast 60% af usolgte varer hver uge</span>
-          </div>
-          <div id="cardMach" onclick="togglePerm('mach')" class="p-3 rounded-2xl bg-stone-50 border-2 cursor-pointer flex flex-col justify-between">
-            <div class="flex justify-between"><span>⚙️ <b>Værkstedsmaskine</b></span><span id="tagMach" class="font-extrabold text-amber-700">400 kr.</span></div>
-            <span class="text-slate-500 my-1">Sænker din råvarepris med -4 kr./stk. permanent</span>
-          </div>
-          <div id="cardNeon" onclick="togglePerm('neon')" class="p-3 rounded-2xl bg-stone-50 border-2 cursor-pointer flex flex-col justify-between">
-            <div class="flex justify-between"><span>✨ <b>Neonskilt & Brand</b></span><span id="tagNeon" class="font-extrabold text-amber-700">350 kr.</span></div>
-            <span class="text-slate-500 my-1">Giver +3 stamkunder hver uge og +1 permanent ⭐</span>
-          </div>
-          <button type="button" id="btnRes" onclick="buyRes()" class="p-3 rounded-2xl bg-indigo-50 border-2 border-indigo-200 text-left flex flex-col justify-between cursor-pointer">
-            <div class="flex justify-between"><span>🔭 <b>Ugens Vejranalyse</b></span><span class="bg-indigo-600 text-white px-1.5 rounded text-[10px]">100 kr.</span></div>
-            <span class="text-indigo-900 my-1">Se ugens terning og kundetal med det samme</span>
-          </button>
+        <div class="flex justify-between items-center mb-2 flex-wrap gap-1">
+          <span class="text-xs font-extrabold uppercase text-slate-500">5. Bod-udstyr (Maks. 3 aktive • Holder i 3 uger • Låses op ved højere kasse)</span>
+          <span class="text-[11px] font-bold text-slate-500">Klik på ejet udstyr hvis du vil sælge det (50% retur)</span>
         </div>
+        <div id="upgradesGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs"></div>
       </div>
 
-      <!-- STREET SLOGAN / BLUFF -->
-      <div class="bg-stone-50 p-3.5 rounded-2xl border flex flex-wrap items-center justify-between gap-3">
-        <div class="text-xs">
-          <b class="text-slate-800">📢 Ugens Gade-råb / Bluff (Valgfrit):</b>
-          <span class="text-slate-500">Vises i en taleboble over din bod på gaden!</span>
+      <!-- STEP 5: BESKIDTE KNEB & GADE-RÅB -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-rose-50/70 border-2 border-rose-200 p-3.5 rounded-2xl space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-extrabold text-rose-950 uppercase">🕵️ Beskidte Kneb mod en rival (Valgfrit)</span>
+            <span class="text-[10px] font-bold bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full">Risiko for bagslag!</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <select id="selTarget" onchange="calc()" class="bg-white border border-rose-300 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-800">
+              <option value="">-- Vælg konkurrent --</option>
+            </select>
+            <select id="selTrick" onchange="calc()" class="bg-white border border-rose-300 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-800">
+              <option value="">-- Intet kneb (0 kr.) --</option>
+              <option value="insp">🚨 Send anonymt tip til Kontrollen (120 kr.)</option>
+              <option value="sign">🏷️ Sabotér prisskilt om natten (90 kr.)</option>
+              <option value="poach">🧲 Kapr kunder i køen (110 kr.)</option>
+              <option value="smear">📰 Start smædekampagne på nettet (150 kr.)</option>
+              <option value="block">🚚 Bloker varevogn foran nabo (130 kr.)</option>
+            </select>
+          </div>
         </div>
-        <input id="inpSlogan" maxlength="38" placeholder="F.eks. 'Vi dumper prisen til 25 kr. i dag!'" class="flex-grow max-w-sm bg-white border rounded-xl px-3 py-1.5 text-xs font-bold">
+
+        <div class="bg-stone-50 border-2 border-stone-200 p-3.5 rounded-2xl space-y-2 flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-extrabold text-slate-800 uppercase">📢 Ugens Gade-råb / Kampagne (Valgfrit)</div>
+            <p class="text-[11px] text-slate-500">Råb op om pris eller kvalitet – men pas på ikke at bluffe for grovt, ellers gennemskuer kunderne jer!</p>
+          </div>
+          <input id="inpSlogan" maxlength="40" placeholder="F.eks. 'Gadens bedste tilbud i dag!'" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold">
+        </div>
       </div>
 
       <div class="pt-3 border-t flex flex-wrap justify-between items-center gap-3">
-        <span class="text-xs">Samlet udlæg nu (inkl. husleje & investeringer): <b id="lblOutlay" class="text-sm">500 kr.</b></span>
+        <span class="text-xs">Samlet udlæg nu (inkl. husleje, udstyr & kneb): <b id="lblOutlay" class="text-sm">500 kr.</b></span>
         <button type="button" id="btnLock" onclick="lockTurn()" disabled class="px-6 py-3 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm">Besvar ugens dilemma først</button>
       </div>
     </div>
 
-    <!-- RESULTS, LIVE CLOCK & 3D DICE -->
+    <!-- RESULTS, BREAKING NEWS, FATE CARD & 3D DICE -->
     <div id="resPanel" class="hidden bg-white border-2 border-amber-400 rounded-3xl p-6 shadow-2xl space-y-5">
       <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-5">
@@ -427,7 +390,7 @@
               <div class="face f2"><div class="pip"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip"></div></div>
               <div class="face f3"><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div></div>
               <div class="face f4"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
-              <div class="face f5"><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
+              <div class="face f5"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
               <div class="face f6"><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div></div>
             </div>
           </div>
@@ -437,11 +400,22 @@
               <span id="liveClockBadge" class="bg-emerald-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-full">🕒 Kl. 10:00</span>
             </div>
             <h3 id="resTitle" class="text-2xl font-extrabold text-slate-900 mt-0.5">Solskin</h3>
-            <p class="text-xs text-slate-700">Kunder i alt: <b id="resCust" class="text-emerald-700">40</b> (60% Prisjægere / 40% Kvalitetskøbere) • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
+            <p class="text-xs text-slate-700">Kunder på gaden: <b id="resCust" class="text-emerald-700">40</b> • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
           </div>
         </div>
         <button type="button" id="btnNextWk" onclick="nextWeek()" class="hidden px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md">Næste uge →</button>
         <span id="clientNextNote" class="hidden text-xs font-bold text-amber-800">Venter på at læreren skifter uge...</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 text-xs space-y-1">
+          <div class="font-extrabold text-indigo-900 uppercase">🃏 Ugens Skæbnekort kl. 10:00</div>
+          <div id="resFateText" class="text-slate-800 font-medium"></div>
+        </div>
+        <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3.5 text-xs space-y-1">
+          <div class="font-extrabold text-rose-900 uppercase">🕵️ Drama, Sabotage & Gade-råb</div>
+          <div id="resDramaList" class="text-slate-800 space-y-1"></div>
+        </div>
       </div>
 
       <div id="resCards" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -506,32 +480,55 @@ function toggleSound() { sndOn = !sndOn; document.getElementById('sndBtn').textC
 
 // --- DATA ---
 const COLORS = ['#059669','#2563eb','#d97706','#db2777','#7c3aed','#0891b2'];
-const EVENTS = [
-  { title:"Normal handelsuge", desc:"Stabil handel på gaden.", costMod:0, rentMod:0, dMult:1, pMod:0, icon:"🌤️" },
-  { title:"Råvaremangel", desc:"Råvarer koster +8 kr. ekstra i denne uge.", costMod:8, rentMod:0, dMult:1, pMod:0, icon:"📦" },
-  { title:"Byfest & Festival", desc:"+45% flere kunder og +10 kr. betalingsvilje!", costMod:0, rentMod:0, dMult:1.45, pMod:10, icon:"🎪" },
-  { title:"Dyrere husleje & strøm", desc:"Faste udgifter stiger med +100 kr.", costMod:0, rentMod:100, dMult:1, pMod:0, icon:"⚡" },
-  { title:"Billigt råvare-indkøb", desc:"Råvareprisen falder med -5 kr. pr. stk.", costMod:-5, rentMod:0, dMult:1, pMod:0, icon:"📉" },
-  { title:"Sidst på måneden", desc:"Kunderne sparer: -10 kr. i maks. pris.", costMod:0, rentMod:0, dMult:0.85, pMod:-10, icon:"🌧️" }
-];
-const DICE = [
-  { r:1, lbl:"Regnvejr & tomme gader", maxP:38, dPerTeam:4.5, icon:"⛈️" },
-  { r:2, lbl:"Stille hverdag", maxP:52, dPerTeam:7.5, icon:"🌥️" },
-  { r:3, lbl:"Almindelig handelsdag", maxP:56, dPerTeam:8.5, icon:"⛅" },
-  { r:4, lbl:"Solskin & god handel", maxP:68, dPerTeam:11.0, icon:"☀️" },
-  { r:5, lbl:"Lønningsdag i byen", maxP:74, dPerTeam:12.0, icon:"💸" },
-  { r:6, lbl:"Kæmpe kundestorm!", maxP:95, dPerTeam:16.0, icon:"🎉" }
-];
-const DILS = [
-  { t:"Restparti fra lukket grossist", txt:"Billigere råvarer, men 20% kasseres og kunderne opdager den svingende kvalitet.", A:{l:"Køb restparti (-6 kr./stk., 20% spild og -1 ⭐ omdømme)", cMod:-6, def:0.2, cash:0, pBon:0, dBon:0, starMod:-1}, B:{l:"Køb normale varer (Ingen risiko)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
-  { t:"Lokal mikro-influencer", txt:"En lokal profil tilbyder reklame i sin story.", A:{l:"Betal 90 kr. (+4 garanterede kunder og +1 ⭐ omdømme)", cMod:0, def:0, cash:-90, pBon:5, dBon:4, starMod:1}, B:{l:"Tak nej", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
-  { t:"Gratis smags-/vareprøver", txt:"Del prøver ud foran boden for at øge kundernes lyst.", A:{l:"Del prøver ud (-60 kr., +8 kr. betalingsvilje og +1 ⭐)", cMod:0, def:0, cash:-60, pBon:8, dBon:0, starMod:1}, B:{l:"Ingen prøver", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
-  { t:"Aftenåbent lørdag", txt:"Hold boden åben 3 timer ekstra.", A:{l:"Hold åbent (-70 kr., +3 ekstra kunder)", cMod:0, def:0, cash:-70, pBon:0, dBon:3, starMod:0}, B:{l:"Luk til normal tid", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
-  { t:"Klagende kunde ved disken", txt:"En højlydt kunde er utilfreds og kræver ekstra kompensation.", A:{l:"Giv gavmild kompensation (-50 kr., +1 ⭐ omdømme)", cMod:0, def:0, cash:-50, pBon:0, dBon:0, starMod:1}, B:{l:"Afvis kunden (Spar pengene, men -1 ⭐ omdømme)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:-1} }
+
+const UPGRADES = [
+  { key:'cool', lvl:1, req:0, name:'Køledisk', icon:'❄️', cost:320, upk:35, desc:'Redder 65% usolgte varer (Drift: 35 kr./uge)' },
+  { key:'sign', lvl:1, req:0, name:'Gadeskilt', icon:'🪧', cost:240, upk:25, desc:'+3 ekstra Prisjægere hver uge (Drift: 25 kr./uge)' },
+  { key:'mach', lvl:2, req:1400, name:'Værkstedsmaskine', icon:'⚙️', cost:420, upk:45, desc:'Råvarer -5 kr./stk. (Drift: 45 kr./uge)' },
+  { key:'barista', lvl:2, req:1400, name:'Lounge & Kaffe', icon:'☕', cost:380, upk:40, desc:'+1 ⭐ så længe aktiv +2 kunder (Drift: 40 kr./uge)' },
+  { key:'web', lvl:3, req:2200, name:'Webshop-modul', icon:'💻', cost:520, upk:60, desc:'Sælger altid 5 stk. fast uanset vejr (Drift: 60 kr./uge)' },
+  { key:'brand', lvl:3, req:2200, name:'Flagship Brand', icon:'👑', cost:580, upk:65, desc:'+2 ⭐ så længe aktiv +4 kunder (Drift: 65 kr./uge)' }
 ];
 
-let mode='solo', maxWks=10, wk=1, teams=[], turnIdx=0, curEv=EVENTS[0], curDice=DICE[2], curDil=DILS[0], dilChoice=null, chart=null;
-let buyPermTemp = { cool:false, mach:false, neon:false };
+const TRICKS_COST = { '':0, insp:120, sign:90, poach:110, smear:150, block:130 };
+
+const EVENTS = [
+  { title:"Normal handelsuge", desc:"Stabil handel på gaden.", costMod:0, rentMod:0, dMult:1, pMod:0, icon:"🌤️" },
+  { title:"Råvaremangel", desc:"Råvarer koster +7 kr. ekstra i denne uge.", costMod:7, rentMod:0, dMult:1, pMod:0, icon:"📦" },
+  { title:"Byfest & Festival", desc:"+45% flere kunder og +10 kr. betalingsvilje!", costMod:0, rentMod:0, dMult:1.45, pMod:10, icon:"🎪" },
+  { title:"Dyrere husleje & el", desc:"Faste udgifter stiger med +100 kr.", costMod:0, rentMod:100, dMult:1, pMod:0, icon:"⚡" },
+  { title:"Billigt råvare-indkøb", desc:"Råvareprisen falder med -4 kr. pr. stk.", costMod:-4, rentMod:0, dMult:1, pMod:0, icon:"📉" },
+  { title:"Sidst på måneden", desc:"Kunderne sparer: -10 kr. i maks. pris.", costMod:0, rentMod:0, dMult:0.85, pMod:-10, icon:"🌧️" }
+];
+
+const FATE_CARDS = [
+  { title:"Turistbus ved bedste bod!", desc:"En bus med købelystne turister stopper ved boden med flest ⭐ (+6 ekstra salg)!", type:"bus" },
+  { title:"Ekstra energigebyr!", desc:"Kommunen opkræver +40 kr. ekstra for hver aktiv udstyrs-opgradering i boderne i dag!", type:"tax" },
+  { title:"Kortterminal-nedbrud hos de dyre!", desc:"Teknisk nedbrud rammer alle boder med prisskilt over 65 kr. (-3 salg)!", type:"term" },
+  { title:"Leverandør-efterregning!", desc:"Transportfirmaet pålægger +3 kr. ekstra pr. nyproduceret vare i dag!", type:"surcharge" },
+  { title:"Lokalavis roser god stil!", desc:"Boder med 3 eller flere ⭐ får gratis omtale og +3 ekstra kunder!", type:"press" },
+  { title:"Rolig formiddag på gaden", desc:"Ingen uventede uheld ramte boderne ved åbning kl. 10:00.", type:"none" }
+];
+
+const DICE = [
+  { r:1, lbl:"Skybrud & torden! Kunder flygter indendørs", maxP:36, dPerTeam:4.0, icon:"⛈️" },
+  { r:2, lbl:"Gråvejr & stille hverdag", maxP:50, dPerTeam:7.0, icon:"🌥️" },
+  { r:3, lbl:"Almindelig handelsdag", maxP:56, dPerTeam:8.5, icon:"⛅" },
+  { r:4, lbl:"Solskin & travle fortove", maxP:68, dPerTeam:11.0, icon:"☀️" },
+  { r:5, lbl:"Lønningsdag & shoppelyst!", maxP:75, dPerTeam:12.5, icon:"💸" },
+  { r:6, lbl:"Kæmpe kundestorm & kø ved boderne!", maxP:96, dPerTeam:16.0, icon:"🎉" }
+];
+
+const DILS = [
+  { t:"Klagende kunde ved disken", txt:"En utilfreds kunde brokker sig højlydt foran køen.", A:{l:"Giv fuld kompensation og gave (-80 kr., +1 ⭐ omdømme)", cMod:0, def:0, cash:-80, pBon:0, dBon:0, starMod:1}, B:{l:"Afvis kunden blankt (0 kr., men -1 ⭐ omdømme)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:-1} },
+  { t:"Lokal mikro-influencer", txt:"En lokal profil tilbyder en anmeldelse af jeres bod.", A:{l:"Betal 110 kr. (+4 kunder og +1 ⭐ omdømme)", cMod:0, def:0, cash:-110, pBon:5, dBon:4, starMod:1}, B:{l:"Tak nej (0 kr.)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
+  { t:"Certificeret kvalitets-stempel", txt:"Brancheforeningen tilbyder et officielt kvalitetsmærke efter et tjek.", A:{l:"Betal gebyr (-100 kr., +1 ⭐ permanent)", cMod:0, def:0, cash:-100, pBon:6, dBon:0, starMod:1}, B:{l:"Spar pengene (0 kr.)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
+  { t:"Aftenåbent med DJ", txt:"Hold boden åben 3 timer ekstra med musik.", A:{l:"Hold åbent (-75 kr., +4 ekstra kunder)", cMod:0, def:0, cash:-75, pBon:0, dBon:4, starMod:0}, B:{l:"Luk til normal tid", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
+  { t:"Lyn-tilbud på tvivlsom emballage", txt:"Spar penge på indpakning, men den går let i stykker.", A:{l:"Brug billig indpakning (-4 kr./stk., men -1 ⭐)", cMod:-4, def:0, cash:0, pBon:0, dBon:0, starMod:-1}, B:{l:"Behold god indpakning (Ingen ændring)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} }
+];
+
+let mode='solo', maxWks=10, wk=1, teams=[], turnIdx=0, curEv=EVENTS[0], curDice=DICE[2], curFate=FATE_CARDS[5], curDil=DILS[0], dilChoice=null, supChoice='norm', chart=null;
+let buyUpgTemp = {};
 let peer=null, roomCode='', hostConns={}, clientConn=null, myId=0, hostResolved=false;
 
 // --- SETUP ---
@@ -564,8 +561,8 @@ function buildLocalInputs(cnt) {
 function mkTeam(id, name, prod, isAI=false, style='human', peerId=null) {
   return {
     id, peerId, name, prod, isAI, style, color:COLORS[id%COLORS.length],
-    cash:1000, stock:0, stars:3,
-    perms:{ cool:false, mach:false, neon:false },
+    cash:1000, stock:0, stars:1, unlockedLvl:1,
+    upgs:{},
     slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
   };
 }
@@ -655,7 +652,8 @@ function startWeekHost() {
   hostResolved = false;
   curEv = wk===1 ? EVENTS[0] : EVENTS[Math.floor(Math.random()*EVENTS.length)];
   curDice = DICE[Math.floor(Math.random()*DICE.length)];
-  teams.forEach(t => { t.dec = null; t.resTemp = false; t.slogan = ""; });
+  curFate = FATE_CARDS[Math.floor(Math.random()*FATE_CARDS.length)];
+  teams.forEach(t => { t.dec = null; t.resTemp = false; t.slogan = ""; updateTeamTier(t); });
   updateStreetUI(false);
   document.getElementById('resPanel').classList.add('hidden');
   document.getElementById('workbench').classList.add('hidden');
@@ -668,7 +666,7 @@ function renderHostWait() {
 }
 function forceHostResolve() {
   const zero = { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
-  teams.forEach(t => { if(!t.dec) t.dec = { qty:0, price:50, qual:false, buyPerms:{cool:false,mach:false,neon:false}, res:false, dil:zero, slogan:"" }; });
+  teams.forEach(t => { if(!t.dec) t.dec = { qty:0, price:50, sup:'norm', upgAct:{}, trick:'', target:'', res:false, dil:zero, slogan:"" }; });
   resolveHostWeek();
 }
 function resolveHostWeek() {
@@ -724,14 +722,17 @@ function joinHost() {
   });
 }
 
-// --- STREET & WORKBENCH ---
-function starStr(n) { return '⭐'.repeat(Math.max(1, Math.min(5, n))); }
-function permIcons(p) {
-  let s = '';
-  if (p.cool) s += '<span title="Køledisk">❄️</span>';
-  if (p.mach) s += '<span title="Værkstedsmaskine">⚙️</span>';
-  if (p.neon) s += '<span title="Neonskilt">✨</span>';
-  return s;
+// --- HELPERS FOR STARS, TIERS & UPGRADES ---
+function updateTeamTier(t) {
+  if (t.cash >= 2200) t.unlockedLvl = Math.max(t.unlockedLvl, 3);
+  else if (t.cash >= 1400) t.unlockedLvl = Math.max(t.unlockedLvl, 2);
+}
+function getEffectiveStars(t, sup, upgState) {
+  let s = t.stars;
+  if (sup === 'lux') s += 1;
+  if (upgState.barista > 0) s += 1;
+  if (upgState.brand > 0) s += 2;
+  return Math.max(1, Math.min(5, s));
 }
 
 function updateStreetUI(resolved) {
@@ -745,12 +746,13 @@ function updateStreetUI(resolved) {
 
   document.getElementById('boothsRow').innerHTML = teams.map(t => {
     const bubble = t.slogan ? `<div class="mb-1.5 bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl shadow max-w-full truncate">💬 "${t.slogan}"</div>` : '';
+    const dispStars = getEffectiveStars(t, 'norm', t.upgs);
     return `
       <div class="flex flex-col items-center">
         ${bubble}
         <div class="bg-white border px-2 py-1 rounded-t-lg text-center w-11/12">
-          <div class="font-extrabold text-xs truncate">${t.name} ${permIcons(t.perms)}</div>
-          <div class="text-[10px]">${starStr(t.stars)}</div>
+          <div class="font-extrabold text-xs truncate">${t.name} ${upgIcons(t.upgs)}</div>
+          <div class="text-[10px]">${starStr(dispStars)} • Niv.${t.unlockedLvl}</div>
         </div>
         <div class="w-full h-5 rounded-t stripes" style="background:${t.color}"></div>
         <div class="w-11/12 bg-white border-x p-2 text-center space-y-1">
@@ -765,7 +767,8 @@ function updateStreetUI(resolved) {
 function startWeekLocal() {
   curEv = wk===1 ? EVENTS[0] : EVENTS[Math.floor(Math.random()*EVENTS.length)];
   curDice = DICE[Math.floor(Math.random()*DICE.length)];
-  teams.forEach(t => { t.dec = null; t.resTemp = false; t.slogan = ""; });
+  curFate = FATE_CARDS[Math.floor(Math.random()*FATE_CARDS.length)];
+  teams.forEach(t => { t.dec = null; t.resTemp = false; t.slogan = ""; updateTeamTier(t); });
   updateStreetUI(false);
   turnIdx = 0;
   document.getElementById('resPanel').classList.add('hidden');
@@ -774,9 +777,11 @@ function startWeekLocal() {
 }
 
 function loadWorkbench(t) {
+  updateTeamTier(t);
+  const lvlNames = { 1:"Niveau 1: Gadebod", 2:"Niveau 2: Etableret Butik", 3:"Niveau 3: Flagship Store" };
+  document.getElementById('wbLevelBadge').textContent = lvlNames[t.unlockedLvl];
   document.getElementById('wbTeamName').textContent = `${t.name} (Uge ${wk})`;
   document.getElementById('wbSub').textContent = `Produkt: ${t.prod} • Kasse: ${t.cash} kr. • Overført lager: ${t.stock} stk.`;
-  document.getElementById('wbStars').textContent = starStr(t.stars);
 
   curDil = DILS[Math.floor(Math.random()*DILS.length)];
   dilChoice = null;
@@ -788,45 +793,123 @@ function loadWorkbench(t) {
   document.getElementById('btnDilB').className = "p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer";
   document.getElementById('dilStatus').textContent = "Vælg A eller B";
 
+  supChoice = 'norm';
+  setSupplier('norm', true);
+
   document.getElementById('slQty').value = 15;
   document.getElementById('slPrice').value = 48;
-  document.getElementById('upQual').checked = false;
   document.getElementById('inpSlogan').value = "";
   document.getElementById('resReveal').classList.add('hidden');
   document.getElementById('btnRes').classList.remove('hidden');
 
-  buyPermTemp = { cool:false, mach:false, neon:false };
-  renderPermCards(t);
+  const selT = document.getElementById('selTarget');
+  selT.innerHTML = `<option value="">-- Vælg konkurrent --</option>` +
+    teams.filter(x => x.id !== t.id).map(x => `<option value="${x.id}">${x.name}</option>`).join('');
+  document.getElementById('selTrick').value = "";
+
+  buyUpgTemp = {};
+  renderUpgradesGrid(t);
   updateLockBtn(); calc();
 }
 
-function renderPermCards(t) {
-  const cfg = [
-    { k:'cool', id:'cardCool', tag:'tagCool', cost:'350 kr.' },
-    { k:'mach', id:'cardMach', tag:'tagMach', cost:'400 kr.' },
-    { k:'neon', id:'cardNeon', tag:'tagNeon', cost:'350 kr.' }
-  ];
-  cfg.forEach(c => {
-    const card = document.getElementById(c.id), tag = document.getElementById(c.tag);
-    if (t.perms[c.k]) {
-      card.className = "p-3 rounded-2xl bg-emerald-50 border-2 border-emerald-500 flex flex-col justify-between opacity-90";
-      tag.textContent = "✓ Ejet"; tag.className = "font-extrabold text-emerald-700";
-    } else if (buyPermTemp[c.k]) {
-      card.className = "p-3 rounded-2xl bg-amber-50 border-2 border-amber-500 cursor-pointer flex flex-col justify-between";
-      tag.textContent = "Valgt ("+c.cost+")"; tag.className = "font-extrabold text-amber-800";
-    } else {
-      card.className = "p-3 rounded-2xl bg-stone-50 border-2 border-stone-200 cursor-pointer flex flex-col justify-between";
-      tag.textContent = c.cost; tag.className = "font-extrabold text-amber-700";
-    }
+function setSupplier(s, silent=false) {
+  supChoice = s;
+  if (!silent) playTone(500, 0.03);
+  ['disc','norm','lux'].forEach(k => {
+    document.getElementById('sup_'+k).className = k===s
+      ? "p-3 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer shadow-sm"
+      : "p-3 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer";
   });
+  calc();
 }
 
-function togglePerm(k) {
+function getPreviewUpgs(t) {
+  const res = { ...t.upgs };
+  Object.keys(buyUpgTemp).forEach(k => {
+    if (buyUpgTemp[k] === 'buy') res[k] = 3;
+    else if (buyUpgTemp[k] === 'sell') delete res[k];
+  });
+  return res;
+}
+
+function renderUpgradesGrid(t) {
+  const prev = getPreviewUpgs(t);
+  const activeCount = Object.keys(prev).filter(k => prev[k] > 0).length;
+  document.getElementById('wbSlots').textContent = `Udstyr: ${activeCount}/3 pladser`;
+
+  const grid = document.getElementById('upgradesGrid');
+  grid.innerHTML = UPGRADES.map(u => {
+    const ownedWks = t.upgs[u.key] || 0;
+    const action = buyUpgTemp[u.key];
+    const locked = t.unlockedLvl < u.lvl;
+
+    if (locked) {
+      return `
+        <div class="p-3 rounded-2xl bg-stone-100 border border-stone-200 opacity-60 flex flex-col justify-between">
+          <div class="flex justify-between font-bold text-slate-500"><span>🔒 ${u.name}</span><span>Niv. ${u.lvl}</span></div>
+          <span class="text-[11px] text-slate-400 mt-1">${u.desc}</span>
+        </div>
+      `;
+    }
+
+    if (ownedWks > 0) {
+      if (action === 'sell') {
+        return `
+          <div onclick="toggleUpg('${u.key}')" class="p-3 rounded-2xl bg-rose-50 border-2 border-rose-400 cursor-pointer flex flex-col justify-between">
+            <div class="flex justify-between font-extrabold text-rose-900"><span>${u.icon} ${u.name}</span><span>Sælges (+${Math.round(u.cost*0.5)} kr.)</span></div>
+            <span class="text-[11px] text-rose-700 mt-1">Klik igen for at beholde udstyret</span>
+          </div>
+        `;
+      }
+      return `
+        <div onclick="toggleUpg('${u.key}')" class="p-3 rounded-2xl bg-emerald-50 border-2 border-emerald-500 cursor-pointer flex flex-col justify-between">
+          <div class="flex justify-between font-extrabold text-emerald-950"><span>${u.icon} ${u.name}</span><span class="text-emerald-700">Aktiv (${ownedWks} uger)</span></div>
+          <span class="text-[11px] text-slate-600 mt-1">${u.desc}</span>
+        </div>
+      `;
+    } else {
+      if (action === 'buy') {
+        return `
+          <div onclick="toggleUpg('${u.key}')" class="p-3 rounded-2xl bg-amber-50 border-2 border-amber-500 cursor-pointer flex flex-col justify-between">
+            <div class="flex justify-between font-extrabold text-amber-950"><span>${u.icon} ${u.name}</span><span>Valgt (${u.cost} kr.)</span></div>
+            <span class="text-[11px] text-amber-800 mt-1">${u.desc}</span>
+          </div>
+        `;
+      }
+      return `
+        <div onclick="toggleUpg('${u.key}')" class="p-3 rounded-2xl bg-stone-50 hover:border-stone-400 border-2 border-stone-200 cursor-pointer flex flex-col justify-between">
+          <div class="flex justify-between font-extrabold text-slate-900"><span>${u.icon} ${u.name}</span><span class="text-amber-700">${u.cost} kr.</span></div>
+          <span class="text-[11px] text-slate-500 mt-1">${u.desc}</span>
+        </div>
+      `;
+    }
+  }).join('');
+}
+
+function toggleUpg(key) {
   const t = teams[turnIdx] || teams[0];
-  if (t.perms[k]) return;
-  buyPermTemp[k] = !buyPermTemp[k];
+  const cfg = UPGRADES.find(x => x.key === key);
+  if (t.unlockedLvl < cfg.lvl) return;
+
+  const owned = (t.upgs[key] || 0) > 0;
+  if (owned) {
+    if (buyUpgTemp[key] === 'sell') delete buyUpgTemp[key];
+    else buyUpgTemp[key] = 'sell';
+  } else {
+    if (buyUpgTemp[key] === 'buy') {
+      delete buyUpgTemp[key];
+    } else {
+      const prev = getPreviewUpgs(t);
+      const activeCount = Object.keys(prev).filter(k => prev[k] > 0).length;
+      if (activeCount >= 3) {
+        alert("Du har allerede 3 aktive opgraderinger på din bod!");
+        return;
+      }
+      buyUpgTemp[key] = 'buy';
+    }
+  }
   playTone(540, 0.04);
-  renderPermCards(t); calc();
+  renderUpgradesGrid(t); calc();
 }
 
 function pickDil(c) {
@@ -857,27 +940,42 @@ function calc() {
   const t = teams[turnIdx] || teams[0];
   const qty = parseInt(document.getElementById('slQty').value);
   const price = parseInt(document.getElementById('slPrice').value);
-  const qual = document.getElementById('upQual').checked;
   const dil = dilChoice ? curDil[dilChoice] : { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
+  const prevUpgs = getPreviewUpgs(t);
 
-  const hasMach = t.perms.mach || buyPermTemp.mach;
-  const uCost = Math.max(5, 20 + curEv.costMod + (qual?10:0) - (hasMach?4:0) + dil.cMod);
+  const effStars = getEffectiveStars(t, supChoice, prevUpgs);
+  document.getElementById('wbStars').textContent = `${starStr(effStars)} (${effStars}/5)`;
+
+  const supMod = supChoice==='disc' ? -5 : (supChoice==='lux' ? 8 : 0);
+  const machDisc = prevUpgs.mach > 0 ? 5 : 0;
+  const uCost = Math.max(5, 20 + curEv.costMod + supMod - machDisc + dil.cMod);
   const rent = 200 + curEv.rentMod;
-  const ready = qty + (t ? t.stock : 0);
 
+  let upkTotal = 0, investDelta = 0;
+  UPGRADES.forEach(cfg => {
+    if (prevUpgs[cfg.key] > 0) upkTotal += cfg.upk;
+    if (buyUpgTemp[cfg.key] === 'buy') investDelta += cfg.cost;
+    if (buyUpgTemp[cfg.key] === 'sell') investDelta -= Math.round(cfg.cost * 0.5);
+  });
+
+  const targetVal = document.getElementById('selTarget').value;
+  const trickKey = document.getElementById('selTrick').value;
+  const trickCost = (targetVal !== "" && trickKey !== "") ? TRICKS_COST[trickKey] : 0;
+
+  const ready = qty + (t ? t.stock : 0);
   document.getElementById('lblQty').textContent = qty + " stk.";
   document.getElementById('lblPrice').textContent = price + " kr.";
   document.getElementById('lblReady').textContent = ready + " stk.";
   document.getElementById('lblProdCost').textContent = (qty*uCost) + " kr. ("+uCost+" kr./stk)";
+  document.getElementById('lblFixedTotal').textContent = (rent + upkTotal) + " kr.";
 
   const shelf = document.getElementById('shelfIcons'); shelf.innerHTML = '';
   for(let i=0;i<Math.min(ready, 35);i++) shelf.innerHTML += `<span class="w-3 h-3 rounded-sm ${i<(t?t.stock:0)?'bg-sky-400':'bg-emerald-500'} inline-block"></span>`;
 
   const margin = price - uCost;
-  const permCost = (buyPermTemp.cool?350:0) + (buyPermTemp.mach?400:0) + (buyPermTemp.neon?350:0);
-  const extras = rent + permCost + (t&&t.resTemp?100:0) - dil.cash;
+  const extras = rent + upkTotal + investDelta + trickCost + (t&&t.resTemp?100:0) - dil.cash;
   document.getElementById('lblMargin').textContent = (margin>=0?'+':'') + margin + " kr.";
-  document.getElementById('lblBE').textContent = margin>0 ? Math.ceil(extras/margin) + " stk." : "Umuligt";
+  document.getElementById('lblBE').textContent = margin>0 ? Math.max(0, Math.ceil(extras/margin)) + " stk." : "Umuligt";
   document.getElementById('lblOutlay').textContent = (qty*uCost + extras) + " kr.";
 }
 
@@ -902,11 +1000,16 @@ function lockTurn() {
   playTone(600, 0.08);
   const t = teams[turnIdx] || teams[0];
   const slogan = document.getElementById('inpSlogan').value.trim();
+  const targetVal = document.getElementById('selTarget').value;
+  const trickVal = document.getElementById('selTrick').value;
+
   const dec = {
     qty: parseInt(document.getElementById('slQty').value),
     price: parseInt(document.getElementById('slPrice').value),
-    qual: document.getElementById('upQual').checked,
-    buyPerms: { ...buyPermTemp },
+    sup: supChoice,
+    upgAct: { ...buyUpgTemp },
+    target: targetVal !== "" ? parseInt(targetVal) : null,
+    trick: targetVal !== "" ? trickVal : "",
     res: !!t.resTemp,
     dil: curDil[dilChoice],
     slogan
@@ -917,20 +1020,23 @@ function lockTurn() {
     t.dec = dec;
     const zero = { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
     teams.filter(x=>x.isAI).forEach(ai => {
+      updateTeamTier(ai);
       const avg = Math.round(8.5 * curEv.dMult);
-      const bp = { cool:false, mach:false, neon:false };
+      const act = {};
+      const activeCnt = Object.keys(ai.upgs).length;
       if (ai.style==='budget') {
-        if (!ai.perms.mach && ai.cash>850) bp.mach = true;
-        ai.slogan = "Gadens billigste priser!";
-        ai.dec = { qty:Math.max(0,avg+4-ai.stock), price:35, qual:false, buyPerms:bp, res:false, dil:zero, slogan:ai.slogan };
+        if (activeCnt<3 && !ai.upgs.sign && ai.cash>600) act.sign = 'buy';
+        if (activeCnt<3 && ai.unlockedLvl>=2 && !ai.upgs.mach && ai.cash>900) act.mach = 'buy';
+        ai.slogan = "Gadens billigste tilbud her!";
+        ai.dec = { qty:Math.max(0,avg+4-ai.stock), price:35, sup:'disc', upgAct:act, target:0, trick:(Math.random()>0.65?'sign':''), res:false, dil:zero, slogan:ai.slogan };
       } else if (ai.style==='premium') {
-        if (!ai.perms.neon && ai.cash>800) bp.neon = true;
-        ai.slogan = "5-stjernet luksus til kræsne kunder ✨";
-        ai.dec = { qty:Math.max(0,avg-ai.stock), price:72, qual:true, buyPerms:bp, res:false, dil:zero, slogan:ai.slogan };
+        if (activeCnt<3 && ai.unlockedLvl>=2 && !ai.upgs.barista && ai.cash>700) act.barista = 'buy';
+        ai.slogan = "Eksklusiv luksus og bedste kvalitet!";
+        ai.dec = { qty:Math.max(0,avg-ai.stock), price:70, sup:'lux', upgAct:act, target:0, trick:(Math.random()>0.7?'insp':''), res:false, dil:zero, slogan:ai.slogan };
       } else {
-        if (!ai.perms.cool && ai.cash>800) bp.cool = true;
-        ai.slogan = "God kvalitet til fair pris!";
-        ai.dec = { qty:Math.max(0,avg+1-ai.stock), price:49, qual:false, buyPerms:bp, res:false, dil:zero, slogan:ai.slogan };
+        if (activeCnt<3 && !ai.upgs.cool && ai.cash>650) act.cool = 'buy';
+        ai.slogan = "God handel til fair pris!";
+        ai.dec = { qty:Math.max(0,avg+1-ai.stock), price:48, sup:'norm', upgAct:act, target:null, trick:'', res:false, dil:zero, slogan:ai.slogan };
       }
     });
     showResultsUI(runMarketMath());
@@ -945,76 +1051,205 @@ function lockTurn() {
   }
 }
 
-// --- 2-SEGMENT MARKET MATH (60% Price Hunters / 40% Quality Buyers) ---
+// --- COMPLETE MARKET, SABOTAGE, SLOGAN & FATE ENGINE ---
 function runMarketMath() {
   const baseCost = 20 + curEv.costMod, rent = 200 + curEv.rentMod;
   const baseMaxP = Math.max(25, curDice.maxP + curEv.pMod);
   const totalDem = Math.round(curDice.dPerTeam * teams.length * curEv.dMult);
   let priceHunters = Math.round(totalDem * 0.60);
   let qualityBuyers = totalDem - priceHunters;
+  const dramaLogs = [];
 
-  const list = teams.map(t => {
+  const stateMap = {};
+  teams.forEach(t => {
     const d = t.dec;
-    let permSpend = 0;
-    if (d.buyPerms.cool && !t.perms.cool) { t.perms.cool = true; permSpend += 350; }
-    if (d.buyPerms.mach && !t.perms.mach) { t.perms.mach = true; permSpend += 400; }
-    if (d.buyPerms.neon && !t.perms.neon) { t.perms.neon = true; permSpend += 350; t.stars = Math.min(5, t.stars + 1); }
+    let investSpend = 0;
+    Object.keys(d.upgAct || {}).forEach(k => {
+      const cfg = UPGRADES.find(x => x.key === k);
+      if (d.upgAct[k] === 'buy' && !t.upgs[k]) { t.upgs[k] = 3; investSpend += cfg.cost; }
+      if (d.upgAct[k] === 'sell' && t.upgs[k]) { delete t.upgs[k]; investSpend -= Math.round(cfg.cost * 0.5); }
+    });
 
     t.stars = Math.max(1, Math.min(5, t.stars + (d.dil.starMod || 0)));
-    const effStars = Math.min(5, t.stars + (d.qual ? 1 : 0));
 
-    const usable = d.dil.def > 0 ? Math.floor(d.qty*(1-d.dil.def)) : d.qty;
-    const avail = t.stock + usable;
+    let defectRate = d.dil.def || 0;
+    if (d.sup === 'disc' && Math.random() < 0.35) {
+      defectRate += 0.25;
+      dramaLogs.push(`📦 <b>${t.name}</b> fik leveret defekte discount-varer (-25% af ny produktion)!`);
+    }
 
-    const maxPriceHunter = baseMaxP + d.dil.pBon + (t.perms.neon ? 5 : 0);
-    const maxQualityBuyer = maxPriceHunter + 20 + effStars * 4;
-
-    const loyalCust = (d.dil.dBon || 0) + (t.perms.neon ? 3 : 0);
-    const dirSold = (d.price <= maxQualityBuyer && avail > 0) ? Math.min(avail, loyalCust) : 0;
-
-    return { t, d, permSpend, effStars, avail, price:d.price, sold:dirSold, maxPriceHunter, maxQualityBuyer };
+    stateMap[t.id] = {
+      t, d, investSpend,
+      defectRate: Math.min(0.6, defectRate),
+      perceivedPriceAdd: 0,
+      salesCapMult: 1.0,
+      fines: 0,
+      bonusCust: (d.dil.dBon || 0) + (t.upgs.sign ? 3 : 0) + (t.upgs.barista ? 2 : 0) + (t.upgs.brand ? 4 : 0)
+    };
   });
 
-  // 1. Quality Buyers (40%) pick highest stars first
-  const qualOrder = list.filter(x => x.price <= x.maxQualityBuyer && x.avail > x.sold)
+  // Sabotage actions
+  teams.forEach(attacker => {
+    const d = attacker.dec;
+    if (!d.trick || d.target === null || !stateMap[d.target]) return;
+    const victim = stateMap[d.target];
+    const attState = stateMap[attacker.id];
+    attState.investSpend += TRICKS_COST[d.trick] || 0;
+
+    if (d.trick === 'insp') {
+      victim.salesCapMult *= 0.75;
+      if (victim.d.sup === 'disc') {
+        victim.fines += 250;
+        victim.t.stars = Math.max(1, victim.t.stars - 1);
+        dramaLogs.push(`🚨 <b>Kontrollen</b> slog til mod <b>${victim.t.name}</b>: Fandt tvivlsomme discount-varer! Bøde på 250 kr. og -1 ⭐!`);
+      } else {
+        dramaLogs.push(`🚨 <b>Kontrollen</b> besøgte <b>${victim.t.name}</b> og forsinkede åbningen (-25% kapacitet).`);
+      }
+    } else if (d.trick === 'sign') {
+      victim.perceivedPriceAdd += 15;
+      dramaLogs.push(`🏷️ Nogen har manipuleret prisskiltet hos <b>${victim.t.name}</b>, så de ser 15 kr. dyrere ud for Prisjægerne!`);
+    } else if (d.trick === 'poach') {
+      attState.bonusCust += 4;
+      victim.bonusCust = Math.max(0, victim.bonusCust - 3);
+      dramaLogs.push(`🧲 <b>${attacker.name}</b> sendte en sælger over foran <b>${victim.t.name}</b> og kaprede 4 kunder fra køen!`);
+    } else if (d.trick === 'smear') {
+      if (Math.random() < 0.30) {
+        attState.fines += 200;
+        attacker.stars = Math.max(1, attacker.stars - 1);
+        dramaLogs.push(`💥 <b>BAGSLAG!</b> <b>${attacker.name}</b> blev afsløret i en ulovlig smædekampagne mod ${victim.t.name}: 200 kr. i bøde og -1 ⭐!`);
+      } else {
+        victim.t.stars = Math.max(1, victim.t.stars - 1);
+        dramaLogs.push(`📰 Et anonymt rygte på sociale medier kostede <b>${victim.t.name}</b> -1 ⭐ i omdømme!`);
+      }
+    } else if (d.trick === 'block') {
+      victim.defectRate = Math.min(0.7, victim.defectRate + 0.30);
+      dramaLogs.push(`🚚 En mystisk varevogn blokerede leverancen til <b>${victim.t.name}</b> (-30% ny produktion forsinket)!`);
+    }
+  });
+
+  // Slogan check
+  const avgPrice = teams.reduce((s, x) => s + x.dec.price, 0) / teams.length;
+  teams.forEach(t => {
+    const st = stateMap[t.id];
+    const txt = (t.dec.slogan || "").toLowerCase();
+    if (!txt) return;
+
+    const claimsCheap = /billig|tilbud|rabat|udsalg|kun |kr|pris|dump/.test(txt);
+    const claimsLux = /luksus|bedst|stjerne|eksklusiv|gourmet|top|kvalitet/.test(txt);
+
+    if (claimsCheap) {
+      if (t.dec.price <= avgPrice + 2) {
+        st.bonusCust += 4;
+        dramaLogs.push(`📢 <b>${t.name}s</b> tilbudsråb lokkede +4 ekstra Prisjægere til boden!`);
+      } else {
+        t.stars = Math.max(1, t.stars - 1);
+        dramaLogs.push(`😡 Kunderne gennemskuede <b>${t.name}s</b> falske tilbudsråb og straffede boden med -1 ⭐!`);
+      }
+    } else if (claimsLux) {
+      const effS = getEffectiveStars(t, t.dec.sup, t.upgs);
+      if (effS >= 3 || t.dec.sup === 'lux') {
+        st.bonusCust += 3;
+        dramaLogs.push(`📢 <b>${t.name}s</b> kvalitetsråb tiltrak +3 ekstra Kvalitetskøbere!`);
+      } else {
+        t.stars = Math.max(1, t.stars - 1);
+        dramaLogs.push(`😡 Kunderne følte sig snydt af <b>${t.name}s</b> luksus-bluff og gav boden -1 ⭐!`);
+      }
+    }
+  });
+
+  const list = teams.map(t => {
+    const st = stateMap[t.id];
+    const d = st.d;
+    const effStars = getEffectiveStars(t, d.sup, t.upgs);
+    const usableNew = Math.floor(d.qty * (1 - st.defectRate));
+    const totalAvail = Math.floor(((t.upgs.web > 0 ? 5 : 0) + t.stock + usableNew) * st.salesCapMult); // webshop adds 5 guaranteed online units
+
+    const maxPriceHunter = baseMaxP + d.dil.pBon;
+    const maxQualityBuyer = maxPriceHunter + 18 + effStars * 5;
+
+    let guaranteed = st.bonusCust;
+    if (curFate.type === 'press' && effStars >= 3) guaranteed += 3;
+    if (curFate.type === 'term' && d.price > 65) guaranteed = Math.max(0, guaranteed - 3);
+
+    const initSold = (d.price <= maxQualityBuyer && totalAvail > 0) ? Math.min(totalAvail, guaranteed) : 0;
+
+    return {
+      t, d, st, effStars, avail:totalAvail, price:d.price,
+      perceivedPrice: d.price + st.perceivedPriceAdd,
+      sold: initSold, maxPriceHunter, maxQualityBuyer
+    };
+  });
+
+  if (curFate.type === 'bus') {
+    const topBoat = [...list].sort((a,b) => b.effStars - a.effStars)[0];
+    if (topBoat) {
+      topBoat.sold = Math.min(topBoat.avail, topBoat.sold + 6);
+    }
+  }
+
+  // Quality buyers (require >= 3 stars)
+  const qualEligible = list.filter(x => x.effStars >= 3 && x.price <= x.maxQualityBuyer && x.avail > x.sold)
     .sort((a,b) => b.effStars !== a.effStars ? b.effStars - a.effStars : a.price - b.price);
-  qualOrder.forEach(item => {
+  qualEligible.forEach(item => {
     const canSell = item.avail - item.sold;
     const take = Math.min(qualityBuyers, canSell);
     item.sold += take; qualityBuyers -= take;
   });
 
-  // 2. Price Hunters (60% + any leftover quality buyers) pick lowest price first
+  // Price hunters
   priceHunters += qualityBuyers;
-  const priceOrder = list.filter(x => x.price <= x.maxPriceHunter && x.avail > x.sold)
-    .sort((a,b) => a.price !== b.price ? a.price - b.price : b.effStars - a.effStars);
-  priceOrder.forEach(item => {
+  const priceEligible = list.filter(x => x.perceivedPrice <= x.maxPriceHunter && x.avail > x.sold)
+    .sort((a,b) => a.perceivedPrice !== b.perceivedPrice ? a.perceivedPrice - b.perceivedPrice : b.effStars - a.effStars);
+  priceEligible.forEach(item => {
     const canSell = item.avail - item.sold;
     const take = Math.min(priceHunters, canSell);
     item.sold += take; priceHunters -= take;
   });
 
   const cards = list.sort((a,b)=>a.price-b.price).map(r => {
-    const t = r.t, d = r.d;
-    const uCost = Math.max(5, baseCost + (d.qual?10:0) - (t.perms.mach?4:0) + d.dil.cMod);
+    const t = r.t, d = r.d, st = r.st;
+    const supMod = d.sup==='disc' ? -5 : (d.sup==='lux' ? 8 : 0);
+    const machDisc = t.upgs.mach > 0 ? 5 : 0;
+    const fateSurcharge = curFate.type === 'surcharge' ? 3 : 0;
+    const uCost = Math.max(5, baseCost + supMod - machDisc + d.dil.cMod + fateSurcharge);
+
+    let upk = 0;
+    UPGRADES.forEach(cfg => {
+      if (t.upgs[cfg.key] > 0) {
+        upk += cfg.upk + (curFate.type === 'tax' ? 40 : 0);
+      }
+    });
+
     const rev = r.sold * r.price;
-    const exp = d.qty*uCost + rent + r.permSpend + (d.res?100:0) - d.dil.cash + (t.cash<0?Math.round(Math.abs(t.cash)*0.2):0);
+    const exp = d.qty*uCost + rent + upk + st.investSpend + st.fines + (d.res?100:0) - d.dil.cash + (t.cash<0?Math.round(Math.abs(t.cash)*0.2):0);
     const net = rev - exp;
     const unsold = r.avail - r.sold;
-    const saved = t.perms.cool ? Math.floor(unsold*0.6) : 0;
+    const saved = t.upgs.cool > 0 ? Math.floor(unsold*0.65) : 0;
     const waste = unsold - saved;
+
+    Object.keys(t.upgs).forEach(k => {
+      t.upgs[k]--;
+      if (t.upgs[k] <= 0) {
+        delete t.upgs[k];
+        dramaLogs.push(`🔧 <b>${t.name}s</b> udstyr (${UPGRADES.find(x=>x.key===k).name}) er slidt op efter 3 uger og skal fornyes!`);
+      }
+    });
 
     t.cash += net; t.stock = saved; t.hist.push(t.cash);
     t.sold += r.sold; t.waste += waste; t.lastP = r.price; t.lastS = r.sold;
+    updateTeamTier(t);
+
     return {
-      name:t.name, prod:t.prod, color:t.color, stars:r.effStars, perms:{...t.perms},
+      name:t.name, prod:t.prod, color:t.color, stars:r.effStars,
       price:r.price, sold:r.sold, avail:r.avail, saved, waste,
       tooExpensive: (r.price > r.maxQualityBuyer && r.avail > 0),
-      maxW:r.maxQualityBuyer, rev, exp, net, cash:t.cash
+      rev, exp, net, cash:t.cash
     };
   });
 
-  return { wk, dice:curDice, totalDem, baseMaxP, cards };
+  if (dramaLogs.length === 0) dramaLogs.push("Ingen sabotage eller uheld ramte boderne i denne uge.");
+
+  return { wk, dice:curDice, fate:curFate, drama:dramaLogs, totalDem, baseMaxP, cards };
 }
 
 // --- LIVE 10:00 TO 18:00 DAY SIMULATION ---
@@ -1035,6 +1270,9 @@ function showResultsUI(sum) {
   document.getElementById('resTitle').textContent = `${sum.dice.icon} ${sum.dice.lbl}`;
   document.getElementById('resCust').textContent = sum.totalDem;
   document.getElementById('resMaxP').textContent = sum.baseMaxP + " kr.";
+
+  document.getElementById('resFateText').innerHTML = `<b>${sum.fate.title}</b> – ${sum.fate.desc}`;
+  document.getElementById('resDramaList').innerHTML = sum.drama.map(d => `<div>• ${d}</div>`).join('');
 
   const hours = ["10:00","12:00","14:00","16:00","18:00 (Lukketid)"];
   let step = 0;
@@ -1117,8 +1355,8 @@ function showEnd() {
   const sorted = [...teams].sort((a,b)=>b.cash-a.cash);
   document.getElementById('podium').innerHTML = sorted.map((t,i) => `
     <div class="p-5 rounded-2xl border-2 ${i===0?'border-amber-400 bg-amber-50':'border-stone-200 bg-stone-50'}">
-      <div class="text-xs font-extrabold uppercase text-amber-700">${i+1}. Plads • ${starStr(t.stars)}</div>
-      <div class="text-xl font-extrabold mt-1">${t.name} ${permIcons(t.perms)}</div>
+      <div class="text-xs font-extrabold uppercase text-amber-700">${i+1}. Plads • ${starStr(t.stars)} • Niv.${t.unlockedLvl}</div>
+      <div class="text-xl font-extrabold mt-1">${t.name} ${upgIcons(t.upgs)}</div>
       <div class="text-sm font-bold text-emerald-700 mt-2">Slutkasse: ${t.cash} kr.</div>
       <div class="text-xs text-slate-500 mt-1">Solgt i alt: ${t.sold} stk. • Spild: ${t.waste} stk.</div>
     </div>
