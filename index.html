@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iværksætterspillet - Markedssimulator</title>
+    <title>Handelsgaden - Iværksætterspillet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
         /* Tactile Custom Range Sliders */
         input[type=range] {
@@ -17,14 +17,14 @@
         }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 26px;
-            width: 26px;
+            height: 28px;
+            width: 28px;
             border-radius: 50%;
-            background: #10b981;
-            border: 3px solid #0f172a;
+            background: #059669;
+            border: 3px solid #ffffff;
             cursor: pointer;
-            margin-top: -9px;
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+            margin-top: -10px;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
             transition: transform 0.1s ease;
         }
         input[type=range]::-webkit-slider-thumb:hover {
@@ -34,83 +34,99 @@
             width: 100%;
             height: 8px;
             cursor: pointer;
-            background: #334155;
+            background: #e2e8f0;
             border-radius: 999px;
         }
         input[type=range].price-slider::-webkit-slider-thumb {
-            background: #f59e0b;
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+            background: #d97706;
+            box-shadow: 0 4px 10px rgba(217, 119, 6, 0.4);
         }
 
         /* 3D Dice Styling */
         .scene {
-            width: 84px;
-            height: 84px;
-            perspective: 400px;
+            width: 96px;
+            height: 96px;
+            perspective: 500px;
         }
         .cube {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1.2s cubic-bezier(0.2, 0.85, 0.3, 1.1);
+            transition: transform 1.25s cubic-bezier(0.2, 0.85, 0.3, 1.1);
         }
         .cube__face {
             position: absolute;
-            width: 84px;
-            height: 84px;
-            background: linear-gradient(145deg, #fbbf24, #d97706);
-            border: 2px solid #fef3c7;
-            border-radius: 16px;
+            width: 96px;
+            height: 96px;
+            background: linear-gradient(145deg, #ffffff, #f1f5f9);
+            border: 3px solid #cbd5e1;
+            border-radius: 18px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            padding: 12px;
-            box-shadow: inset 0 0 12px rgba(0,0,0,0.25);
+            padding: 14px;
+            box-shadow: inset 0 0 14px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.15);
         }
         .pip {
-            width: 14px;
-            height: 14px;
-            background-color: #1e293b;
+            width: 16px;
+            height: 16px;
+            background-color: #0f172a;
             border-radius: 50%;
             align-self: center;
             justify-self: center;
-            box-shadow: inset 0 2px 3px rgba(0,0,0,0.6);
         }
-        .cube__face--1 { transform: rotateY(0deg) translateZ(42px); }
-        .cube__face--2 { transform: rotateY(90deg) translateZ(42px); }
-        .cube__face--3 { transform: rotateY(180deg) translateZ(42px); }
-        .cube__face--4 { transform: rotateY(-90deg) translateZ(42px); }
-        .cube__face--5 { transform: rotateX(90deg) translateZ(42px); }
-        .cube__face--6 { transform: rotateX(-90deg) translateZ(42px); }
+        .cube__face--1 .pip { background-color: #e11d48; width: 20px; height: 20px; }
+        .cube__face--1 { transform: rotateY(0deg) translateZ(48px); }
+        .cube__face--2 { transform: rotateY(90deg) translateZ(48px); }
+        .cube__face--3 { transform: rotateY(180deg) translateZ(48px); }
+        .cube__face--4 { transform: rotateY(-90deg) translateZ(48px); }
+        .cube__face--5 { transform: rotateX(90deg) translateZ(48px); }
+        .cube__face--6 { transform: rotateX(-90deg) translateZ(48px); }
 
-        /* Pop animations */
+        /* Awning Stripes for Storefronts */
+        .awning-stripes {
+            background-image: repeating-linear-gradient(
+                90deg,
+                rgba(255,255,255,0.28) 0px,
+                rgba(255,255,255,0.28) 14px,
+                transparent 14px,
+                transparent 28px
+            );
+        }
+
+        @keyframes floatCustomer {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+        .customer-bob { animation: floatCustomer 2s ease-in-out infinite; }
+
         @keyframes popIn {
-            0% { transform: scale(0.85); opacity: 0; }
+            0% { transform: scale(0.92); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
         .animate-pop { animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-slate-950">
+<body class="bg-amber-50/60 text-slate-800 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
 
     <!-- Top Navigation -->
-    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-30">
+    <header class="bg-white border-b border-stone-200 px-6 py-3.5 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-30 shadow-sm">
         <div class="flex items-center gap-3">
-            <div class="bg-gradient-to-br from-emerald-400 to-teal-600 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-lg tracking-tight shadow-lg shadow-emerald-500/20">
-                CEO SIM
+            <div class="bg-emerald-600 text-white font-extrabold px-3.5 py-1.5 rounded-xl text-base tracking-tight shadow-sm">
+                HANDELSGADEN
             </div>
             <div>
-                <h1 class="font-extrabold text-lg text-white leading-tight">Iværksætterspillet</h1>
-                <p class="text-xs text-slate-400">Byg din forretning • Mærk markedet</p>
+                <h1 class="font-extrabold text-lg text-slate-900 leading-tight">Iværksætterspillet</h1>
+                <p class="text-xs text-slate-500">Byg din forretning fra bod til succes</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <button type="button" id="btnToggleSound" onclick="toggleSound()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-bold text-slate-200 flex items-center gap-1.5 transition">
+            <button type="button" id="btnToggleSound" onclick="toggleSound()" class="bg-stone-100 hover:bg-stone-200 border border-stone-300 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-700 flex items-center gap-1.5 transition">
                 <span id="soundIcon">🔊</span> <span id="soundText">Lyd til</span>
             </button>
-            <div id="roundBadge" class="hidden bg-slate-800 px-4 py-1.5 rounded-full text-sm font-bold border border-slate-700 shadow-inner">
-                Uge <span id="currentRoundDisplay" class="text-emerald-400">1</span> / <span id="maxRoundsDisplay">6</span>
+            <div id="roundBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-950 px-4 py-1.5 rounded-full text-sm font-extrabold">
+                Uge <span id="currentRoundDisplay" class="text-emerald-700">1</span> af <span id="maxRoundsDisplay">10</span>
             </div>
         </div>
     </header>
@@ -119,259 +135,307 @@
     <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6">
 
         <!-- SCREEN 1: SETUP -->
-        <section id="setupScreen" class="max-w-3xl mx-auto bg-slate-900 rounded-3xl border border-slate-800 p-6 md:p-8 shadow-2xl">
-            <h2 class="text-2xl md:text-3xl font-black text-white mb-2">Start din egen virksomhed</h2>
-            <p class="text-slate-300 text-sm mb-6">Vælg om du vil spille solo mod AI-konkurrenter eller i grupper ved samme skærm. Alle starter med <strong>1.000 kr.</strong> i kassen.</p>
+        <section id="setupScreen" class="max-w-3xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">Åbn din egen butik på Handelsgaden</h2>
+            <p class="text-slate-600 text-sm mb-6">Alle starter med en lille markedsbod og <strong>1.000 kr.</strong> i kassen. Vælg spiltilstand, længde og jeres produkt.</p>
 
             <!-- Mode Selector -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                <button type="button" onclick="SoundFX.click(); setGameMode('solo')" id="btnModeSolo" class="p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-500/10 text-left transition">
-                    <div class="font-extrabold text-white text-base mb-1">Solo (Mod AI-butikker)</div>
-                    <div class="text-xs text-slate-300">Du styrer din egen bod og kæmper om kunderne mod 3 AI-konkurrenter.</div>
+                <button type="button" onclick="SoundFX.click(); setGameMode('solo')" id="btnModeSolo" class="p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left transition">
+                    <div class="font-extrabold text-slate-900 text-base mb-1">Solo (Mod AI-butikker)</div>
+                    <div class="text-xs text-slate-600">Kæmp om gaden mod 3 konkurrerende butikker med hver deres strategi.</div>
                 </button>
-                <button type="button" onclick="SoundFX.click(); setGameMode('multi')" id="btnModeMulti" class="p-4 rounded-2xl border-2 border-slate-800 bg-slate-950/60 hover:border-slate-700 text-left transition">
-                    <div class="font-extrabold text-white text-base mb-1">Grupper / Flere hold</div>
-                    <div class="text-xs text-slate-300">2 til 6 hold indtaster deres valg på skift, hvorefter markedet åbner.</div>
+                <button type="button" onclick="SoundFX.click(); setGameMode('multi')" id="btnModeMulti" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition">
+                    <div class="font-extrabold text-slate-900 text-base mb-1">Grupper / Flere hold</div>
+                    <div class="text-xs text-slate-600">2 til 6 hold klargør deres bod på skift, hvorefter gaden åbner samlet.</div>
                 </button>
             </div>
 
+            <!-- Round Length Selector -->
+            <div class="mb-6 bg-stone-50 p-4 rounded-2xl border border-stone-200 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <div class="text-sm font-extrabold text-slate-800">Hvor mange uger skal spillet vare?</div>
+                    <div class="text-xs text-slate-500">Flere uger giver tid til at bygge lager og mærke strategiske valg.</div>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="SoundFX.click(); setMaxRounds(8)" class="rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">8 uger</button>
+                    <button type="button" onclick="SoundFX.click(); setMaxRounds(10)" class="rnd-len-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm">10 uger</button>
+                    <button type="button" onclick="SoundFX.click(); setMaxRounds(12)" class="rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">12 uger</button>
+                </div>
+            </div>
+
             <!-- Team Count (Only for Multi) -->
-            <div id="multiCountContainer" class="hidden mb-6 bg-slate-950/70 p-4 rounded-2xl border border-slate-800">
-                <label class="block text-sm font-bold text-slate-200 mb-2">Antal hold på handelsgaden:</label>
+            <div id="multiCountContainer" class="hidden mb-6 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+                <label class="block text-sm font-extrabold text-slate-800 mb-2">Antal boder på gaden:</label>
                 <div class="flex flex-wrap gap-2">
                     <button type="button" onclick="SoundFX.click(); setTeamCount(2)" class="team-cnt-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm">2 hold</button>
-                    <button type="button" onclick="SoundFX.click(); setTeamCount(3)" class="team-cnt-btn px-4 py-2 rounded-xl bg-slate-800 text-slate-200 font-bold text-sm">3 hold</button>
-                    <button type="button" onclick="SoundFX.click(); setTeamCount(4)" class="team-cnt-btn px-4 py-2 rounded-xl bg-slate-800 text-slate-200 font-bold text-sm">4 hold</button>
-                    <button type="button" onclick="SoundFX.click(); setTeamCount(5)" class="team-cnt-btn px-4 py-2 rounded-xl bg-slate-800 text-slate-200 font-bold text-sm">5 hold</button>
-                    <button type="button" onclick="SoundFX.click(); setTeamCount(6)" class="team-cnt-btn px-4 py-2 rounded-xl bg-slate-800 text-slate-200 font-bold text-sm">6 hold</button>
+                    <button type="button" onclick="SoundFX.click(); setTeamCount(3)" class="team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">3 hold</button>
+                    <button type="button" onclick="SoundFX.click(); setTeamCount(4)" class="team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">4 hold</button>
+                    <button type="button" onclick="SoundFX.click(); setTeamCount(5)" class="team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">5 hold</button>
+                    <button type="button" onclick="SoundFX.click(); setTeamCount(6)" class="team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm">6 hold</button>
                 </div>
             </div>
 
             <!-- Company & Product Inputs -->
             <div id="teamsInputList" class="space-y-4 mb-8"></div>
 
-            <!-- Rules Quick Reference -->
-            <div class="bg-slate-950/90 rounded-2xl p-5 border border-slate-800 mb-6 text-xs text-slate-300 space-y-2">
-                <div class="font-extrabold text-emerald-400 uppercase tracking-wider mb-1">Sådan fungerer butikken</div>
-                <p>• <strong>Lager & Spild:</strong> Hver vare koster 20 kr. at fremstille. Usolgte varer smides ud ved ugens slutning.</p>
-                <p>• <strong>Husleje:</strong> 200 kr. pr. uge trækkes fast, uanset hvor meget du sælger.</p>
-                <p>• <strong>Kunderne:</strong> Går altid til det billigste prisskilt først – så længe prisen ikke overstiger kundernes smertegrænse.</p>
-            </div>
-
-            <button type="button" onclick="startGame()" class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl text-lg transition shadow-xl shadow-emerald-500/20 active:scale-[0.99]">
-                Åbn butikken og start spillet
+            <button type="button" onclick="startGame()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-lg transition shadow-lg shadow-emerald-600/20 active:scale-[0.99]">
+                Slå markisen op og start spillet
             </button>
         </section>
 
         <!-- SCREEN 2: ACTIVE GAME -->
         <section id="gameScreen" class="hidden space-y-6">
 
-            <!-- Top Status Cards -->
-            <div id="scoreboardGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
-
-            <!-- Event & Weather Odds Banner -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <!-- Current Event Card -->
-                <div class="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-900/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between shadow-lg">
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-full">Ugens nyhed på gaden</span>
-                            <span class="text-xs font-semibold text-slate-400">Uge <span id="eventRoundNum">1</span></span>
+            <!-- ILLUSTRATED MARKET STREET SCENE (Always visible at top!) -->
+            <div id="marketStreetScene" class="rounded-3xl overflow-hidden border border-stone-300 shadow-lg transition-colors duration-700 bg-gradient-to-b from-sky-200 via-sky-100 to-amber-100">
+                <!-- Sky & Weather Banner -->
+                <div class="px-6 pt-5 pb-3 flex flex-wrap justify-between items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <span id="weatherEmoji" class="text-4xl drop-shadow-sm">🌤️</span>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider bg-white/80 text-slate-700 px-2.5 py-0.5 rounded-full">Uge <span id="streetRoundNum">1</span></span>
+                                <span id="streetWeatherStatus" class="text-xs font-bold text-slate-700">Gaden gør klar til handel</span>
+                            </div>
+                            <h2 id="eventTitle" class="text-lg md:text-xl font-extrabold text-slate-900">Normal handelsuge</h2>
+                            <p id="eventDesc" class="text-xs text-slate-700 max-w-2xl">Ingen uforudsete forstyrrelser i byen denne uge.</p>
                         </div>
-                        <h3 id="eventTitle" class="text-xl font-black text-white mb-1">Normal handelsuge</h3>
-                        <p id="eventDesc" class="text-sm text-slate-300">Ingen uforudsete forstyrrelser i forsyningskæden eller lokalområdet denne uge.</p>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800 flex flex-wrap gap-6 text-xs">
-                        <div class="bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">Fremstillingspris: <strong id="currentCostDisplay" class="text-white">20 kr./stk.</strong></div>
-                        <div class="bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">Ugentlig husleje: <strong id="currentFixedDisplay" class="text-white">200 kr.</strong></div>
+
+                    <!-- Street Cost Pills -->
+                    <div class="flex gap-2 text-xs font-bold">
+                        <div class="bg-white/90 backdrop-blur px-3 py-2 rounded-xl border border-stone-200 shadow-sm">
+                            Råvarepris: <span id="currentCostDisplay" class="text-slate-900 font-extrabold">20 kr.</span>
+                        </div>
+                        <div class="bg-white/90 backdrop-blur px-3 py-2 rounded-xl border border-stone-200 shadow-sm">
+                            Husleje: <span id="currentFixedDisplay" class="text-slate-900 font-extrabold">200 kr.</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Demand Probability Table -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-xs shadow-lg">
-                    <div class="font-extrabold text-slate-200 uppercase tracking-wider mb-2">Vejrudsigt & Terninge-odds</div>
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-slate-400 border-b border-slate-800">
-                                <th class="py-1">Slag</th>
-                                <th class="py-1">Stemning</th>
-                                <th class="py-1">Maks. pris</th>
-                                <th class="py-1 text-right">Kunder</th>
-                            </tr>
-                        </thead>
-                        <tbody id="demandTableBody" class="divide-y divide-slate-800/60 text-slate-300"></tbody>
-                    </table>
+                <!-- Storefronts Row (Visual Booths with Awnings, Cash & Stock) -->
+                <div class="px-6 pt-4 pb-0">
+                    <div id="streetBoothsRow" class="grid grid-cols-2 md:grid-cols-4 gap-4 items-end"></div>
+                </div>
+
+                <!-- Cobblestone Street Pavement -->
+                <div class="bg-stone-700 border-t-4 border-stone-600 px-6 py-2.5 flex items-center justify-between text-xs text-stone-200">
+                    <div id="streetPedestrians" class="flex items-center gap-2 font-medium">
+                        <span>🚶‍♀️🚶‍♂️🛍️</span>
+                        <span>Kunderne går altid til det mest attraktive tilbud først.</span>
+                    </div>
+                    <div class="hidden sm:block text-stone-400 font-semibold">Handelsgaden</div>
                 </div>
             </div>
 
-            <!-- DECISION PANEL (TACTILE WORKBENCH) -->
-            <div id="decisionPanel" class="bg-slate-900 border-2 border-emerald-500/40 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
-                <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-slate-800">
+            <!-- DECISION WORKBENCH (Per Team) -->
+            <div id="decisionPanel" class="bg-white border border-stone-200 rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-stone-200">
                     <div>
-                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-400">Klargør din butik</span>
-                        <h3 id="activeTeamHeading" class="text-2xl font-black text-white">Hold 1's tur</h3>
-                        <p id="activeTeamSub" class="text-xs text-slate-400">Produkt: Custom T-shirts • Kassebeholdning: 1.000 kr.</p>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600">Forbered din bod</span>
+                        <h3 id="activeTeamHeading" class="text-2xl font-extrabold text-slate-900">Hold 1's tur</h3>
+                        <p id="activeTeamSub" class="text-xs text-slate-500">Produkt: Custom T-shirts • Kassebeholdning: 1.000 kr.</p>
                     </div>
-                    <div id="turnProgressBadge" class="text-xs bg-slate-800 border border-slate-700 px-3.5 py-2 rounded-xl font-bold text-slate-200">
-                        Indstil lager og pris
+                    <div class="flex items-center gap-3">
+                        <div id="carriedStockPill" class="hidden bg-sky-50 border border-sky-200 text-sky-800 px-3 py-1.5 rounded-xl text-xs font-bold">
+                            📦 Overført fra sidste uge: <span id="carriedStockCount">0</span> stk.
+                        </div>
+                        <div id="turnProgressBadge" class="text-xs bg-stone-100 border border-stone-200 px-3.5 py-2 rounded-xl font-bold text-slate-700">
+                            Din tur
+                        </div>
                     </div>
+                </div>
+
+                <!-- STEP A: MANDATORY WEEKLY DILEMMA CARD -->
+                <div class="bg-amber-50/90 border-2 border-amber-300 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800 bg-amber-200/70 px-2.5 py-0.5 rounded-full">Ugens dilemma • Tag stilling</span>
+                        <span id="dilemmaStatusTag" class="text-xs font-bold text-amber-700">Vælg en løsning for at låse boden op</span>
+                    </div>
+                    <h4 id="dilemmaTitle" class="text-base font-extrabold text-slate-900">Leverandøren tilbyder et restparti</h4>
+                    <p id="dilemmaText" class="text-xs text-slate-700 leading-relaxed">En grossist har et parti råvarer til halv pris, men kvaliteten svinger.</p>
+                    <div id="dilemmaOptions" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1"></div>
                 </div>
 
                 <!-- Optional Market Research Reveal Box -->
-                <div id="forecastRevealBox" class="hidden bg-indigo-950/70 border border-indigo-500/50 rounded-2xl p-4 animate-pop">
-                    <div class="text-xs font-extrabold uppercase text-indigo-300 mb-1">Hemmelig vejrudsigt afsløret!</div>
-                    <p id="forecastRevealText" class="text-sm text-white font-semibold"></p>
+                <div id="forecastRevealBox" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-4 animate-pop">
+                    <div class="text-xs font-extrabold uppercase text-indigo-700 mb-1">🔭 Vejrudsigt & Kundeanalyse afsløret!</div>
+                    <p id="forecastRevealText" class="text-sm text-slate-900 font-bold"></p>
                 </div>
 
-                <!-- Tactile Sliders Grid -->
+                <!-- STEP B: PRODUCTION & PRICE SLIDERS -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     
                     <!-- 1. Production Slider & Visual Shelf -->
-                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-4">
+                    <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 flex flex-col justify-between space-y-4">
                         <div>
                             <div class="flex justify-between items-baseline mb-1">
-                                <label class="text-base font-extrabold text-white">1. Fyld lagerhylden</label>
-                                <span id="qtyBadge" class="text-2xl font-black text-emerald-400">15 stk.</span>
+                                <label class="text-base font-extrabold text-slate-900">1. Ny produktion til hylden</label>
+                                <span id="qtyBadge" class="text-2xl font-extrabold text-emerald-600">15 stk.</span>
                             </div>
-                            <p class="text-xs text-slate-400 mb-4">Træk i skyderen for at producere varer (<span class="unitCostInline">20</span> kr./stk.)</p>
+                            <p class="text-xs text-slate-500 mb-3">Fremstillingspris: <strong class="unitCostInline text-slate-800">20</strong> kr./stk. (+ evt. overført lager)</p>
                             
                             <input type="range" id="inputQty" min="0" max="60" value="15" oninput="handleSliderChange('qty')" class="w-full my-2">
-                            <div class="flex justify-between text-[11px] text-slate-500 font-semibold">
-                                <span>0 stk. (Lukket)</span>
+                            <div class="flex justify-between text-[11px] text-slate-400 font-semibold">
+                                <span>0 stk.</span>
                                 <span>30 stk.</span>
-                                <span>60 stk. (Storproduktion)</span>
+                                <span>60 stk.</span>
                             </div>
                         </div>
 
                         <!-- Visual Shelf Box -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
-                            <div class="text-[11px] font-bold uppercase text-slate-400 mb-2 flex justify-between">
-                                <span>Din lagerhylde lige nu:</span>
-                                <span class="text-amber-400 font-extrabold">Udgift: <span id="calcProdCost">300 kr.</span></span>
+                        <div class="bg-white border border-stone-200 rounded-xl p-3">
+                            <div class="text-[11px] font-bold uppercase text-slate-500 mb-2 flex justify-between">
+                                <span>Samlet antal varer klar til salg: <strong id="totalReadyStock" class="text-slate-900">15 stk.</strong></span>
+                                <span class="text-amber-700 font-extrabold">Produktion: <span id="calcProdCost">300 kr.</span></span>
                             </div>
-                            <div id="visualShelf" class="flex flex-wrap gap-1.5 min-h-[38px] items-center"></div>
+                            <div id="visualShelf" class="flex flex-wrap gap-1.5 min-h-[34px] items-center"></div>
                         </div>
                     </div>
 
                     <!-- 2. Price Tag Slider & Profit Gauge -->
-                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-4">
+                    <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 flex flex-col justify-between space-y-4">
                         <div>
                             <div class="flex justify-between items-baseline mb-1">
-                                <label class="text-base font-extrabold text-white">2. Sæt dit prisskilt</label>
-                                <span id="priceBadge" class="text-2xl font-black text-amber-400">45 kr.</span>
+                                <label class="text-base font-extrabold text-slate-900">2. Skriv dit prisskilt</label>
+                                <span id="priceBadge" class="text-2xl font-extrabold text-amber-600">45 kr.</span>
                             </div>
-                            <p class="text-xs text-slate-400 mb-4">Laveste pris sælger først. Høj pris giver større fortjeneste pr. kunde.</p>
+                            <p class="text-xs text-slate-500 mb-3">Laveste pris sælger først – medmindre du satser på luksus og blikfang.</p>
                             
-                            <input type="range" id="inputPrice" min="15" max="110" value="45" oninput="handleSliderChange('price')" class="w-full price-slider my-2">
-                            <div class="flex justify-between text-[11px] text-slate-500 font-semibold">
-                                <span>15 kr. (Tilbud)</span>
-                                <span>60 kr. (Mellem)</span>
-                                <span>110 kr. (Luksus)</span>
+                            <input type="range" id="inputPrice" min="15" max="120" value="45" oninput="handleSliderChange('price')" class="w-full price-slider my-2">
+                            <div class="flex justify-between text-[11px] text-slate-400 font-semibold">
+                                <span>15 kr. (Lavpris)</span>
+                                <span>65 kr. (Mellem)</span>
+                                <span>120 kr. (Eksklusiv)</span>
                             </div>
                         </div>
 
                         <!-- Visual Price Tag & Margin -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                        <div class="bg-white border border-stone-200 rounded-xl p-3 flex items-center justify-between">
                             <div>
                                 <div class="text-[11px] font-bold uppercase text-slate-400">Fortjeneste pr. solgt vare:</div>
-                                <div id="calcMargin" class="text-lg font-black text-emerald-400">+25 kr.</div>
+                                <div id="calcMargin" class="text-lg font-extrabold text-emerald-600">+25 kr.</div>
                             </div>
                             <div class="text-right">
-                                <div class="text-[11px] font-bold uppercase text-slate-400">Salg før du tjener penge:</div>
-                                <div id="calcBreakEven" class="text-sm font-extrabold text-slate-200">8 stk.</div>
+                                <div class="text-[11px] font-bold uppercase text-slate-400">Salg før overskud:</div>
+                                <div id="calcBreakEven" class="text-sm font-extrabold text-slate-800">Mindst 8 stk.</div>
                             </div>
                         </div>
                     </div>
 
                 </div>
 
-                <!-- 3. Strategic Actions / Upgrades -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label onclick="SoundFX.click()" class="flex items-center justify-between gap-3 cursor-pointer p-4 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 transition">
-                        <div class="flex items-start gap-3">
-                            <input type="checkbox" id="chkMarketing" onchange="updateLiveCalc()" class="mt-1 w-5 h-5 rounded text-emerald-500 focus:ring-0">
-                            <div>
-                                <div class="font-bold text-sm text-white">Køb reklame & hype (+10 kr. betalingsvilje)</div>
-                                <div class="text-xs text-slate-400">Kunderne vil betale op til 10 kr. mere for dit brand i denne uge.</div>
+                <!-- STEP C: EXPANDED BUSINESS TOOLBOX (4 Upgrades) -->
+                <div>
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">3. Tilkøb & Driftsvalg til din forretning</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        
+                        <!-- Option 1: Luksus Råvarer -->
+                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
+                            <div class="flex items-start justify-between gap-2 mb-2">
+                                <span class="text-xl">✨</span>
+                                <input type="checkbox" id="chkQuality" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
                             </div>
-                        </div>
-                        <span class="shrink-0 bg-slate-800 text-amber-400 font-extrabold text-xs px-2.5 py-1 rounded-lg">150 kr.</span>
-                    </label>
+                            <div>
+                                <div class="font-extrabold text-xs text-slate-900">Luksus-kvalitet</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Kunder betaler op til <strong>+15 kr.</strong> mere for dine varer.</div>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">+10 kr. pr. produceret stk.</div>
+                        </label>
 
-                    <div id="researchBtnWrapper">
-                        <button type="button" id="btnBuyResearch" onclick="buyMarketResearch()" class="w-full h-full p-4 bg-indigo-950/60 hover:bg-indigo-900/60 border border-indigo-500/40 rounded-2xl transition flex items-center justify-between gap-3 text-left">
-                            <div>
-                                <div class="font-bold text-sm text-indigo-200">Køb markedsanalyse (Se terningen nu)</div>
-                                <div class="text-xs text-indigo-300/80">Afslører ugens vejr og præcise efterspørgsel før du låser dit valg.</div>
+                        <!-- Option 2: Blikfang & Sælger -->
+                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
+                            <div class="flex items-start justify-between gap-2 mb-2">
+                                <span class="text-xl">📣</span>
+                                <input type="checkbox" id="chkMarketing" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
                             </div>
-                            <span class="shrink-0 bg-indigo-600 text-white font-extrabold text-xs px-2.5 py-1 rounded-lg">100 kr.</span>
-                        </button>
+                            <div>
+                                <div class="font-extrabold text-xs text-slate-900">Blikfang & Sælger</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Vinder kunder ved pris-lighed + løfter betalingsvilje med <strong>+10 kr.</strong></div>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">120 kr. fast</div>
+                        </label>
+
+                        <!-- Option 3: Lagersikring -->
+                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
+                            <div class="flex items-start justify-between gap-2 mb-2">
+                                <span class="text-xl">❄️</span>
+                                <input type="checkbox" id="chkStorage" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
+                            </div>
+                            <div>
+                                <div class="font-extrabold text-xs text-slate-900">Lagersikring</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Redder <strong>50 % af usolgte varer</strong> til næste uge i stedet for spild.</div>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">100 kr. fast</div>
+                        </label>
+
+                        <!-- Option 4: Markedsanalyse -->
+                        <div id="researchBtnWrapper" class="flex">
+                            <button type="button" id="btnBuyResearch" onclick="buyMarketResearch()" class="w-full flex flex-col justify-between p-3.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 transition text-left">
+                                <div class="flex items-start justify-between gap-2 mb-2 w-full">
+                                    <span class="text-xl">🔭</span>
+                                    <span class="text-[10px] font-extrabold uppercase bg-indigo-600 text-white px-2 py-0.5 rounded-full">Afslør nu</span>
+                                </div>
+                                <div>
+                                    <div class="font-extrabold text-xs text-indigo-950">Vejr- & kundeanalyse</div>
+                                    <div class="text-[11px] text-indigo-800/80 mt-0.5 leading-snug">Se ugens terningeslag og kundetal før du beslutter dig.</div>
+                                </div>
+                                <div class="mt-2 pt-2 border-t border-indigo-200/80 text-[11px] font-extrabold text-indigo-700 w-full">100 kr. engangsbeløb</div>
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
-                <!-- Footer Bar: Total Outlay & Anti-Autopilot Lock Button -->
-                <div class="pt-4 border-t border-slate-800 flex flex-wrap justify-between items-center gap-4">
-                    <div class="text-xs text-slate-300">
-                        Samlet penge op af lommen nu (inkl. husleje): <strong id="calcTotalOutlay" class="text-white text-base">500 kr.</strong>
+                <!-- Footer Bar: Total Outlay & Lock Button -->
+                <div class="pt-4 border-t border-stone-200 flex flex-wrap justify-between items-center gap-4">
+                    <div class="text-xs text-slate-600">
+                        Samlet udlæg før salg (inkl. husleje): <strong id="calcTotalOutlay" class="text-slate-900 text-base">500 kr.</strong>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span id="autopilotHint" class="text-xs text-amber-400 font-semibold">Træk i en skyder for at aktivere knappen</span>
-                        <button type="button" onclick="submitTeamDecision()" id="btnSubmitTurn" disabled class="px-7 py-3.5 bg-slate-800 text-slate-500 font-black rounded-2xl text-sm transition cursor-not-allowed">
-                            Åbn butikken og slå med terningen
+                        <span id="autopilotHint" class="text-xs text-amber-700 font-bold">Vælg svar på ugens dilemma først</span>
+                        <button type="button" onclick="submitTeamDecision()" id="btnSubmitTurn" disabled class="px-7 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition cursor-not-allowed">
+                            Åbn boden og slå med terningen
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- SCREEN 2B: VISUAL STOREFRONT & 3D DICE RESULTS -->
-            <div id="roundResultPanel" class="hidden bg-slate-900 border-2 border-amber-400/50 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+            <!-- SCREEN 2B: VISUAL STREET RESULTS & CENTERED 3D DICE -->
+            <div id="roundResultPanel" class="hidden bg-white border-2 border-amber-400 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
                 
-                <!-- 3D Dice & Weather Header -->
-                <div class="flex flex-wrap items-center justify-between gap-6 border-b border-slate-800 pb-6">
-                    <div>
-                        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-400">Markedet er åbent • Uge <span id="resRoundNum">1</span></span>
-                        <h3 id="resWeatherTitle" class="text-2xl md:text-3xl font-black text-white mt-1">Godt vejr / Lønningsdag</h3>
-                        <p class="text-sm text-slate-300 mt-1">
-                            Samlet efterspørgsel på gaden: <strong id="resTotalDemand" class="text-emerald-400">40 kunder</strong> • 
-                            Kundernes maks. pris: <strong id="resMaxPrice" class="text-amber-400">65 kr.</strong>
-                        </p>
-                    </div>
-
-                    <!-- 3D Dice Container -->
-                    <div class="flex items-center gap-4 bg-slate-950 px-6 py-4 rounded-2xl border border-slate-800 shadow-inner">
-                        <div class="scene">
+                <!-- Prominent Centered 3D Dice Banner -->
+                <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-6">
+                        <!-- 3D Dice -->
+                        <div class="scene shrink-0">
                             <div class="cube" id="diceCube">
-                                <!-- Face 1 -->
                                 <div class="cube__face cube__face--1">
                                     <div></div><div></div><div></div>
                                     <div></div><div class="pip"></div><div></div>
                                     <div></div><div></div><div></div>
                                 </div>
-                                <!-- Face 2 -->
                                 <div class="cube__face cube__face--2">
                                     <div class="pip"></div><div></div><div></div>
                                     <div></div><div></div><div></div>
                                     <div></div><div></div><div class="pip"></div>
                                 </div>
-                                <!-- Face 3 -->
                                 <div class="cube__face cube__face--3">
                                     <div class="pip"></div><div></div><div></div>
                                     <div></div><div class="pip"></div><div></div>
                                     <div></div><div></div><div class="pip"></div>
                                 </div>
-                                <!-- Face 4 -->
                                 <div class="cube__face cube__face--4">
                                     <div class="pip"></div><div></div><div class="pip"></div>
                                     <div></div><div></div><div></div>
                                     <div class="pip"></div><div></div><div class="pip"></div>
                                 </div>
-                                <!-- Face 5 -->
                                 <div class="cube__face cube__face--5">
                                     <div class="pip"></div><div></div><div class="pip"></div>
                                     <div></div><div class="pip"></div><div></div>
                                     <div class="pip"></div><div></div><div class="pip"></div>
                                 </div>
-                                <!-- Face 6 -->
                                 <div class="cube__face cube__face--6">
                                     <div class="pip"></div><div></div><div class="pip"></div>
                                     <div class="pip"></div><div></div><div class="pip"></div>
@@ -379,35 +443,40 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-xs text-slate-400 max-w-[110px]">
-                            Terningen afgør dagens kundestrøm på gaden.
+
+                        <div>
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Terningen er kastet • Uge <span id="resRoundNum">1</span></span>
+                            <h3 id="resWeatherTitle" class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-0.5">Solskin & god stemning</h3>
+                            <p class="text-sm text-slate-700 mt-1">
+                                <strong id="resTotalDemand" class="text-emerald-700">40 kunder</strong> gik på gaden • 
+                                Basis maks. pris: <strong id="resMaxPrice" class="text-amber-700">65 kr.</strong>
+                            </p>
                         </div>
                     </div>
+
+                    <button type="button" onclick="SoundFX.click(); nextRound()" id="btnNextRound" class="w-full md:w-auto px-7 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-emerald-600/20 shrink-0">
+                        Fortsæt til næste uge →
+                    </button>
                 </div>
 
-                <!-- Visual Storefront Cards (Instead of boring spreadsheet first) -->
+                <!-- Visual Storefront Cards -->
                 <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Handelsgaden (Sorteret efter billigste prisskilt først)</h4>
-                        <div class="flex items-center gap-3 text-[11px] text-slate-400">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Sådan gik salget i boderne (Sorteret efter kundernes rækkefølge)</h4>
+                        <div class="flex items-center gap-3 text-[11px] font-semibold text-slate-600">
                             <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span> Solgt</span>
-                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-rose-500/80 inline-block"></span> Spild (smidt ud)</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-sky-400 inline-block"></span> Gemt på lager</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-rose-400 inline-block"></span> Spild</span>
                         </div>
                     </div>
                     <div id="visualStorefrontsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
-
-                <div class="flex justify-end pt-2">
-                    <button type="button" onclick="SoundFX.click(); nextRound()" id="btnNextRound" class="px-7 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl text-sm transition shadow-lg shadow-emerald-500/20">
-                        Fortsæt til næste uge →
-                    </button>
-                </div>
             </div>
 
             <!-- Live Chart -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                <h4 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-3">Udvikling i kassebeholdning (kr.)</h4>
-                <div class="h-60 w-full">
+            <div class="bg-white border border-stone-200 rounded-3xl p-5 shadow-sm">
+                <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-3">Udvikling i kassebeholdning gennem ugerne (kr.)</h4>
+                <div class="h-56 w-full">
                     <canvas id="balanceChart"></canvas>
                 </div>
             </div>
@@ -415,27 +484,27 @@
         </section>
 
         <!-- SCREEN 3: FINAL GAME OVER -->
-        <section id="endScreen" class="hidden max-w-4xl mx-auto bg-slate-900 rounded-3xl border border-slate-800 p-6 md:p-8 shadow-2xl space-y-6">
+        <section id="endScreen" class="hidden max-w-4xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-2xl space-y-6">
             <div class="text-center space-y-2">
-                <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full">Simulering afsluttet</span>
-                <h2 class="text-3xl font-black text-white">Endelig stilling efter 6 uger</h2>
-                <p class="text-slate-300 text-sm">Sådan klarede virksomhederne sig på handelsgaden.</p>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3.5 py-1 rounded-full">Sæsonen er slut</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">Endelig stilling på Handelsgaden</h2>
+                <p class="text-slate-600 text-sm">Her er det samlede resultat efter alle ugerne.</p>
             </div>
 
             <div id="podiumGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
 
-            <div class="bg-slate-950/90 rounded-2xl p-5 border border-slate-800">
-                <h3 class="font-extrabold text-white mb-3 text-xs uppercase tracking-wider">Opsummering & Snak på klassen</h3>
-                <ul class="text-sm text-slate-300 space-y-2 list-disc pl-5">
-                    <li><strong>Priskrig vs. indtjening:</strong> Hvem solgte mange varer uden at tjene penge på grund af huslejen?</li>
-                    <li><strong>Lagerstyring:</strong> Hvor mange varer endte i skraldespanden som spild?</li>
-                    <li><strong>Risikovillighed:</strong> Kunne det betale sig at købe markedsanalyse eller reklame?</li>
+            <div class="bg-amber-50/80 rounded-2xl p-5 border border-amber-200">
+                <h3 class="font-extrabold text-slate-900 mb-2 text-xs uppercase tracking-wider">Opsummering til klassen</h3>
+                <ul class="text-sm text-slate-700 space-y-1.5 list-disc pl-5">
+                    <li><strong>Strategi over tid:</strong> Hvem formåede at opbygge en stabil forretning frem for blot at vinde en enkelt uge?</li>
+                    <li><strong>Kvalitet vs. Lavpris:</strong> Kunne det betale sig at satse på dyre råvarer og høj pris, eller vandt volumen?</li>
+                    <li><strong>Risikostyring:</strong> Hvilken forskel gjorde lagersikring og dilemma-valgene undervejs?</li>
                 </ul>
             </div>
 
             <div class="flex justify-center pt-2">
-                <button type="button" onclick="location.reload()" class="px-8 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl text-sm transition">
-                    Spil igen med nye virksomheder
+                <button type="button" onclick="location.reload()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm transition shadow-lg">
+                    Start et nyt spil
                 </button>
             </div>
         </section>
@@ -443,7 +512,7 @@
     </main>
 
     <script>
-        // --- SYNTHETIC WEB AUDIO ENGINE (No external files needed) ---
+        // --- SYNTHETIC WEB AUDIO ENGINE ---
         let soundEnabled = true;
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -480,7 +549,7 @@
                 const gain = audioCtx.createGain();
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(pitch, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.025);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -497,7 +566,7 @@
                     osc.type = 'square';
                     osc.frequency.setValueAtTime(160 + (idx % 3) * 45, audioCtx.currentTime + delay);
                     osc.frequency.exponentialRampToValueAtTime(65, audioCtx.currentTime + delay + 0.06);
-                    gain.gain.setValueAtTime(0.14, audioCtx.currentTime + delay);
+                    gain.gain.setValueAtTime(0.13, audioCtx.currentTime + delay);
                     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + 0.06);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
@@ -508,14 +577,14 @@
             cashRegister() {
                 if (!soundEnabled) return;
                 this.ensureCtx();
-                const notes = [987.77, 1318.51]; // B5 -> E6 ("Ka-ching!")
+                const notes = [987.77, 1318.51];
                 notes.forEach((freq, i) => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.type = 'sine';
                     const start = audioCtx.currentTime + i * 0.11;
                     osc.frequency.setValueAtTime(freq, start);
-                    gain.gain.setValueAtTime(0.18, start);
+                    gain.gain.setValueAtTime(0.16, start);
                     gain.gain.exponentialRampToValueAtTime(0.001, start + 0.45);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
@@ -533,7 +602,7 @@
                     osc.type = 'sawtooth';
                     const start = audioCtx.currentTime + i * 0.18;
                     osc.frequency.setValueAtTime(freq, start);
-                    gain.gain.setValueAtTime(0.1, start);
+                    gain.gain.setValueAtTime(0.09, start);
                     gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
@@ -544,30 +613,68 @@
         };
 
         // --- GAME CONFIGURATION & DATA ---
-        const MAX_ROUNDS = 6;
+        let maxRounds = 10;
         const STARTING_CASH = 1000;
         const BASE_UNIT_COST = 20;
         const BASE_FIXED_COST = 200;
-        const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4'];
+        const COLORS = ['#059669', '#2563eb', '#d97706', '#db2777', '#7c3aed', '#0891b2'];
 
         const EVENTS = [
-            { title: "Normal handelsuge", desc: "Ingen uforudsete forstyrrelser på gaden. Markedet opfører sig som forventet.", costMod: 0, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0 },
-            { title: "Råvaremangel hos leverandøren", desc: "Materialer er blevet dyrere! Det koster nu +8 kr. ekstra at fremstille hver vare.", costMod: 8, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0 },
-            { title: "Lokal festival i byen", desc: "Gaden syder af liv! Der kommer 40 % flere kunder i denne uge.", costMod: 0, fixedMod: 0, demandMult: 1.4, maxPriceMod: 5 },
-            { title: "Stigende el- og huslejepriser", desc: "Udlejeren hæver huslejen med +100 kr. i denne uge.", costMod: 0, fixedMod: 100, demandMult: 1.0, maxPriceMod: 0 },
-            { title: "Smart produktions-trick", desc: "Du har optimeret arbejdet! Fremstillingsprisen falder med -5 kr. pr. vare.", costMod: -5, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0 },
-            { title: "Folk holder på pengene", desc: "Kunderne er ekstra nærige i denne uge og betaler maks. -10 kr. mindre end normalt.", costMod: 0, fixedMod: 0, demandMult: 0.85, maxPriceMod: -10 },
-            { title: "Viralt hit på sociale medier", desc: "Alle taler om jeres produkttype! Kunderne betaler glædeligt +10 kr. mere.", costMod: 0, fixedMod: 0, demandMult: 1.15, maxPriceMod: 10 },
-            { title: "Normal handelsuge", desc: "Stabilt vejr og almindelig handel. Fokusér på skarp prissætning.", costMod: 0, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0 }
+            { title: "Normal handelsuge", desc: "Rolig stemning på gaden. Kunderne kigger på både pris og kvalitet.", costMod: 0, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-sky-200 via-sky-100 to-amber-100", icon: "🌤️" },
+            { title: "Råvaremangel i byen", desc: "Leverandørerne hæver prisen! Råvarer koster +8 kr. ekstra pr. stk. i denne uge.", costMod: 8, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-slate-300 via-slate-200 to-amber-100", icon: "📦" },
+            { title: "Byfest & Gadefestival", desc: "Massiv tilstrømning af glade gæster! 45 % flere kunder på gaden i denne uge.", costMod: 0, fixedMod: 0, demandMult: 1.45, maxPriceMod: 10, sky: "from-amber-200 via-yellow-100 to-orange-100", icon: "🎪" },
+            { title: "Højere el- og stadepladsleje", desc: "Kommunen og elselskabet hæver de faste udgifter med +100 kr. denne uge.", costMod: 0, fixedMod: 100, demandMult: 1.0, maxPriceMod: 0, sky: "from-sky-200 via-slate-100 to-amber-100", icon: "⚡" },
+            { title: "Billigere indkøbsaftale", desc: "Råvarepriserne falder med -5 kr. pr. stk. i denne uge. God mulighed for høj avance!", costMod: -5, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-emerald-200 via-sky-100 to-amber-100", icon: "📉" },
+            { title: "Smalhals sidst på måneden", desc: "Folk sparer på pengene. Kundernes betalingsvilje falder med -10 kr.", costMod: 0, fixedMod: 0, demandMult: 0.85, maxPriceMod: -10, sky: "from-slate-300 via-stone-200 to-amber-100", icon: "🌧️" },
+            { title: "Trend på TikTok & Instagram", desc: "Jeres produkttype trender vildt! Kunderne betaler glædeligt +12 kr. mere.", costMod: 0, fixedMod: 0, demandMult: 1.2, maxPriceMod: 12, sky: "from-rose-200 via-amber-100 to-yellow-100", icon: "🔥" }
+        ];
+
+        const DILEMMAS = [
+            {
+                title: "Restparti fra en lukket grossist",
+                text: "En sælger tilbyder billige materialer i denne uge, men der er risiko for, at nogle varer er skæve.",
+                optA: { label: "Tag chancen (-6 kr. pr. vare, men 20 % kasseres)", costMod: -6, defectRate: 0.20, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 },
+                optB: { label: "Køb normale råvarer (Ingen risiko)", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Lokal mikro-influencer kigger forbi",
+                text: "En lokal profil med 15.000 følgere tilbyder at nævne din bod i en story mod betaling.",
+                optA: { label: "Betal 90 kr. (+4 garanterede kunder til din bod)", costMod: 0, defectRate: 0, cashMod: -90, maxPriceBonus: 5, demandBonus: 4 },
+                optB: { label: "Tak nej og spar pengene", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Ekstra åbningstid lørdag aften",
+                text: "Du kan holde boden åben 3 timer ekstra. Det koster lidt i strøm og forplejning.",
+                optA: { label: "Hold åbent (-70 kr. i drift, +3 ekstra kunder)", costMod: 0, defectRate: 0, cashMod: -70, maxPriceBonus: 0, demandBonus: 3 },
+                optB: { label: "Luk til normal tid", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Smagsprøver / Gratis vareprøver",
+                text: "Vil du dele gratis prøver ud foran boden for at lokke forbipasserende indenfor?",
+                optA: { label: "Del prøver ud (-60 kr., kunder betaler +8 kr. mere)", costMod: 0, defectRate: 0, cashMod: -60, maxPriceBonus: 8, demandBonus: 0 },
+                optB: { label: "Ingen gratis prøver i denne uge", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Miljøvenlig emballage",
+                text: "Du kan skifte til bæredygtig indpakning i denne uge. Det koster lidt ekstra pr. vare.",
+                optA: { label: "Vælg grøn profil (+4 kr./vare, +7 kr. betalingsvilje)", costMod: 4, defectRate: 0, cashMod: 0, maxPriceBonus: 7, demandBonus: 0 },
+                optB: { label: "Brug standardemballage", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            },
+            {
+                title: "Lyn-rabat til stamkunder",
+                text: "Vil du udlodde et gavekort på 80 kr. blandt dagens handlende for at skabe kø?",
+                optA: { label: "Udlod gavekort (-80 kr., +4 ekstra kunder)", costMod: 0, defectRate: 0, cashMod: -80, maxPriceBonus: 0, demandBonus: 4 },
+                optB: { label: "Kør uden konkurrence", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
+            }
         ];
 
         const DICE_OUTCOMES = [
-            { roll: 1, label: "Regnvejr & tomme gader", baseMaxPrice: 35, baseDemandPerTeam: 3.5 },
-            { roll: 2, label: "Stille hverdag", baseMaxPrice: 50, baseDemandPerTeam: 6.5 },
-            { roll: 3, label: "Almindelig handelsdag", baseMaxPrice: 50, baseDemandPerTeam: 6.5 },
-            { roll: 4, label: "Solskin & god stemning", baseMaxPrice: 65, baseDemandPerTeam: 10.0 },
-            { roll: 5, label: "Lønningsdag i byen", baseMaxPrice: 65, baseDemandPerTeam: 10.0 },
-            { roll: 6, label: "Byfest & kø ved boden!", baseMaxPrice: 90, baseDemandPerTeam: 15.0 }
+            { roll: 1, label: "Regnvejr & tomme gader", baseMaxPrice: 38, baseDemandPerTeam: 4.0, icon: "⛈️" },
+            { roll: 2, label: "Stille hverdag", baseMaxPrice: 52, baseDemandPerTeam: 7.0, icon: "🌥️" },
+            { roll: 3, label: "Almindelig handelsdag", baseMaxPrice: 55, baseDemandPerTeam: 7.5, icon: "⛅" },
+            { roll: 4, label: "Solskin & god handel", baseMaxPrice: 68, baseDemandPerTeam: 10.5, icon: "☀️" },
+            { roll: 5, label: "Lønningsdag i byen", baseMaxPrice: 72, baseDemandPerTeam: 11.5, icon: "💸" },
+            { roll: 6, label: "Kæmpe kundestorm!", baseMaxPrice: 95, baseDemandPerTeam: 15.5, icon: "🎉" }
         ];
 
         // --- STATE ---
@@ -578,8 +685,9 @@
         let currentTurnIndex = 0;
         let roundEvent = null;
         let roundDice = null;
+        let currentDilemma = null;
+        let selectedDilemmaOption = null; // 'A' | 'B'
         let chartInstance = null;
-        let playerTouchedControls = false;
         let lastSliderTick = 0;
 
         // --- SETUP UI ---
@@ -590,15 +698,26 @@
             const multiContainer = document.getElementById('multiCountContainer');
 
             if (mode === 'solo') {
-                btnSolo.className = "p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-500/10 text-left transition";
-                btnMulti.className = "p-4 rounded-2xl border-2 border-slate-800 bg-slate-950/60 hover:border-slate-700 text-left transition";
+                btnSolo.className = "p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left transition";
+                btnMulti.className = "p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition";
                 multiContainer.classList.add('hidden');
             } else {
-                btnMulti.className = "p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-500/10 text-left transition";
-                btnSolo.className = "p-4 rounded-2xl border-2 border-slate-800 bg-slate-950/60 hover:border-slate-700 text-left transition";
+                btnMulti.className = "p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left transition";
+                btnSolo.className = "p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition";
                 multiContainer.classList.remove('hidden');
             }
             renderSetupInputs();
+        }
+
+        function setMaxRounds(len) {
+            maxRounds = len;
+            document.querySelectorAll('.rnd-len-btn').forEach(btn => {
+                if (btn.textContent.startsWith(String(len))) {
+                    btn.className = "rnd-len-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm";
+                } else {
+                    btn.className = "rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm";
+                }
+            });
         }
 
         function setTeamCount(count) {
@@ -607,7 +726,7 @@
                 if (idx + 2 === count) {
                     btn.className = "team-cnt-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm";
                 } else {
-                    btn.className = "team-cnt-btn px-4 py-2 rounded-xl bg-slate-800 text-slate-200 font-bold text-sm";
+                    btn.className = "team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm";
                 }
             });
             renderSetupInputs();
@@ -621,23 +740,23 @@
                 { name: "Nordic Streetwear", prod: "Custom T-shirts" },
                 { name: "BoostLab", prod: "Økologisk energidrik" },
                 { name: "ByteBite", prod: "Gourmet toast" },
-                { name: "UrbanCases", prod: "3D-printede mobilcovers" },
+                { name: "UrbanCases", prod: "3D-printede covers" },
                 { name: "KaffeKutteren", prod: "Iskaffe & cold brew" },
                 { name: "EcoBags", prod: "Genanvendelige stofnet" }
             ];
 
             for (let i = 0; i < count; i++) {
                 const ph = placeholders[i % placeholders.length];
-                const label = gameMode === 'solo' ? 'Din virksomhed' : `Hold ${i + 1}`;
+                const label = gameMode === 'solo' ? 'Din bod' : `Hold ${i + 1}`;
                 container.innerHTML += `
-                    <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">${label} – Virksomhedsnavn</label>
-                            <input type="text" id="teamName_${i}" value="${ph.name}" placeholder="F.eks. ${ph.name}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white font-semibold focus:outline-none focus:border-emerald-500">
+                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">${label} – Virksomhedsnavn</label>
+                            <input type="text" id="teamName_${i}" value="${ph.name}" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Hvad sælger I?</label>
-                            <input type="text" id="teamProd_${i}" value="${ph.prod}" placeholder="Valgfrit produkt" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white font-semibold focus:outline-none focus:border-emerald-500">
+                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Hvad sælger I?</label>
+                            <input type="text" id="teamProd_${i}" value="${ph.prod}" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
                         </div>
                     </div>
                 `;
@@ -667,7 +786,7 @@
             document.getElementById('setupScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
             document.getElementById('roundBadge').classList.remove('hidden');
-            document.getElementById('maxRoundsDisplay').textContent = MAX_ROUNDS;
+            document.getElementById('maxRoundsDisplay').textContent = maxRounds;
 
             initChart();
             prepareRound();
@@ -682,9 +801,12 @@
                 aiStyle,
                 color: COLORS[id % COLORS.length],
                 cash: STARTING_CASH,
+                carriedStock: 0,
                 history: [STARTING_CASH],
                 totalSold: 0,
                 totalWasted: 0,
+                lastPrice: null,
+                lastSold: null,
                 decision: null
             };
         }
@@ -692,7 +814,7 @@
         // --- ROUND LOGIC ---
         function prepareRound() {
             document.getElementById('currentRoundDisplay').textContent = currentRound;
-            document.getElementById('eventRoundNum').textContent = currentRound;
+            document.getElementById('streetRoundNum').textContent = currentRound;
 
             roundEvent = currentRound === 1 ? EVENTS[0] : EVENTS[Math.floor(Math.random() * EVENTS.length)];
             roundDice = DICE_OUTCOMES[Math.floor(Math.random() * DICE_OUTCOMES.length)];
@@ -700,17 +822,20 @@
             const unitCost = BASE_UNIT_COST + roundEvent.costMod;
             const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
 
+            // Update Street Sky & News
+            const scene = document.getElementById('marketStreetScene');
+            scene.className = `rounded-3xl overflow-hidden border border-stone-300 shadow-lg transition-colors duration-700 bg-gradient-to-b ${roundEvent.sky}`;
+            document.getElementById('weatherEmoji').textContent = roundEvent.icon;
+            document.getElementById('streetWeatherStatus').textContent = "Boderne klargøres";
             document.getElementById('eventTitle').textContent = roundEvent.title;
             document.getElementById('eventDesc').textContent = roundEvent.desc;
-            document.getElementById('currentCostDisplay').textContent = `${unitCost} kr./stk.`;
+            document.getElementById('currentCostDisplay').textContent = `${unitCost} kr.`;
             document.getElementById('currentFixedDisplay').textContent = `${fixedCost} kr.`;
-            document.querySelectorAll('.unitCostInline').forEach(el => el.textContent = unitCost);
 
-            renderDemandTable();
-            renderScoreboard();
+            renderStreetBooths(false);
 
             teams.forEach(t => {
-                t.decision = { qty: 0, price: 0, marketing: false, researchBought: false };
+                t.decision = null;
             });
 
             currentTurnIndex = 0;
@@ -719,44 +844,32 @@
             setupTurnForCurrentTeam();
         }
 
-        function renderDemandTable() {
-            const tbody = document.getElementById('demandTableBody');
-            tbody.innerHTML = '';
-            const numTeams = teams.length;
-            const rows = [
-                { roll: "1", label: "Regnvejr", baseMax: 35, mult: 3.5 },
-                { roll: "2–3", label: "Hverdag", baseMax: 50, mult: 6.5 },
-                { roll: "4–5", label: "Godt vejr", baseMax: 65, mult: 10.0 },
-                { roll: "6", label: "Byfest!", baseMax: 90, mult: 15.0 }
-            ];
+        function renderStreetBooths(isResolved) {
+            const row = document.getElementById('streetBoothsRow');
+            row.innerHTML = '';
 
-            rows.forEach(r => {
-                const adjMax = Math.max(25, r.baseMax + roundEvent.maxPriceMod);
-                const adjDemand = Math.round(r.mult * numTeams * roundEvent.demandMult);
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="py-1.5 font-black text-amber-400">${r.roll}</td>
-                        <td class="py-1.5">${r.label}</td>
-                        <td class="py-1.5">${adjMax} kr.</td>
-                        <td class="py-1.5 text-right font-bold">${adjDemand} stk.</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function renderScoreboard() {
-            const grid = document.getElementById('scoreboardGrid');
-            grid.innerHTML = '';
             teams.forEach(t => {
-                const cashColor = t.cash < 0 ? 'text-rose-400' : 'text-emerald-400';
-                grid.innerHTML += `
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-md">
-                        <div class="flex items-center justify-between gap-2 mb-1">
-                            <span class="font-extrabold text-white text-sm truncate">${t.name}</span>
-                            <span class="w-3 h-3 rounded-full shrink-0" style="background:${t.color}"></span>
+                const cashColor = t.cash < 0 ? 'text-rose-600' : 'text-emerald-700';
+                const priceTag = isResolved && t.lastPrice ? `${t.lastPrice} kr.` : (t.lastPrice ? `Sidst: ${t.lastPrice} kr.` : 'Åbner snart');
+                const stockInfo = isResolved ? `Solgt: ${t.lastSold} stk.` : `Lager: ${t.carriedStock} stk.`;
+
+                row.innerHTML += `
+                    <div class="flex flex-col items-center animate-pop">
+                        <!-- Signboard above awning -->
+                        <div class="bg-white/95 border border-stone-300 px-3 py-1 rounded-t-xl shadow-sm text-center w-11/12">
+                            <div class="font-extrabold text-xs text-slate-900 truncate">${t.name}</div>
+                            <div class="text-[10px] text-slate-500 truncate">${t.product}</div>
                         </div>
-                        <div class="text-xs text-slate-400 truncate mb-2">${t.product}</div>
-                        <div class="text-2xl font-black ${cashColor}">${t.cash.toLocaleString('da-DK')} kr.</div>
+                        <!-- Striped Awning -->
+                        <div class="w-full h-6 rounded-t-lg awning-stripes shadow-md border-b-2 border-black/15" style="background-color: ${t.color}"></div>
+                        <!-- Booth Counter Body -->
+                        <div class="w-11/12 bg-white border-x border-stone-300 p-3 flex flex-col items-center justify-between space-y-1.5 shadow-inner">
+                            <span class="bg-amber-100 border border-amber-300 text-amber-950 font-extrabold text-xs px-2.5 py-0.5 rounded-md">
+                                ${priceTag}
+                            </span>
+                            <div class="text-[11px] font-semibold text-slate-500">${stockInfo}</div>
+                            <div class="text-base font-extrabold ${cashColor}">${t.cash.toLocaleString('da-DK')} kr.</div>
+                        </div>
                     </div>
                 `;
             });
@@ -765,23 +878,76 @@
         function setupTurnForCurrentTeam() {
             const team = teams[currentTurnIndex];
             document.getElementById('activeTeamHeading').textContent = `${team.name} – Klargør uge ${currentRound}`;
-            document.getElementById('activeTeamSub').textContent = `Produkt: ${team.product} • Saldo: ${team.cash.toLocaleString('da-DK')} kr.`;
+            document.getElementById('activeTeamSub').textContent = `Produkt: ${team.product} • Kassebeholdning: ${team.cash.toLocaleString('da-DK')} kr.`;
+
+            const carriedPill = document.getElementById('carriedStockPill');
+            if (team.carriedStock > 0) {
+                carriedPill.classList.remove('hidden');
+                document.getElementById('carriedStockCount').textContent = team.carriedStock;
+            } else {
+                carriedPill.classList.add('hidden');
+            }
 
             const humanTeams = teams.filter(t => !t.isAI);
             if (humanTeams.length > 1) {
-                document.getElementById('turnProgressBadge').textContent = `Hold ${currentTurnIndex + 1} af ${humanTeams.length} (Skjul skærmen for de andre!)`;
+                document.getElementById('turnProgressBadge').textContent = `Hold ${currentTurnIndex + 1} af ${humanTeams.length} (Hold valgene hemmelige!)`;
             } else {
-                document.getElementById('turnProgressBadge').textContent = `Din tur`;
+                document.getElementById('turnProgressBadge').textContent = `Din bod`;
             }
 
-            // Reset sliders & lock submit button to prevent mindless clicking
+            // Pick a random dilemma for this team's turn
+            currentDilemma = DILEMMAS[Math.floor(Math.random() * DILEMMAS.length)];
+            selectedDilemmaOption = null;
+            renderDilemmaCard();
+
+            // Reset controls
             document.getElementById('inputQty').value = 15;
             document.getElementById('inputPrice').value = 45;
+            document.getElementById('chkQuality').checked = false;
             document.getElementById('chkMarketing').checked = false;
+            document.getElementById('chkStorage').checked = false;
             document.getElementById('forecastRevealBox').classList.add('hidden');
             document.getElementById('researchBtnWrapper').classList.remove('hidden');
 
-            playerTouchedControls = false;
+            team.researchBoughtTemp = false;
+            updateSubmitLockState();
+            updateLiveCalc();
+        }
+
+        function renderDilemmaCard() {
+            document.getElementById('dilemmaTitle').textContent = currentDilemma.title;
+            document.getElementById('dilemmaText').textContent = currentDilemma.text;
+            document.getElementById('dilemmaStatusTag').textContent = "Vælg en løsning for at låse boden op";
+            document.getElementById('dilemmaStatusTag').className = "text-xs font-bold text-amber-700";
+
+            const container = document.getElementById('dilemmaOptions');
+            container.innerHTML = `
+                <button type="button" onclick="selectDilemma('A')" id="btnDilemmaA" class="p-3.5 rounded-xl border-2 border-amber-300/80 bg-white hover:border-amber-500 text-left text-xs font-bold text-slate-800 transition">
+                    🅰️ ${currentDilemma.optA.label}
+                </button>
+                <button type="button" onclick="selectDilemma('B')" id="btnDilemmaB" class="p-3.5 rounded-xl border-2 border-amber-300/80 bg-white hover:border-amber-500 text-left text-xs font-bold text-slate-800 transition">
+                    🅱️ ${currentDilemma.optB.label}
+                </button>
+            `;
+        }
+
+        function selectDilemma(choice) {
+            SoundFX.click();
+            selectedDilemmaOption = choice;
+
+            const btnA = document.getElementById('btnDilemmaA');
+            const btnB = document.getElementById('btnDilemmaB');
+            if (choice === 'A') {
+                btnA.className = "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold text-emerald-950 transition shadow-sm";
+                btnB.className = "p-3.5 rounded-xl border-2 border-stone-200 bg-white/60 text-left text-xs font-semibold text-slate-500 transition";
+            } else {
+                btnB.className = "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold text-emerald-950 transition shadow-sm";
+                btnA.className = "p-3.5 rounded-xl border-2 border-stone-200 bg-white/60 text-left text-xs font-semibold text-slate-500 transition";
+            }
+
+            document.getElementById('dilemmaStatusTag').textContent = "✓ Beslutning taget";
+            document.getElementById('dilemmaStatusTag').className = "text-xs font-extrabold text-emerald-700";
+
             updateSubmitLockState();
             updateLiveCalc();
         }
@@ -793,10 +959,6 @@
                 SoundFX.tick(280 + parseInt(val) * 4);
                 lastSliderTick = now;
             }
-            if (!playerTouchedControls) {
-                playerTouchedControls = true;
-                updateSubmitLockState();
-            }
             updateLiveCalc();
         }
 
@@ -806,93 +968,115 @@
             const humanTeams = teams.filter(t => !t.isAI);
             const isLastHuman = currentTurnIndex >= humanTeams.length - 1;
 
-            if (playerTouchedControls) {
+            if (selectedDilemmaOption !== null) {
                 btn.disabled = false;
-                btn.className = "px-7 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl text-sm transition shadow-lg shadow-emerald-500/20 cursor-pointer active:scale-[0.98]";
-                btn.textContent = isLastHuman ? "Åbn butikken og slå med terningen!" : "Lås valg og giv turen videre →";
+                btn.className = "px-7 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-emerald-600/20 cursor-pointer active:scale-[0.98]";
+                btn.textContent = isLastHuman ? "Åbn gaden og slå med terningen!" : "Lås boden og giv turen videre →";
                 hint.classList.add('hidden');
             } else {
                 btn.disabled = true;
-                btn.className = "px-7 py-3.5 bg-slate-800 text-slate-500 font-black rounded-2xl text-sm transition cursor-not-allowed";
-                btn.textContent = isLastHuman ? "Åbn butikken og slå med terningen!" : "Lås valg og giv turen videre →";
+                btn.className = "px-7 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition cursor-not-allowed";
+                btn.textContent = isLastHuman ? "Åbn gaden og slå med terningen!" : "Lås boden og giv turen videre →";
                 hint.classList.remove('hidden');
             }
         }
 
+        function getActiveDilemmaObj() {
+            if (!selectedDilemmaOption) return { costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 };
+            return selectedDilemmaOption === 'A' ? currentDilemma.optA : currentDilemma.optB;
+        }
+
         function updateLiveCalc() {
+            const team = teams[currentTurnIndex];
             const qty = parseInt(document.getElementById('inputQty').value);
             const price = parseInt(document.getElementById('inputPrice').value);
+            const quality = document.getElementById('chkQuality').checked;
             const marketing = document.getElementById('chkMarketing').checked;
-            const team = teams[currentTurnIndex];
-            const researchCost = team && team.decision.researchBought ? 100 : 0;
+            const storage = document.getElementById('chkStorage').checked;
+            const researchCost = team && team.researchBoughtTemp ? 100 : 0;
+            const dil = getActiveDilemmaObj();
 
+            const unitCost = Math.max(5, BASE_UNIT_COST + roundEvent.costMod + (quality ? 10 : 0) + dil.costMod);
+            const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
+
+            document.querySelectorAll('.unitCostInline').forEach(el => el.textContent = unitCost);
             document.getElementById('qtyBadge').textContent = `${qty} stk.`;
             document.getElementById('priceBadge').textContent = `${price} kr.`;
 
-            // Render visual boxes on the shelf
+            const totalReady = qty + (team ? team.carriedStock : 0);
+            document.getElementById('totalReadyStock').textContent = `${totalReady} stk.`;
+
+            // Visual Shelf Boxes
             const shelf = document.getElementById('visualShelf');
             shelf.innerHTML = '';
-            if (qty === 0) {
-                shelf.innerHTML = `<span class="text-xs text-slate-500 italic">Tom hylde (ingen produktion i denne uge)</span>`;
+            if (totalReady === 0) {
+                shelf.innerHTML = `<span class="text-xs text-slate-400 italic">Tom disk (ingen varer til salg)</span>`;
             } else {
-                const maxIcons = Math.min(qty, 40);
-                for (let i = 0; i < maxIcons; i++) {
-                    shelf.innerHTML += `<span class="w-3.5 h-3.5 rounded bg-emerald-500/80 border border-emerald-300/40 inline-block"></span>`;
+                const maxCarried = Math.min(team.carriedStock, 36);
+                for (let c = 0; c < maxCarried; c++) {
+                    shelf.innerHTML += `<span class="w-3.5 h-3.5 rounded bg-sky-400 border border-sky-500/40 inline-block" title="Overført fra sidste uge"></span>`;
                 }
-                if (qty > 40) {
-                    shelf.innerHTML += `<span class="text-xs font-bold text-emerald-400 ml-1">+${qty - 40} mere</span>`;
+                const maxNew = Math.min(qty, Math.max(0, 36 - maxCarried));
+                for (let i = 0; i < maxNew; i++) {
+                    shelf.innerHTML += `<span class="w-3.5 h-3.5 rounded bg-emerald-500 border border-emerald-600/40 inline-block" title="Ny produktion"></span>`;
+                }
+                if (totalReady > 36) {
+                    shelf.innerHTML += `<span class="text-xs font-bold text-emerald-700 ml-1">+${totalReady - 36} mere</span>`;
                 }
             }
 
-            const unitCost = BASE_UNIT_COST + roundEvent.costMod;
-            const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
             const prodCost = qty * unitCost;
             const margin = price - unitCost;
-            const totalFixedAndExtras = fixedCost + (marketing ? 150 : 0) + researchCost;
+            const extras = (marketing ? 120 : 0) + (storage ? 100 : 0) + researchCost - dil.cashMod;
+            const totalFixedAndExtras = fixedCost + extras;
             const totalOutlay = prodCost + totalFixedAndExtras;
 
             document.getElementById('calcProdCost').textContent = `${prodCost} kr.`;
             const marginEl = document.getElementById('calcMargin');
             marginEl.textContent = `${margin >= 0 ? '+' : ''}${margin} kr. pr. stk.`;
-            marginEl.className = margin > 0 ? 'text-lg font-black text-emerald-400' : 'text-lg font-black text-rose-400';
+            marginEl.className = margin > 0 ? 'text-lg font-extrabold text-emerald-600' : 'text-lg font-extrabold text-rose-600';
 
             document.getElementById('calcTotalOutlay').textContent = `${totalOutlay} kr.`;
             const breakEvenEl = document.getElementById('calcBreakEven');
             if (margin <= 0) {
-                breakEvenEl.textContent = "Umuligt (du taber på hvert salg!)";
-                breakEvenEl.className = "text-sm font-extrabold text-rose-400";
+                breakEvenEl.textContent = "Umuligt (for lav pris)";
+                breakEvenEl.className = "text-sm font-extrabold text-rose-600";
             } else {
                 const be = Math.ceil(totalFixedAndExtras / margin);
                 breakEvenEl.textContent = `Mindst ${be} stk.`;
-                breakEvenEl.className = "text-sm font-extrabold text-slate-200";
+                breakEvenEl.className = "text-sm font-extrabold text-slate-800";
             }
         }
 
         function buyMarketResearch() {
             SoundFX.cashRegister();
             const team = teams[currentTurnIndex];
-            team.decision.researchBought = true;
-            playerTouchedControls = true;
-            updateSubmitLockState();
+            team.researchBoughtTemp = true;
 
             const adjMax = Math.max(25, roundDice.baseMaxPrice + roundEvent.maxPriceMod);
             const adjDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
 
             document.getElementById('forecastRevealText').textContent =
-                `Vejrudsigten siger "${roundDice.label}" (Terning: ${roundDice.roll}). Der kommer ${adjDemand} kunder på gaden, og de betaler maks. ${adjMax} kr.`;
+                `Vejrudsigten siger "${roundDice.label}" (Terning: ${roundDice.roll}). Der kommer ca. ${adjDemand} kunder på gaden, og deres basis-smertegrænse er ${adjMax} kr.`;
             document.getElementById('forecastRevealBox').classList.remove('hidden');
             document.getElementById('researchBtnWrapper').classList.add('hidden');
             updateLiveCalc();
         }
 
         function submitTeamDecision() {
-            if (!playerTouchedControls) return;
+            if (selectedDilemmaOption === null) return;
             SoundFX.click();
 
             const team = teams[currentTurnIndex];
-            team.decision.qty = parseInt(document.getElementById('inputQty').value);
-            team.decision.price = parseInt(document.getElementById('inputPrice').value);
-            team.decision.marketing = document.getElementById('chkMarketing').checked;
+            team.decision = {
+                qty: parseInt(document.getElementById('inputQty').value),
+                price: parseInt(document.getElementById('inputPrice').value),
+                quality: document.getElementById('chkQuality').checked,
+                marketing: document.getElementById('chkMarketing').checked,
+                storage: document.getElementById('chkStorage').checked,
+                researchBought: !!team.researchBoughtTemp,
+                dilemma: getActiveDilemmaObj()
+            };
 
             currentTurnIndex++;
             if (currentTurnIndex < teams.length && !teams[currentTurnIndex].isAI) {
@@ -905,32 +1089,28 @@
 
         function generateAIDecision(ai) {
             const unitCost = BASE_UNIT_COST + roundEvent.costMod;
-            const avgDemand = Math.round(7.5 * roundEvent.demandMult);
-            let qty = avgDemand;
-            let price = 45;
-            let marketing = false;
+            const avgDemand = Math.round(8.0 * roundEvent.demandMult);
+            const noDil = { costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 };
 
             if (ai.aiStyle === 'budget') {
-                qty = Math.round(avgDemand * 1.4) + Math.floor(Math.random() * 4);
-                price = unitCost + 12 + Math.floor(Math.random() * 5);
+                const targetStock = Math.round(avgDemand * 1.35);
+                const newQty = Math.max(0, targetStock - ai.carriedStock);
+                ai.decision = { qty: newQty, price: unitCost + 14, quality: false, marketing: false, storage: false, researchBought: false, dilemma: noDil };
             } else if (ai.aiStyle === 'premium') {
-                qty = Math.max(5, Math.round(avgDemand * 0.8));
-                price = 58 + Math.floor(Math.random() * 10);
-                marketing = ai.cash > 600 && Math.random() > 0.4;
+                const targetStock = Math.max(6, Math.round(avgDemand * 0.85));
+                const newQty = Math.max(0, targetStock - ai.carriedStock);
+                ai.decision = { qty: newQty, price: 66 + Math.floor(Math.random() * 10), quality: true, marketing: ai.cash > 600, storage: true, researchBought: false, dilemma: noDil };
             } else {
-                qty = avgDemand + Math.floor(Math.random() * 5) - 2;
-                price = 42 + Math.floor(Math.random() * 8);
-                marketing = ai.cash > 800 && Math.random() > 0.7;
+                const targetStock = avgDemand + Math.floor(Math.random() * 4) - 1;
+                const newQty = Math.max(0, targetStock - ai.carriedStock);
+                ai.decision = { qty: newQty, price: 46 + Math.floor(Math.random() * 8), quality: false, marketing: ai.cash > 850 && Math.random() > 0.6, storage: ai.cash > 700, researchBought: false, dilemma: noDil };
             }
-
-            ai.decision = { qty, price, marketing, researchBought: false };
         }
 
         // --- 3D DICE ROTATION HELPER ---
         function roll3DDice(targetNumber) {
             SoundFX.diceRoll();
             const cube = document.getElementById('diceCube');
-            // Base rotations to bring target face to front
             const faceRotations = {
                 1: { x: 0, y: 0 },
                 2: { x: 0, y: -90 },
@@ -940,10 +1120,7 @@
                 6: { x: 90, y: 0 }
             };
             const target = faceRotations[targetNumber];
-            // Add extra full spins for dramatic tumbling effect
-            const spinX = target.x + 720;
-            const spinY = target.y + 720;
-            cube.style.transform = `rotateX(${spinX}deg) rotateY(${spinY}deg)`;
+            cube.style.transform = `rotateX(${target.x + 720}deg) rotateY(${target.y + 720}deg)`;
         }
 
         // --- MARKET ALLOCATION & VISUAL STOREFRONT RESULTS ---
@@ -951,51 +1128,81 @@
             document.getElementById('decisionPanel').classList.add('hidden');
             document.getElementById('roundResultPanel').classList.remove('hidden');
 
-            // Trigger 3D Dice roll
             setTimeout(() => roll3DDice(roundDice.roll), 50);
 
-            const unitCost = BASE_UNIT_COST + roundEvent.costMod;
+            const baseUnitCost = BASE_UNIT_COST + roundEvent.costMod;
             const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
             const baseMaxPrice = Math.max(25, roundDice.baseMaxPrice + roundEvent.maxPriceMod);
-            const totalStreetDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
-            let remainingDemand = totalStreetDemand;
+            const streetDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
+            let remainingStreetDemand = streetDemand;
+
+            // Update Top Street Weather Scene
+            document.getElementById('weatherEmoji').textContent = roundDice.icon;
+            document.getElementById('streetWeatherStatus').textContent = `Dagens vejr: ${roundDice.label}`;
 
             const results = teams.map(t => {
-                const maxWillingness = baseMaxPrice + (t.decision.marketing ? 10 : 0);
-                const eligible = t.decision.price <= maxWillingness && t.decision.qty > 0;
+                const d = t.decision;
+                const dil = d.dilemma;
+
+                // Apply defect rate if risky restparti was chosen
+                const usableNewQty = dil.defectRate > 0 ? Math.floor(d.qty * (1 - dil.defectRate)) : d.qty;
+                const defectiveLost = d.qty - usableNewQty;
+                const totalAvailable = t.carriedStock + usableNewQty;
+
+                const maxWillingness = baseMaxPrice + (d.quality ? 15 : 0) + (d.marketing ? 10 : 0) + dil.maxPriceBonus;
+                const eligible = d.price <= maxWillingness && totalAvailable > 0;
+
+                // Direct bonus customers from dilemma (e.g. influencer)
+                let directSales = 0;
+                if (eligible && dil.demandBonus > 0) {
+                    directSales = Math.min(totalAvailable, dil.demandBonus);
+                }
+
+                // Attractiveness score for tie-breaking (marketing & quality give edge at equal price)
+                const appealScore = (d.marketing ? 2 : 0) + (d.quality ? 1 : 0);
+
                 return {
                     team: t,
-                    price: t.decision.price,
-                    qty: t.decision.qty,
-                    sold: 0,
+                    d,
+                    dil,
+                    usableNewQty,
+                    defectiveLost,
+                    totalAvailable,
+                    price: d.price,
+                    sold: directSales,
                     eligible,
-                    maxWillingness
+                    maxWillingness,
+                    appealScore
                 };
             });
 
-            // Sort eligible by lowest price first
-            const eligibleSorted = results.filter(r => r.eligible).sort((a, b) => a.price - b.price);
+            // Sort eligible teams by lowest price first, then highest appealScore
+            const eligibleSorted = results.filter(r => r.eligible).sort((a, b) => {
+                if (a.price !== b.price) return a.price - b.price;
+                return b.appealScore - a.appealScore;
+            });
 
             let i = 0;
-            while (i < eligibleSorted.length && remainingDemand > 0) {
+            while (i < eligibleSorted.length && remainingStreetDemand > 0) {
                 let j = i;
-                while (j < eligibleSorted.length && eligibleSorted[j].price === eligibleSorted[i].price) {
+                while (j < eligibleSorted.length && eligibleSorted[j].price === eligibleSorted[i].price && eligibleSorted[j].appealScore === eligibleSorted[i].appealScore) {
                     j++;
                 }
                 const tieGroup = eligibleSorted.slice(i, j);
-                const totalGroupStock = tieGroup.reduce((sum, item) => sum + item.qty, 0);
+                const totalGroupRemainingStock = tieGroup.reduce((sum, item) => sum + (item.totalAvailable - item.sold), 0);
 
-                if (remainingDemand >= totalGroupStock) {
+                if (remainingStreetDemand >= totalGroupRemainingStock) {
                     tieGroup.forEach(item => {
-                        item.sold = item.qty;
-                        remainingDemand -= item.qty;
+                        const canSell = item.totalAvailable - item.sold;
+                        item.sold += canSell;
+                        remainingStreetDemand -= canSell;
                     });
                 } else {
-                    let toDistribute = remainingDemand;
+                    let toDistribute = remainingStreetDemand;
                     while (toDistribute > 0) {
                         let anyGiven = false;
                         for (let item of tieGroup) {
-                            if (toDistribute > 0 && item.sold < item.qty) {
+                            if (toDistribute > 0 && item.sold < item.totalAvailable) {
                                 item.sold++;
                                 toDistribute--;
                                 anyGiven = true;
@@ -1003,111 +1210,135 @@
                         }
                         if (!anyGiven) break;
                     }
-                    remainingDemand = 0;
+                    remainingStreetDemand = 0;
                 }
                 i = j;
             }
 
             document.getElementById('resRoundNum').textContent = currentRound;
-            document.getElementById('resWeatherTitle').textContent = roundDice.label;
-            document.getElementById('resTotalDemand').textContent = `${totalStreetDemand} kunder`;
+            document.getElementById('resWeatherTitle').textContent = `${roundDice.icon} ${roundDice.label}`;
+            document.getElementById('resTotalDemand').textContent = `${streetDemand} kunder`;
             document.getElementById('resMaxPrice').textContent = `${baseMaxPrice} kr.`;
 
-            // Sort visual storefronts by price so players clearly see customer flow
-            const displayOrder = [...results].sort((a, b) => a.price - b.price);
+            const displayOrder = [...results].sort((a, b) => {
+                if (a.price !== b.price) return a.price - b.price;
+                return b.appealScore - a.appealScore;
+            });
+
             const grid = document.getElementById('visualStorefrontsGrid');
             grid.innerHTML = '';
-
             let humanNetProfit = 0;
 
             displayOrder.forEach((r, idx) => {
                 const t = r.team;
+                const d = r.d;
+                const unitCost = Math.max(5, baseUnitCost + (d.quality ? 10 : 0) + r.dil.costMod);
+
                 const revenue = r.sold * r.price;
-                const prodExpense = r.qty * unitCost;
-                const extraExpense = (t.decision.marketing ? 150 : 0) + (t.decision.researchBought ? 100 : 0);
+                const prodExpense = d.qty * unitCost;
+                const extraExpense = (d.marketing ? 120 : 0) + (d.storage ? 100 : 0) + (d.researchBought ? 100 : 0) - r.dil.cashMod;
                 const interestExpense = t.cash < 0 ? Math.round(Math.abs(t.cash) * 0.20) : 0;
                 const totalExpenses = prodExpense + fixedCost + extraExpense + interestExpense;
                 const netProfit = revenue - totalExpenses;
 
                 if (!t.isAI) humanNetProfit += netProfit;
 
+                // Calculate unsold, saved via storage, and wasted
+                const unsold = r.totalAvailable - r.sold;
+                const savedForNextWeek = d.storage ? Math.floor(unsold * 0.5) : 0;
+                const wasted = unsold - savedForNextWeek + r.defectiveLost;
+
                 t.cash += netProfit;
+                t.carriedStock = savedForNextWeek;
                 t.history.push(t.cash);
                 t.totalSold += r.sold;
-                const wasted = r.qty - r.sold;
                 t.totalWasted += wasted;
+                t.lastPrice = r.price;
+                t.lastSold = r.sold;
 
                 const profitBadge = netProfit >= 0
-                    ? `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-black text-sm">+${netProfit} kr.</span>`
-                    : `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded-lg font-black text-sm">${netProfit} kr.</span>`;
+                    ? `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1 rounded-xl font-extrabold text-sm">+${netProfit} kr.</span>`
+                    : `<span class="bg-rose-100 text-rose-800 border border-rose-300 px-3 py-1 rounded-xl font-extrabold text-sm">${netProfit} kr.</span>`;
 
-                // Build visual shelf items (green = sold, red = wasted)
+                // Build visual shelf items (green = sold, blue = saved, red = wasted)
                 let shelfHtml = '';
-                const maxVisual = Math.min(r.qty, 36);
-                const soldRatio = r.qty > 0 ? Math.round((r.sold / r.qty) * maxVisual) : 0;
-                for (let b = 0; b < maxVisual; b++) {
-                    if (b < soldRatio) {
-                        shelfHtml += `<span class="w-3 h-3 rounded-sm bg-emerald-500 inline-block" title="Solgt"></span>`;
-                    } else {
-                        shelfHtml += `<span class="w-3 h-3 rounded-sm bg-rose-500/80 inline-block" title="Spild"></span>`;
-                    }
-                }
-                if (r.qty === 0) shelfHtml = `<span class="text-xs text-slate-500 italic">Ingen varer på hylden</span>`;
+                const totalShownItems = r.sold + savedForNextWeek + wasted;
+                const maxVisual = Math.min(totalShownItems, 36);
+                if (totalShownItems > 0) {
+                    const soldBlocks = Math.round((r.sold / totalShownItems) * maxVisual);
+                    const savedBlocks = Math.round((savedForNextWeek / totalShownItems) * maxVisual);
+                    const wastedBlocks = Math.max(0, maxVisual - soldBlocks - savedBlocks);
 
-                // Status feedback message
-                let feedbackMsg = '';
-                if (!r.eligible && r.qty > 0) {
-                    feedbackMsg = `<span class="text-rose-400 font-bold">For dyrt! Kunderne gik forbi (maks ${r.maxWillingness} kr.)</span>`;
-                } else if (r.qty > 0 && wasted === 0) {
-                    feedbackMsg = `<span class="text-emerald-400 font-bold">Alt udsolgt!</span>`;
-                } else if (wasted > 0) {
-                    feedbackMsg = `<span class="text-amber-400 font-semibold">${wasted} stk. usolgt (smidt ud)</span>`;
+                    for (let b = 0; b < soldBlocks; b++) shelfHtml += `<span class="w-3 h-3 rounded-sm bg-emerald-500 inline-block" title="Solgt"></span>`;
+                    for (let b = 0; b < savedBlocks; b++) shelfHtml += `<span class="w-3 h-3 rounded-sm bg-sky-400 inline-block" title="Gemt til næste uge"></span>`;
+                    for (let b = 0; b < wastedBlocks; b++) shelfHtml += `<span class="w-3 h-3 rounded-sm bg-rose-400 inline-block" title="Spild"></span>`;
+                } else {
+                    shelfHtml = `<span class="text-xs text-slate-400 italic">Ingen varer på disken</span>`;
                 }
+
+                let feedbackMsg = '';
+                if (!r.eligible && r.totalAvailable > 0) {
+                    feedbackMsg = `<span class="text-rose-600 font-extrabold">For dyrt! (Kundernes grænse: ${r.maxWillingness} kr.)</span>`;
+                } else if (r.totalAvailable > 0 && unsold === 0 && r.defectiveLost === 0) {
+                    feedbackMsg = `<span class="text-emerald-700 font-extrabold">Alt udsolgt!</span>`;
+                } else {
+                    const parts = [];
+                    if (savedForNextWeek > 0) parts.push(`<span class="text-sky-700 font-bold">${savedForNextWeek} gemt</span>`);
+                    if (wasted > 0) parts.push(`<span class="text-rose-600 font-bold">${wasted} spild</span>`);
+                    feedbackMsg = parts.join(' • ');
+                }
+
+                // Active tags
+                const tags = [];
+                if (d.quality) tags.push("✨ Luksus");
+                if (d.marketing) tags.push("📣 Blikfang");
+                if (d.storage) tags.push("❄️ Lagersikring");
+                const tagHtml = tags.length > 0 ? `<div class="flex flex-wrap gap-1 mt-1">${tags.map(tg => `<span class="text-[10px] font-bold bg-stone-200/80 text-slate-700 px-2 py-0.5 rounded-md">${tg}</span>`).join('')}</div>` : '';
 
                 grid.innerHTML += `
-                    <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-3 animate-pop" style="animation-delay: ${idx * 80}ms">
+                    <div class="bg-stone-50 border border-stone-200 rounded-2xl p-5 flex flex-col justify-between space-y-3 animate-pop" style="animation-delay: ${idx * 80}ms">
                         <div class="flex justify-between items-start gap-2">
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-full" style="background:${t.color}"></span>
-                                    <h5 class="font-extrabold text-white text-base">${t.name}</h5>
+                                    <span class="w-3.5 h-3.5 rounded-full" style="background:${t.color}"></span>
+                                    <h5 class="font-extrabold text-slate-900 text-base">${t.name}</h5>
                                 </div>
-                                <div class="text-xs text-slate-400">${t.product} • Prisskilt: <strong class="text-amber-400">${r.price} kr.</strong></div>
+                                <div class="text-xs text-slate-600">${t.product} • Prisskilt: <strong class="text-amber-700">${r.price} kr.</strong></div>
+                                ${tagHtml}
                             </div>
                             ${profitBadge}
                         </div>
 
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/80 space-y-2">
+                        <div class="bg-white p-3 rounded-xl border border-stone-200 space-y-2">
                             <div class="flex justify-between text-xs">
-                                <span class="text-slate-300">Solgt: <strong>${r.sold}</strong> af ${r.qty} stk.</span>
-                                ${feedbackMsg}
+                                <span class="text-slate-700">Solgt: <strong>${r.sold}</strong> af ${r.totalAvailable} stk.</span>
+                                <div>${feedbackMsg}</div>
                             </div>
                             <div class="flex flex-wrap gap-1">${shelfHtml}</div>
                         </div>
 
-                        <div class="flex justify-between items-center text-xs text-slate-400 pt-1">
-                            <span>Indtægt: <strong class="text-slate-200">${revenue} kr.</strong> | Udgifter: <strong class="text-slate-200">${totalExpenses} kr.</strong></span>
-                            <span>Ny saldo: <strong class="text-white text-sm">${t.cash.toLocaleString('da-DK')} kr.</strong></span>
+                        <div class="flex justify-between items-center text-xs text-slate-500 pt-1">
+                            <span>Salg: <strong class="text-slate-800">${revenue} kr.</strong> | Udgifter: <strong class="text-slate-800">${totalExpenses} kr.</strong></span>
+                            <span>Kasse: <strong class="text-slate-900 text-sm">${t.cash.toLocaleString('da-DK')} kr.</strong></span>
                         </div>
                     </div>
                 `;
             });
 
-            // Play result sound after dice finishes rolling
             setTimeout(() => {
                 if (humanNetProfit >= 0) SoundFX.cashRegister();
                 else SoundFX.loss();
             }, 1150);
 
-            renderScoreboard();
+            renderStreetBooths(true);
             updateChart();
 
             const btnNext = document.getElementById('btnNextRound');
-            btnNext.textContent = currentRound >= MAX_ROUNDS ? "Se endelig vinder og slutstilling →" : `Start Uge ${currentRound + 1} →`;
+            btnNext.textContent = currentRound >= maxRounds ? "Se endelig vinder og slutstilling →" : `Start Uge ${currentRound + 1} →`;
         }
 
         function nextRound() {
-            if (currentRound >= MAX_ROUNDS) {
+            if (currentRound >= maxRounds) {
                 SoundFX.cashRegister();
                 showEndScreen();
             } else {
@@ -1139,11 +1370,11 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { labels: { color: '#e2e8f0', font: { family: 'Inter', weight: '600' } } }
+                        legend: { labels: { color: '#334155', font: { family: 'Plus Jakarta Sans', weight: '700' } } }
                     },
                     scales: {
-                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
-                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } }
+                        x: { ticks: { color: '#64748b' }, grid: { color: '#f1f5f9' } },
+                        y: { ticks: { color: '#64748b' }, grid: { color: '#f1f5f9' } }
                     }
                 }
             });
@@ -1170,22 +1401,22 @@
             podium.innerHTML = '';
 
             sorted.forEach((t, index) => {
-                const medal = index === 0 ? '1. Plads (Vinder)' : index === 1 ? '2. Plads' : index === 2 ? '3. Plads' : `${index + 1}. Plads`;
-                const border = index === 0 ? 'border-amber-400 bg-amber-400/10' : 'border-slate-800 bg-slate-950/70';
+                const medal = index === 0 ? '🏆 1. Plads (Vinder)' : index === 1 ? '🥈 2. Plads' : index === 2 ? '🥉 3. Plads' : `${index + 1}. Plads`;
+                const border = index === 0 ? 'border-amber-400 bg-amber-50/70' : 'border-stone-200 bg-stone-50';
                 const profit = t.cash - STARTING_CASH;
 
                 podium.innerHTML += `
                     <div class="p-5 rounded-2xl border-2 ${border} flex flex-col justify-between">
                         <div>
-                            <div class="text-xs font-extrabold uppercase tracking-wider ${index === 0 ? 'text-amber-400' : 'text-slate-400'} mb-1">${medal}</div>
-                            <div class="text-xl font-black text-white">${t.name}</div>
-                            <div class="text-xs text-slate-400 mb-4">${t.product}</div>
+                            <div class="text-xs font-extrabold uppercase tracking-wider ${index === 0 ? 'text-amber-700' : 'text-slate-500'} mb-1">${medal}</div>
+                            <div class="text-xl font-extrabold text-slate-900">${t.name}</div>
+                            <div class="text-xs text-slate-500 mb-4">${t.product}</div>
                         </div>
-                        <div class="space-y-1.5 text-xs border-t border-slate-800 pt-3">
-                            <div class="flex justify-between"><span>Slutsaldo:</span> <strong class="text-white text-sm">${t.cash.toLocaleString('da-DK')} kr.</strong></div>
-                            <div class="flex justify-between"><span>Samlet resultat:</span> <strong class="${profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${profit >= 0 ? '+' : ''}${profit} kr.</strong></div>
-                            <div class="flex justify-between"><span>Solgte varer:</span> <span class="text-slate-200">${t.totalSold} stk.</span></div>
-                            <div class="flex justify-between"><span>Spild i skraldespanden:</span> <span class="text-slate-400">${t.totalWasted} stk.</span></div>
+                        <div class="space-y-1.5 text-xs border-t border-stone-200 pt-3">
+                            <div class="flex justify-between"><span>Slutsaldo:</span> <strong class="text-slate-900 text-sm">${t.cash.toLocaleString('da-DK')} kr.</strong></div>
+                            <div class="flex justify-between"><span>Samlet overskud/tab:</span> <strong class="${profit >= 0 ? 'text-emerald-700' : 'text-rose-600'}">${profit >= 0 ? '+' : ''}${profit} kr.</strong></div>
+                            <div class="flex justify-between"><span>Solgte varer i alt:</span> <span class="text-slate-700 font-semibold">${t.totalSold} stk.</span></div>
+                            <div class="flex justify-between"><span>Samlet spild:</span> <span class="text-slate-500">${t.totalWasted} stk.</span></div>
                         </div>
                     </div>
                 `;
