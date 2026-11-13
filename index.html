@@ -1,1900 +1,252 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Handelsgaden - Iværksætterspillet</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        input[type=range] {
-            -webkit-appearance: none;
-            background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 28px;
-            width: 28px;
-            border-radius: 50%;
-            background: #059669;
-            border: 3px solid #ffffff;
-            cursor: pointer;
-            margin-top: -10px;
-            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
-            transition: transform 0.1s ease;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 8px;
-            cursor: pointer;
-            background: #e2e8f0;
-            border-radius: 999px;
-        }
-        input[type=range].price-slider::-webkit-slider-thumb {
-            background: #d97706;
-            box-shadow: 0 4px 10px rgba(217, 119, 6, 0.4);
-        }
-
-        .scene {
-            width: 96px;
-            height: 96px;
-            perspective: 500px;
-        }
-        .cube {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1.25s cubic-bezier(0.2, 0.85, 0.3, 1.1);
-        }
-        .cube__face {
-            position: absolute;
-            width: 96px;
-            height: 96px;
-            background: linear-gradient(145deg, #ffffff, #f1f5f9);
-            border: 3px solid #cbd5e1;
-            border-radius: 18px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            padding: 14px;
-            box-shadow: inset 0 0 14px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.15);
-        }
-        .pip {
-            width: 16px;
-            height: 16px;
-            background-color: #0f172a;
-            border-radius: 50%;
-            align-self: center;
-            justify-self: center;
-        }
-        .cube__face--1 .pip { background-color: #e11d48; width: 20px; height: 20px; }
-        .cube__face--1 { transform: rotateY(0deg) translateZ(48px); }
-        .cube__face--2 { transform: rotateY(90deg) translateZ(48px); }
-        .cube__face--3 { transform: rotateY(180deg) translateZ(48px); }
-        .cube__face--4 { transform: rotateY(-90deg) translateZ(48px); }
-        .cube__face--5 { transform: rotateX(90deg) translateZ(48px); }
-        .cube__face--6 { transform: rotateX(-90deg) translateZ(48px); }
-
-        .awning-stripes {
-            background-image: repeating-linear-gradient(
-                90deg,
-                rgba(255,255,255,0.28) 0px,
-                rgba(255,255,255,0.28) 14px,
-                transparent 14px,
-                transparent 28px
-            );
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.92); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-pop { animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handelsgaden - Iværksætterspillet</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  input[type=range] { -webkit-appearance: none; background: transparent; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 26px; width: 26px; border-radius: 50%; background: #059669; border: 3px solid #fff; cursor: pointer; margin-top: -9px; box-shadow: 0 3px 8px rgba(0,0,0,0.3); }
+  input[type=range].price-sl::-webkit-slider-thumb { background: #d97706; }
+  input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: #e2e8f0; border-radius: 999px; }
+  .scene { width: 88px; height: 88px; perspective: 450px; }
+  .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.15s cubic-bezier(0.2, 0.85, 0.3, 1.1); }
+  .face { position: absolute; width: 88px; height: 88px; background: linear-gradient(145deg,#fff,#f1f5f9); border: 3px solid #cbd5e1; border-radius: 16px; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr); padding: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.12); }
+  .pip { width: 14px; height: 14px; background: #0f172a; border-radius: 50%; place-self: center; }
+  .f1 .pip { background: #e11d48; width: 18px; height: 18px; }
+  .f1 { transform: rotateY(0deg) translateZ(44px); }
+  .f2 { transform: rotateY(90deg) translateZ(44px); }
+  .f3 { transform: rotateY(180deg) translateZ(44px); }
+  .f4 { transform: rotateY(-90deg) translateZ(44px); }
+  .f5 { transform: rotateX(90deg) translateZ(44px); }
+  .f6 { transform: rotateX(-90deg) translateZ(44px); }
+  .stripes { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.28) 0 12px, transparent 12px 24px); }
+  @keyframes pop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .anim-pop { animation: pop 0.3s ease-out forwards; }
+</style>
 </head>
-<body class="bg-amber-50/60 text-slate-800 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+<body class="bg-amber-50/60 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- Top Navigation -->
-    <header class="bg-white border-b border-stone-200 px-6 py-3.5 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-30 shadow-sm">
-        <div class="flex items-center gap-3">
-            <div class="bg-emerald-600 text-white font-extrabold px-3.5 py-1.5 rounded-xl text-base tracking-tight shadow-sm">
-                HANDELSGADEN
-            </div>
-            <div>
-                <h1 class="font-extrabold text-lg text-slate-900 leading-tight">Iværksætterspillet</h1>
-                <p class="text-xs text-slate-500">Byg din forretning fra bod til succes</p>
-            </div>
+<header class="bg-white border-b border-stone-200 px-6 py-3 flex flex-wrap justify-between items-center gap-3 sticky top-0 z-30 shadow-sm">
+  <div class="flex items-center gap-3">
+    <div class="bg-emerald-600 text-white font-extrabold px-3 py-1 rounded-xl text-sm tracking-tight">HANDELSGADEN</div>
+    <div>
+      <h1 class="font-extrabold text-base md:text-lg text-slate-900 leading-tight">Iværksætterspillet</h1>
+      <p class="text-[11px] text-slate-500">Byg omdømme, opgradér din bod og vind gaden</p>
+    </div>
+  </div>
+  <div class="flex items-center gap-2">
+    <span id="roomBadge" class="hidden bg-indigo-100 border border-indigo-300 text-indigo-950 px-3 py-1 rounded-full text-xs font-extrabold">Rumkode: <b id="topCode" class="tracking-widest">----</b></span>
+    <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-stone-100 hover:bg-stone-200 border border-stone-300 px-3 py-1 rounded-full text-xs font-bold cursor-pointer">🔊 Lyd til</button>
+    <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-950 px-3.5 py-1 rounded-full text-xs font-extrabold">Uge <b id="rndNow" class="text-emerald-700">1</b> af <b id="rndMax">10</b></span>
+  </div>
+</header>
+
+<main class="max-w-6xl w-full mx-auto p-4 md:p-6 flex-grow">
+
+  <!-- SCREEN 1: SETUP -->
+  <section id="scrSetup" class="max-w-4xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl space-y-6">
+    <div>
+      <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">Åbn din butik på Handelsgaden</h2>
+      <p class="text-sm text-slate-600 mt-1">Alle starter med <b>1.000 kr.</b> og <b>3 ⭐ i omdømme</b>. Vælg hvordan I vil spille:</p>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <button type="button" onclick="switchTab('solo')" id="t_solo" class="p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left cursor-pointer transition">
+        <div class="text-xl mb-1">👤</div><div class="font-extrabold text-sm text-slate-900">Solo (Mod AI)</div><div class="text-xs text-slate-500">Spil mod 3 AI-butikker</div>
+      </button>
+      <button type="button" onclick="switchTab('local')" id="t_local" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-xl mb-1">👥</div><div class="font-extrabold text-sm text-slate-900">Flere hold (1 skærm)</div><div class="text-xs text-slate-500">2-6 hold på samme PC</div>
+      </button>
+      <button type="button" onclick="switchTab('host')" id="t_host" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-xl mb-1">🖥️</div><div class="font-extrabold text-sm text-slate-900">Opret spil (Vært)</div><div class="text-xs text-slate-500">Storskærm med rumkode</div>
+      </button>
+      <button type="button" onclick="switchTab('join')" id="t_join" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-xl mb-1">📱</div><div class="font-extrabold text-sm text-slate-900">Deltag (Elev)</div><div class="text-xs text-slate-500">Join med 4-cifret kode</div>
+      </button>
+    </div>
+
+    <div id="durBox" class="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex justify-between items-center flex-wrap gap-3">
+      <div>
+        <div class="text-sm font-extrabold text-slate-800">Antal uger i sæsonen:</div>
+        <div class="text-xs text-slate-500">Flere uger giver tid til at tjene permanente opgraderinger hjem.</div>
+      </div>
+      <div class="flex gap-2">
+        <button type="button" onclick="setWeeks(8)" id="w8" class="px-3.5 py-2 rounded-xl bg-white border border-stone-300 text-xs font-bold cursor-pointer">8 uger</button>
+        <button type="button" onclick="setWeeks(10)" id="w10" class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer shadow-sm">10 uger</button>
+        <button type="button" onclick="setWeeks(12)" id="w12" class="px-3.5 py-2 rounded-xl bg-white border border-stone-300 text-xs font-bold cursor-pointer">12 uger</button>
+      </div>
+    </div>
+
+    <!-- Solo -->
+    <div id="p_solo" class="space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+        <div><label class="text-xs font-extrabold uppercase text-slate-500">Virksomhedsnavn</label><input id="sName" value="Nordic Streetwear" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
+        <div><label class="text-xs font-extrabold uppercase text-slate-500">Hvad sælger I?</label><input id="sProd" value="Custom T-shirts" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
+      </div>
+      <button type="button" onclick="beginLocal('solo')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base shadow-lg cursor-pointer">Slå markisen op og start solo-spil</button>
+    </div>
+
+    <!-- Local Multi -->
+    <div id="p_local" class="hidden space-y-4">
+      <div class="flex items-center gap-2 bg-stone-50 p-3.5 rounded-2xl border border-stone-200 flex-wrap">
+        <span class="text-xs font-extrabold mr-2">Antal boder på gaden:</span>
+        <button type="button" onclick="buildLocalInputs(2)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">2 hold</button>
+        <button type="button" onclick="buildLocalInputs(3)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">3 hold</button>
+        <button type="button" onclick="buildLocalInputs(4)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">4 hold</button>
+        <button type="button" onclick="buildLocalInputs(5)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">5 hold</button>
+        <button type="button" onclick="buildLocalInputs(6)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">6 hold</button>
+      </div>
+      <div id="localList" class="space-y-2.5"></div>
+      <button type="button" onclick="beginLocal('local')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base shadow-lg cursor-pointer">Start spillet med alle hold på denne skærm</button>
+    </div>
+
+    <!-- Host -->
+    <div id="p_host" class="hidden space-y-4">
+      <button type="button" id="btnOpenHost" onclick="openHostLobby()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-2xl text-base shadow-lg cursor-pointer">Opret spilrum og generér 4-cifret rumkode</button>
+      <div id="hostLobby" class="hidden bg-indigo-50/80 border-2 border-indigo-300 rounded-2xl p-6 space-y-4 anim-pop">
+        <div class="flex justify-between items-center border-b border-indigo-200 pb-4 flex-wrap gap-3">
+          <div>
+            <div class="text-xs font-extrabold text-indigo-700 uppercase">Del denne rumkode med eleverne</div>
+            <div id="bigCode" class="text-4xl md:text-5xl font-black text-indigo-950 tracking-widest mt-1">----</div>
+          </div>
+          <span id="hostNetStatus" class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full">Opretter forbindelse...</span>
         </div>
-        <div class="flex items-center gap-3">
-            <div id="roomCodeHeaderBadge" class="hidden bg-indigo-100 border border-indigo-300 text-indigo-950 px-3.5 py-1.5 rounded-full text-xs font-extrabold">
-                Rumkode: <span id="headerRoomCode" class="text-indigo-700 tracking-widest">----</span>
-            </div>
-            <button type="button" id="btnToggleSound" onclick="toggleSound()" class="bg-stone-100 hover:bg-stone-200 border border-stone-300 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-700 flex items-center gap-1.5 transition">
-                <span id="soundIcon">🔊</span> <span id="soundText">Lyd til</span>
-            </button>
-            <div id="roundBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-950 px-4 py-1.5 rounded-full text-sm font-extrabold">
-                Uge <span id="currentRoundDisplay" class="text-emerald-700">1</span> af <span id="maxRoundsDisplay">10</span>
-            </div>
+        <div>
+          <div class="text-xs font-extrabold uppercase text-slate-600 mb-2">Tilmeldte boder:</div>
+          <div id="lobbyTeams" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-500 italic">Venter på at eleverne logger på...</div>
         </div>
-    </header>
+        <button type="button" id="btnStartHostGame" onclick="startHostGame()" disabled class="w-full py-4 bg-stone-300 text-stone-500 font-extrabold rounded-2xl text-base">Venter på mindst 1 hold...</button>
+      </div>
+    </div>
 
-    <!-- Main Container -->
-    <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6">
+    <!-- Join -->
+    <div id="p_join" class="hidden space-y-4">
+      <div id="joinForm" class="space-y-4">
+        <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200">
+          <label class="text-xs font-extrabold text-indigo-900 uppercase">4-cifret rumkode fra storskærmen</label>
+          <input id="jCode" maxlength="4" placeholder="4829" class="w-full bg-white border-2 border-indigo-300 rounded-xl px-4 py-3 text-2xl font-black text-center tracking-widest mt-1 uppercase">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+          <div><label class="text-xs font-extrabold uppercase text-slate-500">Jeres bod-navn</label><input id="jName" value="Struer Streetfood" class="w-full bg-white border rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
+          <div><label class="text-xs font-extrabold uppercase text-slate-500">Hvad sælger I?</label><input id="jProd" value="Gourmet Burger" class="w-full bg-white border rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
+        </div>
+        <div id="jErr" class="hidden text-xs font-bold text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200"></div>
+        <button type="button" id="btnJoin" onclick="joinHost()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base shadow-lg cursor-pointer">Forbind til Handelsgaden</button>
+      </div>
+      <div id="joinWait" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-6 text-center space-y-2 anim-pop">
+        <div class="text-4xl">🏪</div>
+        <div class="font-extrabold text-xl text-emerald-950">Din bod står klar på gaden!</div>
+        <p class="text-xs text-emerald-800">Venter på at læreren starter Uge 1 på storskærmen...</p>
+      </div>
+    </div>
+  </section>
 
-        <!-- SCREEN 1: SETUP & MULTIPLAYER HUB -->
-        <section id="setupScreen" class="max-w-4xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">Åbn din butik på Handelsgaden</h2>
-            <p class="text-slate-600 text-sm mb-6">Vælg hvordan I vil spille. Alle starter med <strong>1.000 kr.</strong> i kassen.</p>
+  <!-- SCREEN 2: ACTIVE GAME -->
+  <section id="scrGame" class="hidden space-y-6">
 
-            <!-- 4-Way Mode Selector -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <button type="button" onclick="selectModeTab('solo')" id="tabBtn_solo" class="p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left transition cursor-pointer">
-                    <div class="text-xl mb-1">👤</div>
-                    <div class="font-extrabold text-slate-900 text-sm mb-1">Solo (Mod AI)</div>
-                    <div class="text-xs text-slate-600">Spil alene mod 3 AI-butikker på din skærm.</div>
-                </button>
-                <button type="button" onclick="selectModeTab('local')" id="tabBtn_local" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition cursor-pointer">
-                    <div class="text-xl mb-1">👥</div>
-                    <div class="font-extrabold text-slate-900 text-sm mb-1">Flere hold (1 skærm)</div>
-                    <div class="text-xs text-slate-600">2-6 hold taster på skift på samme computer.</div>
-                </button>
-                <button type="button" onclick="selectModeTab('host')" id="tabBtn_host" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition cursor-pointer">
-                    <div class="text-xl mb-1">🖥️</div>
-                    <div class="font-extrabold text-slate-900 text-sm mb-1">Opret spil (Vært)</div>
-                    <div class="text-xs text-slate-600">Storskærm med rumkode til elevernes enheder.</div>
-                </button>
-                <button type="button" onclick="selectModeTab('join')" id="tabBtn_join" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition cursor-pointer">
-                    <div class="text-xl mb-1">📱</div>
-                    <div class="font-extrabold text-slate-900 text-sm mb-1">Deltag i spil (Elev)</div>
-                    <div class="text-xs text-slate-600">Tast 4-cifret rumkode fra din egen enhed.</div>
-                </button>
+    <!-- ILLUSTRATED MARKET STREET -->
+    <div id="streetBox" class="rounded-3xl overflow-hidden border border-stone-300 shadow-lg bg-gradient-to-b from-sky-200 via-sky-100 to-amber-100 transition-colors duration-700">
+      <div class="px-6 pt-5 pb-3 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+          <span id="evIcon" class="text-4xl drop-shadow-sm">🌤️</span>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] font-extrabold uppercase bg-white/80 text-slate-800 px-2.5 py-0.5 rounded-full">Uge <span id="stWeek">1</span></span>
+              <span id="stStatus" class="text-xs font-bold text-slate-700">Boderne klargøres</span>
             </div>
-
-            <!-- Duration Selector (Shared for Solo, Local & Host) -->
-            <div id="durationSelectorBox" class="mb-6 bg-stone-50 p-4 rounded-2xl border border-stone-200 flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <div class="text-sm font-extrabold text-slate-800">Antal uger i spillet:</div>
-                    <div class="text-xs text-slate-500">Flere uger giver tid til at opbygge lager og strategi.</div>
-                </div>
-                <div class="flex gap-2">
-                    <button type="button" onclick="setMaxRounds(8)" class="rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm cursor-pointer">8 uger</button>
-                    <button type="button" onclick="setMaxRounds(10)" class="rnd-len-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm cursor-pointer">10 uger</button>
-                    <button type="button" onclick="setMaxRounds(12)" class="rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm cursor-pointer">12 uger</button>
-                </div>
-            </div>
-
-            <!-- PANEL 1: SOLO -->
-            <div id="panel_solo" class="space-y-5">
-                <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Din virksomheds navn</label>
-                        <input type="text" id="soloTeamName" value="Nordic Streetwear" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Hvad sælger I?</label>
-                        <input type="text" id="soloTeamProd" value="Custom T-shirts" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
-                    </div>
-                </div>
-                <button type="button" onclick="startSoloOrLocalGame('solo')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-lg transition shadow-lg shadow-emerald-600/20 cursor-pointer">
-                    Slå markisen op og start solo-spil
-                </button>
-            </div>
-
-            <!-- PANEL 2: LOCAL MULTI-TEAM (Same screen) -->
-            <div id="panel_local" class="hidden space-y-5">
-                <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200">
-                    <label class="block text-sm font-extrabold text-slate-800 mb-2">Antal hold ved denne computer:</label>
-                    <div class="flex flex-wrap gap-2">
-                        <button type="button" onclick="setLocalTeamCount(2)" class="team-cnt-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm cursor-pointer">2 hold</button>
-                        <button type="button" onclick="setLocalTeamCount(3)" class="team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm cursor-pointer">3 hold</button>
-                        <button type="button" onclick="setLocalTeamCount(4)" class="team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm cursor-pointer">4 hold</button>
-                        <button type="button" onclick="setLocalTeamCount(5)" class="team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm cursor-pointer">5 hold</button>
-                        <button type="button" onclick="setLocalTeamCount(6)" class="team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm cursor-pointer">6 hold</button>
-                    </div>
-                </div>
-                <div id="localTeamsInputList" class="space-y-3"></div>
-                <button type="button" onclick="startSoloOrLocalGame('local')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-lg transition shadow-lg shadow-emerald-600/20 cursor-pointer">
-                    Start spillet med alle hold på denne skærm
-                </button>
-            </div>
-
-            <!-- PANEL 3: HOST ROOM -->
-            <div id="panel_host" class="hidden space-y-5">
-                <div id="hostCreateBox" class="space-y-3">
-                    <div id="hostStatusMsg" class="hidden text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 p-3 rounded-xl"></div>
-                    <button type="button" id="btnCreateHostRoom" onclick="createHostRoom()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-2xl text-lg transition shadow-lg shadow-indigo-600/20 cursor-pointer">
-                        Opret spilrum og generér 4-cifret rumkode
-                    </button>
-                </div>
-
-                <div id="hostLobbyActive" class="hidden bg-indigo-50/80 border-2 border-indigo-300 rounded-2xl p-6 space-y-5 animate-pop">
-                    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-indigo-200 pb-4">
-                        <div>
-                            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">Del denne rumkode med eleverne</span>
-                            <div id="lobbyRoomCodeDisplay" class="text-4xl md:text-5xl font-black text-indigo-950 tracking-widest mt-1">----</div>
-                        </div>
-                        <div class="text-right">
-                            <span id="hostConnectionStatus" class="inline-flex items-center gap-1.5 text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">
-                                Opretter rum...
-                            </span>
-                            <div class="text-xs text-slate-600 mt-2">Eleverne åbner siden og vælger <strong>Deltag i spil (Elev)</strong>.</div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2">Tilmeldte virksomheder (<span id="lobbyPlayerCount">0</span>):</div>
-                        <div id="lobbyPlayersList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 min-h-[52px]">
-                            <div class="text-xs text-slate-500 italic col-span-2 py-3">Venter på at den første elev eller gruppe logger på...</div>
-                        </div>
-                    </div>
-
-                    <button type="button" id="btnStartHostedGame" onclick="startHostedGame()" disabled class="w-full py-4 bg-stone-300 text-stone-500 font-extrabold rounded-2xl text-base transition cursor-not-allowed">
-                        Venter på mindst 1 hold...
-                    </button>
-                </div>
-            </div>
-
-            <!-- PANEL 4: JOIN ROOM (CLIENT) -->
-            <div id="panel_join" class="hidden space-y-5">
-                <div id="joinFormBox" class="space-y-4">
-                    <div class="bg-indigo-50/70 p-4 rounded-2xl border border-indigo-200">
-                        <label class="block text-xs font-extrabold uppercase text-indigo-900 mb-1">4-cifret rumkode fra storskærmen</label>
-                        <input type="text" id="joinRoomCodeInput" maxlength="4" placeholder="F.eks. 4829" class="w-full bg-white border-2 border-indigo-300 rounded-xl px-4 py-3 text-2xl font-black tracking-widest text-center text-indigo-950 uppercase focus:outline-none focus:border-indigo-600">
-                    </div>
-
-                    <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Jeres virksomhedsnavn</label>
-                            <input type="text" id="joinTeamName" value="Struer Streetfood" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Hvad sælger I?</label>
-                            <input type="text" id="joinTeamProd" value="Gourmet Burger" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
-                        </div>
-                    </div>
-
-                    <div id="joinErrorMsg" class="hidden text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 p-3 rounded-xl"></div>
-
-                    <button type="button" id="btnJoinRoom" onclick="joinHostRoom()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-lg transition shadow-lg shadow-emerald-600/20 cursor-pointer">
-                        Forbind til spillet
-                    </button>
-                </div>
-
-                <div id="clientWaitingBox" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-6 text-center space-y-3 animate-pop">
-                    <div class="text-4xl">🏪</div>
-                    <h3 class="text-xl font-extrabold text-emerald-950">Du er inde i spillet!</h3>
-                    <p class="text-sm text-emerald-800">Din bod <strong id="clientRegisteredName"></strong> er klar på Handelsgaden. Venter på at læreren starter uge 1 på storskærmen...</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SCREEN 2: ACTIVE GAME -->
-        <section id="gameScreen" class="hidden space-y-6">
-
-            <!-- ILLUSTRATED MARKET STREET SCENE -->
-            <div id="marketStreetScene" class="rounded-3xl overflow-hidden border border-stone-300 shadow-lg transition-colors duration-700 bg-gradient-to-b from-sky-200 via-sky-100 to-amber-100">
-                <div class="px-6 pt-5 pb-3 flex flex-wrap justify-between items-center gap-4">
-                    <div class="flex items-center gap-3">
-                        <span id="weatherEmoji" class="text-4xl drop-shadow-sm">🌤️</span>
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-[11px] font-extrabold uppercase tracking-wider bg-white/80 text-slate-700 px-2.5 py-0.5 rounded-full">Uge <span id="streetRoundNum">1</span></span>
-                                <span id="streetWeatherStatus" class="text-xs font-bold text-slate-700">Gaden gør klar til handel</span>
-                            </div>
-                            <h2 id="eventTitle" class="text-lg md:text-xl font-extrabold text-slate-900">Normal handelsuge</h2>
-                            <p id="eventDesc" class="text-xs text-slate-700 max-w-2xl">Ingen uforudsete forstyrrelser i byen denne uge.</p>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-2 text-xs font-bold">
-                        <div class="bg-white/90 backdrop-blur px-3 py-2 rounded-xl border border-stone-200 shadow-sm">
-                            Råvarepris: <span id="currentCostDisplay" class="text-slate-900 font-extrabold">20 kr.</span>
-                        </div>
-                        <div class="bg-white/90 backdrop-blur px-3 py-2 rounded-xl border border-stone-200 shadow-sm">
-                            Husleje: <span id="currentFixedDisplay" class="text-slate-900 font-extrabold">200 kr.</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="px-6 pt-4 pb-0">
-                    <div id="streetBoothsRow" class="grid grid-cols-2 md:grid-cols-4 gap-4 items-end"></div>
-                </div>
-
-                <div class="bg-stone-700 border-t-4 border-stone-600 px-6 py-2.5 flex items-center justify-between text-xs text-stone-200">
-                    <div class="flex items-center gap-2 font-medium">
-                        <span>🚶‍♀️🚶‍♂️🛍️</span>
-                        <span>Kunderne går altid til det mest attraktive tilbud først.</span>
-                    </div>
-                    <div class="hidden sm:block text-stone-400 font-semibold">Handelsgaden</div>
-                </div>
-            </div>
-
-            <!-- HOST LIVE MONITOR PANEL -->
-            <div id="hostMonitorPanel" class="hidden bg-white border-2 border-indigo-300 rounded-3xl p-6 md:p-8 shadow-xl space-y-5">
-                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-stone-200 pb-4">
-                    <div>
-                        <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Lærerens overblik • Uge <span id="hostMonitorRound">1</span></span>
-                        <h3 class="text-2xl font-extrabold text-slate-900">Eleverne forbereder deres boder...</h3>
-                        <p class="text-xs text-slate-500">Når alle hold har låst deres valg på egne enheder, åbner markedet automatisk.</p>
-                    </div>
-                    <button type="button" onclick="forceResolveHostedRound()" class="px-5 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-sm cursor-pointer">
-                        Tving runden i gang nu →
-                    </button>
-                </div>
-                <div id="hostSubmissionStatusGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
-            </div>
-
-            <!-- CLIENT WAITING AFTER SUBMITTING -->
-            <div id="clientSubmittedWaitPanel" class="hidden bg-white border-2 border-emerald-300 rounded-3xl p-8 text-center shadow-xl space-y-3 animate-pop">
-                <div class="text-4xl">🔒</div>
-                <h3 class="text-2xl font-extrabold text-slate-900">Din bod er låst og klar!</h3>
-                <p class="text-sm text-slate-600 max-w-md mx-auto">Venter på at de sidste hold på gaden bliver færdige, så terningen kan kastes...</p>
-            </div>
-
-            <!-- DECISION WORKBENCH -->
-            <div id="decisionPanel" class="bg-white border border-stone-200 rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
-                <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-stone-200">
-                    <div>
-                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600">Forbered din bod</span>
-                        <h3 id="activeTeamHeading" class="text-2xl font-extrabold text-slate-900">Din bod</h3>
-                        <p id="activeTeamSub" class="text-xs text-slate-500">Produkt: Custom T-shirts • Kassebeholdning: 1.000 kr.</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div id="carriedStockPill" class="hidden bg-sky-50 border border-sky-200 text-sky-800 px-3 py-1.5 rounded-xl text-xs font-bold">
-                            📦 Overført fra sidste uge: <span id="carriedStockCount">0</span> stk.
-                        </div>
-                        <div id="turnProgressBadge" class="text-xs bg-stone-100 border border-stone-200 px-3.5 py-2 rounded-xl font-bold text-slate-700">
-                            Din tur
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP A: MANDATORY WEEKLY DILEMMA CARD -->
-                <div class="bg-amber-50/90 border-2 border-amber-300 rounded-2xl p-5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800 bg-amber-200/70 px-2.5 py-0.5 rounded-full">Ugens dilemma • Tag stilling</span>
-                        <span id="dilemmaStatusTag" class="text-xs font-bold text-amber-700">Vælg en løsning for at låse boden op</span>
-                    </div>
-                    <h4 id="dilemmaTitle" class="text-base font-extrabold text-slate-900">Leverandøren tilbyder et restparti</h4>
-                    <p id="dilemmaText" class="text-xs text-slate-700 leading-relaxed">En grossist har et parti råvarer til halv pris, men kvaliteten svinger.</p>
-                    <div id="dilemmaOptions" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1"></div>
-                </div>
-
-                <!-- Optional Market Research Reveal Box -->
-                <div id="forecastRevealBox" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-4 animate-pop">
-                    <div class="text-xs font-extrabold uppercase text-indigo-700 mb-1">🔭 Vejrudsigt & Kundeanalyse afsløret!</div>
-                    <p id="forecastRevealText" class="text-sm text-slate-900 font-bold"></p>
-                </div>
-
-                <!-- STEP B: PRODUCTION & PRICE SLIDERS -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="flex justify-between items-baseline mb-1">
-                                <label class="text-base font-extrabold text-slate-900">1. Ny produktion til hylden</label>
-                                <span id="qtyBadge" class="text-2xl font-extrabold text-emerald-600">15 stk.</span>
-                            </div>
-                            <p class="text-xs text-slate-500 mb-3">Fremstillingspris: <strong class="unitCostInline text-slate-800">20</strong> kr./stk. (+ evt. overført lager)</p>
-                            
-                            <input type="range" id="inputQty" min="0" max="60" value="15" oninput="handleSliderChange('qty')" class="w-full my-2">
-                            <div class="flex justify-between text-[11px] text-slate-400 font-semibold">
-                                <span>0 stk.</span>
-                                <span>30 stk.</span>
-                                <span>60 stk.</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-white border border-stone-200 rounded-xl p-3">
-                            <div class="text-[11px] font-bold uppercase text-slate-500 mb-2 flex justify-between">
-                                <span>Samlet antal varer klar til salg: <strong id="totalReadyStock" class="text-slate-900">15 stk.</strong></span>
-                                <span class="text-amber-700 font-extrabold">Produktion: <span id="calcProdCost">300 kr.</span></span>
-                            </div>
-                            <div id="visualShelf" class="flex flex-wrap gap-1.5 min-h-[34px] items-center"></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="flex justify-between items-baseline mb-1">
-                                <label class="text-base font-extrabold text-slate-900">2. Skriv dit prisskilt</label>
-                                <span id="priceBadge" class="text-2xl font-extrabold text-amber-600">45 kr.</span>
-                            </div>
-                            <p class="text-xs text-slate-500 mb-3">Laveste pris sælger først – medmindre du satser på luksus og blikfang.</p>
-                            
-                            <input type="range" id="inputPrice" min="15" max="120" value="45" oninput="handleSliderChange('price')" class="w-full price-slider my-2">
-                            <div class="flex justify-between text-[11px] text-slate-400 font-semibold">
-                                <span>15 kr. (Lavpris)</span>
-                                <span>65 kr. (Mellem)</span>
-                                <span>120 kr. (Eksklusiv)</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-white border border-stone-200 rounded-xl p-3 flex items-center justify-between">
-                            <div>
-                                <div class="text-[11px] font-bold uppercase text-slate-400">Fortjeneste pr. solgt vare:</div>
-                                <div id="calcMargin" class="text-lg font-extrabold text-emerald-600">+25 kr.</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-[11px] font-bold uppercase text-slate-400">Salg før overskud:</div>
-                                <div id="calcBreakEven" class="text-sm font-extrabold text-slate-800">Mindst 8 stk.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP C: EXPANDED BUSINESS TOOLBOX -->
-                <div>
-                    <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">3. Tilkøb & Driftsvalg til din forretning</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
-                            <div class="flex items-start justify-between gap-2 mb-2">
-                                <span class="text-xl">✨</span>
-                                <input type="checkbox" id="chkQuality" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
-                            </div>
-                            <div>
-                                <div class="font-extrabold text-xs text-slate-900">Luksus-kvalitet</div>
-                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Kunder betaler op til <strong>+15 kr.</strong> mere for dine varer.</div>
-                            </div>
-                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">+10 kr. pr. produceret stk.</div>
-                        </label>
-
-                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
-                            <div class="flex items-start justify-between gap-2 mb-2">
-                                <span class="text-xl">📣</span>
-                                <input type="checkbox" id="chkMarketing" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
-                            </div>
-                            <div>
-                                <div class="font-extrabold text-xs text-slate-900">Blikfang & Sælger</div>
-                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Vinder kunder ved pris-lighed + løfter betalingsvilje med <strong>+10 kr.</strong></div>
-                            </div>
-                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">120 kr. fast</div>
-                        </label>
-
-                        <label onclick="SoundFX.click()" class="flex flex-col justify-between cursor-pointer p-3.5 rounded-2xl bg-stone-50 border-2 border-stone-200 hover:border-emerald-400 transition has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
-                            <div class="flex items-start justify-between gap-2 mb-2">
-                                <span class="text-xl">❄️</span>
-                                <input type="checkbox" id="chkStorage" onchange="updateLiveCalc()" class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
-                            </div>
-                            <div>
-                                <div class="font-extrabold text-xs text-slate-900">Lagersikring</div>
-                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Redder <strong>50 % af usolgte varer</strong> til næste uge i stedet for spild.</div>
-                            </div>
-                            <div class="mt-2 pt-2 border-t border-stone-200/80 text-[11px] font-extrabold text-amber-700">100 kr. fast</div>
-                        </label>
-
-                        <div id="researchBtnWrapper" class="flex">
-                            <button type="button" id="btnBuyResearch" onclick="buyMarketResearch()" class="w-full flex flex-col justify-between p-3.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 transition text-left cursor-pointer">
-                                <div class="flex items-start justify-between gap-2 mb-2 w-full">
-                                    <span class="text-xl">🔭</span>
-                                    <span class="text-[10px] font-extrabold uppercase bg-indigo-600 text-white px-2 py-0.5 rounded-full">Afslør nu</span>
-                                </div>
-                                <div>
-                                    <div class="font-extrabold text-xs text-indigo-950">Vejr- & kundeanalyse</div>
-                                    <div class="text-[11px] text-indigo-800/80 mt-0.5 leading-snug">Se ugens terningeslag og kundetal før du beslutter dig.</div>
-                                </div>
-                                <div class="mt-2 pt-2 border-t border-indigo-200/80 text-[11px] font-extrabold text-indigo-700 w-full">100 kr. engangsbeløb</div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer Bar -->
-                <div class="pt-4 border-t border-stone-200 flex flex-wrap justify-between items-center gap-4">
-                    <div class="text-xs text-slate-600">
-                        Samlet udlæg før salg (inkl. husleje): <strong id="calcTotalOutlay" class="text-slate-900 text-base">500 kr.</strong>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span id="autopilotHint" class="text-xs text-amber-700 font-bold">Vælg svar på ugens dilemma først</span>
-                        <button type="button" onclick="submitTeamDecision()" id="btnSubmitTurn" disabled class="px-7 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition cursor-not-allowed">
-                            Lås min bod og gør klar til handel
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SCREEN 2B: VISUAL STREET RESULTS & CENTERED 3D DICE -->
-            <div id="roundResultPanel" class="hidden bg-white border-2 border-amber-400 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
-                <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="flex items-center gap-6">
-                        <div class="scene shrink-0">
-                            <div class="cube" id="diceCube">
-                                <div class="cube__face cube__face--1">
-                                    <div></div><div></div><div></div>
-                                    <div></div><div class="pip"></div><div></div>
-                                    <div></div><div></div><div></div>
-                                </div>
-                                <div class="cube__face cube__face--2">
-                                    <div class="pip"></div><div></div><div></div>
-                                    <div></div><div></div><div></div>
-                                    <div></div><div></div><div class="pip"></div>
-                                </div>
-                                <div class="cube__face cube__face--3">
-                                    <div class="pip"></div><div></div><div></div>
-                                    <div></div><div class="pip"></div><div></div>
-                                    <div></div><div></div><div class="pip"></div>
-                                </div>
-                                <div class="cube__face cube__face--4">
-                                    <div class="pip"></div><div></div><div class="pip"></div>
-                                    <div></div><div></div><div></div>
-                                    <div class="pip"></div><div></div><div class="pip"></div>
-                                </div>
-                                <div class="cube__face cube__face--5">
-                                    <div class="pip"></div><div></div><div class="pip"></div>
-                                    <div></div><div class="pip"></div><div></div>
-                                    <div class="pip"></div><div></div><div class="pip"></div>
-                                </div>
-                                <div class="cube__face cube__face--6">
-                                    <div class="pip"></div><div></div><div class="pip"></div>
-                                    <div class="pip"></div><div></div><div class="pip"></div>
-                                    <div class="pip"></div><div></div><div class="pip"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Terningen er kastet • Uge <span id="resRoundNum">1</span></span>
-                            <h3 id="resWeatherTitle" class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-0.5">Solskin & god stemning</h3>
-                            <p class="text-sm text-slate-700 mt-1">
-                                <strong id="resTotalDemand" class="text-emerald-700">40 kunder</strong> gik på gaden • 
-                                Basis maks. pris: <strong id="resMaxPrice" class="text-amber-700">65 kr.</strong>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="nextRoundBtnContainer">
-                        <button type="button" onclick="SoundFX.click(); nextRound()" id="btnNextRound" class="w-full md:w-auto px-7 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-emerald-600/20 shrink-0 cursor-pointer">
-                            Fortsæt til næste uge →
-                        </button>
-                    </div>
-                    <div id="clientNextRoundWaitNote" class="hidden text-xs font-bold text-amber-800 bg-amber-100 border border-amber-300 px-4 py-3 rounded-xl">
-                        Venter på at læreren starter næste uge...
-                    </div>
-                </div>
-
-                <div>
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Sådan gik salget i boderne</h4>
-                        <div class="flex items-center gap-3 text-[11px] font-semibold text-slate-600">
-                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span> Solgt</span>
-                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-sky-400 inline-block"></span> Gemt på lager</span>
-                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-rose-400 inline-block"></span> Spild</span>
-                        </div>
-                    </div>
-                    <div id="visualStorefrontsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                </div>
-            </div>
-
-            <!-- Live Chart -->
-            <div class="bg-white border border-stone-200 rounded-3xl p-5 shadow-sm">
-                <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-3">Udvikling i kassebeholdning gennem ugerne (kr.)</h4>
-                <div class="h-56 w-full">
-                    <canvas id="balanceChart"></canvas>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- SCREEN 3: FINAL GAME OVER -->
-        <section id="endScreen" class="hidden max-w-4xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-2xl space-y-6">
-            <div class="text-center space-y-2">
-                <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3.5 py-1 rounded-full">Sæsonen er slut</span>
-                <h2 class="text-3xl font-extrabold text-slate-900">Endelig stilling på Handelsgaden</h2>
-                <p class="text-slate-600 text-sm">Her er det samlede resultat efter alle ugerne.</p>
-            </div>
-
-            <div id="podiumGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-
-            <div class="bg-amber-50/80 rounded-2xl p-5 border border-amber-200">
-                <h3 class="font-extrabold text-slate-900 mb-2 text-xs uppercase tracking-wider">Opsummering til klassen</h3>
-                <ul class="text-sm text-slate-700 space-y-1.5 list-disc pl-5">
-                    <li><strong>Strategi over tid:</strong> Hvem formåede at opbygge en stabil forretning frem for blot at vinde en enkelt uge?</li>
-                    <li><strong>Kvalitet vs. Lavpris:</strong> Kunne det betale sig at satse på dyre råvarer og høj pris, eller vandt volumen?</li>
-                    <li><strong>Risikostyring:</strong> Hvilken forskel gjorde lagersikring og dilemma-valgene undervejs?</li>
-                </ul>
-            </div>
-
-            <div class="flex justify-center pt-2">
-                <button type="button" onclick="location.reload()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm transition shadow-lg cursor-pointer">
-                    Start et nyt spil
-                </button>
-            </div>
-        </section>
-
-    </main>
-
-    <script>
-        // --- SAFE SYNTHETIC WEB AUDIO ENGINE ---
-        let soundEnabled = true;
-        let audioCtx = null;
-
-        function getAudioCtx() {
-            if (!audioCtx) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (AudioContextClass) audioCtx = new AudioContextClass();
-            }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume().catch(() => {});
-            }
-            return audioCtx;
-        }
-
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            document.getElementById('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
-            document.getElementById('soundText').textContent = soundEnabled ? 'Lyd til' : 'Lyd fra';
-            if (soundEnabled) SoundFX.click();
-        }
-
-        const SoundFX = {
-            click() {
-                try {
-                    if (!soundEnabled) return;
-                    const ctx = getAudioCtx();
-                    if (!ctx) return;
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(520, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.04);
-                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(); osc.stop(ctx.currentTime + 0.045);
-                } catch (e) {}
-            },
-            tick(pitch = 400) {
-                try {
-                    if (!soundEnabled) return;
-                    const ctx = getAudioCtx();
-                    if (!ctx) return;
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(pitch, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.025);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(); osc.stop(ctx.currentTime + 0.03);
-                } catch (e) {}
-            },
-            diceRoll() {
-                try {
-                    if (!soundEnabled) return;
-                    const ctx = getAudioCtx();
-                    if (!ctx) return;
-                    [0, 0.09, 0.19, 0.31, 0.45, 0.62, 0.82].forEach((delay, idx) => {
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.type = 'square';
-                        osc.frequency.setValueAtTime(160 + (idx % 3) * 45, ctx.currentTime + delay);
-                        osc.frequency.exponentialRampToValueAtTime(65, ctx.currentTime + delay + 0.06);
-                        gain.gain.setValueAtTime(0.13, ctx.currentTime + delay);
-                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.06);
-                        osc.connect(gain); gain.connect(ctx.destination);
-                        osc.start(ctx.currentTime + delay); osc.stop(ctx.currentTime + delay + 0.065);
-                    });
-                } catch (e) {}
-            },
-            cashRegister() {
-                try {
-                    if (!soundEnabled) return;
-                    const ctx = getAudioCtx();
-                    if (!ctx) return;
-                    [987.77, 1318.51].forEach((freq, i) => {
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.type = 'sine';
-                        const start = ctx.currentTime + i * 0.11;
-                        osc.frequency.setValueAtTime(freq, start);
-                        gain.gain.setValueAtTime(0.16, start);
-                        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.45);
-                        osc.connect(gain); gain.connect(ctx.destination);
-                        osc.start(start); osc.stop(start + 0.46);
-                    });
-                } catch (e) {}
-            },
-            loss() {
-                try {
-                    if (!soundEnabled) return;
-                    const ctx = getAudioCtx();
-                    if (!ctx) return;
-                    [240, 175].forEach((freq, i) => {
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.type = 'sawtooth';
-                        const start = ctx.currentTime + i * 0.18;
-                        osc.frequency.setValueAtTime(freq, start);
-                        gain.gain.setValueAtTime(0.09, start);
-                        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35);
-                        osc.connect(gain); gain.connect(ctx.destination);
-                        osc.start(start); osc.stop(start + 0.36);
-                    });
-                } catch (e) {}
-            }
-        };
-
-        // --- GAME DATA ---
-        let maxRounds = 10;
-        let localTeamCount = 2;
-        const STARTING_CASH = 1000;
-        const BASE_UNIT_COST = 20;
-        const BASE_FIXED_COST = 200;
-        const COLORS = ['#059669', '#2563eb', '#d97706', '#db2777', '#7c3aed', '#0891b2', '#ea580c', '#4f46e5'];
-
-        const EVENTS = [
-            { title: "Normal handelsuge", desc: "Rolig stemning på gaden. Kunderne kigger på både pris og kvalitet.", costMod: 0, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-sky-200 via-sky-100 to-amber-100", icon: "🌤️" },
-            { title: "Råvaremangel i byen", desc: "Leverandørerne hæver prisen! Råvarer koster +8 kr. ekstra pr. stk. i denne uge.", costMod: 8, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-slate-300 via-slate-200 to-amber-100", icon: "📦" },
-            { title: "Byfest & Gadefestival", desc: "Massiv tilstrømning af glade gæster! 45 % flere kunder på gaden i denne uge.", costMod: 0, fixedMod: 0, demandMult: 1.45, maxPriceMod: 10, sky: "from-amber-200 via-yellow-100 to-orange-100", icon: "🎪" },
-            { title: "Højere el- og stadepladsleje", desc: "Kommunen og elselskabet hæver de faste udgifter med +100 kr. denne uge.", costMod: 0, fixedMod: 100, demandMult: 1.0, maxPriceMod: 0, sky: "from-sky-200 via-slate-100 to-amber-100", icon: "⚡" },
-            { title: "Billigere indkøbsaftale", desc: "Råvarepriserne falder med -5 kr. pr. stk. i denne uge. God mulighed for høj avance!", costMod: -5, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0, sky: "from-emerald-200 via-sky-100 to-amber-100", icon: "📉" },
-            { title: "Smalhals sidst på måneden", desc: "Folk sparer på pengene. Kundernes betalingsvilje falder med -10 kr.", costMod: 0, fixedMod: 0, demandMult: 0.85, maxPriceMod: -10, sky: "from-slate-300 via-stone-200 to-amber-100", icon: "🌧️" },
-            { title: "Trend på TikTok & Instagram", desc: "Jeres produkttype trender vildt! Kunderne betaler glædeligt +12 kr. mere.", costMod: 0, fixedMod: 0, demandMult: 1.2, maxPriceMod: 12, sky: "from-rose-200 via-amber-100 to-yellow-100", icon: "🔥" }
-        ];
-
-        const DILEMMAS = [
-            {
-                title: "Restparti fra en lukket grossist",
-                text: "En sælger tilbyder billige materialer i denne uge, men der er risiko for, at nogle varer er skæve.",
-                optA: { label: "Tag chancen (-6 kr. pr. vare, men 20 % kasseres)", costMod: -6, defectRate: 0.20, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 },
-                optB: { label: "Køb normale råvarer (Ingen risiko)", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
-            },
-            {
-                title: "Lokal mikro-influencer kigger forbi",
-                text: "En lokal profil med 15.000 følgere tilbyder at nævne din bod i en story mod betaling.",
-                optA: { label: "Betal 90 kr. (+4 garanterede kunder til din bod)", costMod: 0, defectRate: 0, cashMod: -90, maxPriceBonus: 5, demandBonus: 4 },
-                optB: { label: "Tak nej og spar pengene", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
-            },
-            {
-                title: "Ekstra åbningstid lørdag aften",
-                text: "Du kan holde boden åben 3 timer ekstra. Det koster lidt i strøm og forplejning.",
-                optA: { label: "Hold åbent (-70 kr. i drift, +3 ekstra kunder)", costMod: 0, defectRate: 0, cashMod: -70, maxPriceBonus: 0, demandBonus: 3 },
-                optB: { label: "Luk til normal tid", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
-            },
-            {
-                title: "Smagsprøver / Gratis vareprøver",
-                text: "Vil du dele gratis prøver ud foran boden for at lokke forbipasserende indenfor?",
-                optA: { label: "Del prøver ud (-60 kr., kunder betaler +8 kr. mere)", costMod: 0, defectRate: 0, cashMod: -60, maxPriceBonus: 8, demandBonus: 0 },
-                optB: { label: "Ingen gratis prøver i denne uge", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
-            },
-            {
-                title: "Miljøvenlig emballage",
-                text: "Du kan skifte til bæredygtig indpakning i denne uge. Det koster lidt ekstra pr. vare.",
-                optA: { label: "Vælg grøn profil (+4 kr./vare, +7 kr. betalingsvilje)", costMod: 4, defectRate: 0, cashMod: 0, maxPriceBonus: 7, demandBonus: 0 },
-                optB: { label: "Brug standardemballage", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
-            },
-            {
-                title: "Lyn-rabat til stamkunder",
-                text: "Vil du udlodde et gavekort på 80 kr. blandt dagens handlende for at skabe kø?",
-                optA: { label: "Udlod gavekort (-80 kr., +4 ekstra kunder)", costMod: 0, defectRate: 0, cashMod: -80, maxPriceBonus: 0, demandBonus: 4 },
-                optB: { label: "Kør uden konkurrence", costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 }
-            }
-        ];
-
-        const DICE_OUTCOMES = [
-            { roll: 1, label: "Regnvejr & tomme gader", baseMaxPrice: 38, baseDemandPerTeam: 4.0, icon: "⛈️" },
-            { roll: 2, label: "Stille hverdag", baseMaxPrice: 52, baseDemandPerTeam: 7.0, icon: "🌥️" },
-            { roll: 3, label: "Almindelig handelsdag", baseMaxPrice: 55, baseDemandPerTeam: 7.5, icon: "⛅" },
-            { roll: 4, label: "Solskin & god handel", baseMaxPrice: 68, baseDemandPerTeam: 10.5, icon: "☀️" },
-            { roll: 5, label: "Lønningsdag i byen", baseMaxPrice: 72, baseDemandPerTeam: 11.5, icon: "💸" },
-            { roll: 6, label: "Kæmpe kundestorm!", baseMaxPrice: 95, baseDemandPerTeam: 15.5, icon: "🎉" }
-        ];
-
-        // --- GLOBAL STATE ---
-        let gameMode = 'solo'; // 'solo' | 'local' | 'host' | 'join'
-        let currentRound = 1;
-        let teams = [];
-        let activeTurnIdx = 0;
-        let roundEvent = null;
-        let roundDice = null;
-        let currentDilemma = null;
-        let selectedDilemmaOption = null;
-        let chartInstance = null;
-        let lastSliderTick = 0;
-
-        // PeerJS State
-        const PEER_PREFIX = 'handelsgaden-dk-';
-        let peer = null;
-        let roomCode = '';
-        let hostConnections = {};
-        let clientConn = null;
-        let myTeamId = 0;
-        let roundResolvedFlag = false;
-
-        // --- TAB SWITCHING ---
-        function selectModeTab(mode) {
-            SoundFX.click();
-            gameMode = mode;
-            const modes = ['solo', 'local', 'host', 'join'];
-            modes.forEach(m => {
-                const btn = document.getElementById('tabBtn_' + m);
-                const panel = document.getElementById('panel_' + m);
-                if (m === mode) {
-                    btn.className = "p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left transition cursor-pointer";
-                    panel.classList.remove('hidden');
-                } else {
-                    btn.className = "p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:border-stone-300 text-left transition cursor-pointer";
-                    panel.classList.add('hidden');
-                }
-            });
-
-            const durBox = document.getElementById('durationSelectorBox');
-            if (mode === 'join') durBox.classList.add('hidden');
-            else durBox.classList.remove('hidden');
-
-            if (mode === 'local') renderLocalTeamInputs();
-        }
-
-        function setMaxRounds(len) {
-            SoundFX.click();
-            maxRounds = len;
-            document.querySelectorAll('.rnd-len-btn').forEach(btn => {
-                if (btn.textContent.startsWith(String(len))) {
-                    btn.className = "rnd-len-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm cursor-pointer";
-                } else {
-                    btn.className = "rnd-len-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm cursor-pointer";
-                }
-            });
-        }
-
-        function setLocalTeamCount(count) {
-            SoundFX.click();
-            localTeamCount = count;
-            document.querySelectorAll('.team-cnt-btn').forEach((btn, idx) => {
-                if (idx + 2 === count) {
-                    btn.className = "team-cnt-btn px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm cursor-pointer";
-                } else {
-                    btn.className = "team-cnt-btn px-4 py-2 rounded-xl bg-white border border-stone-300 text-slate-700 font-bold text-sm cursor-pointer";
-                }
-            });
-            renderLocalTeamInputs();
-        }
-
-        function renderLocalTeamInputs() {
-            const container = document.getElementById('localTeamsInputList');
-            container.innerHTML = '';
-            const placeholders = [
-                { name: "Nordic Streetwear", prod: "Custom T-shirts" },
-                { name: "BoostLab", prod: "Økologisk energidrik" },
-                { name: "ByteBite", prod: "Gourmet toast" },
-                { name: "UrbanCases", prod: "3D-printede covers" },
-                { name: "KaffeKutteren", prod: "Iskaffe & cold brew" },
-                { name: "EcoBags", prod: "Genanvendelige stofnet" }
-            ];
-            for (let i = 0; i < localTeamCount; i++) {
-                const ph = placeholders[i % placeholders.length];
-                container.innerHTML += `
-                    <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Hold ${i + 1} – Virksomhedsnavn</label>
-                            <input type="text" id="localName_${i}" value="${ph.name}" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-1">Hvad sælger I?</label>
-                            <input type="text" id="localProd_${i}" value="${ph.prod}" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-600">
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function createTeamObj(id, name, product, isAI, aiStyle, peerId = null) {
-            return {
-                id,
-                peerId,
-                name,
-                product,
-                isAI,
-                aiStyle,
-                color: COLORS[id % COLORS.length],
-                cash: STARTING_CASH,
-                carriedStock: 0,
-                history: [STARTING_CASH],
-                totalSold: 0,
-                totalWasted: 0,
-                lastPrice: null,
-                lastSold: null,
-                decision: null,
-                researchBoughtTemp: false
-            };
-        }
-
-        // --- START SOLO OR LOCAL MULTI-TEAM ---
-        function startSoloOrLocalGame(mode) {
-            SoundFX.cashRegister();
-            gameMode = mode;
-            teams = [];
-            if (mode === 'solo') {
-                const userName = document.getElementById('soloTeamName').value.trim() || "Min Virksomhed";
-                const userProd = document.getElementById('soloTeamProd').value.trim() || "Eget Produkt";
-                teams.push(createTeamObj(0, userName, userProd, false, 'human'));
-                teams.push(createTeamObj(1, "Lavpris-Boden (AI)", userProd, true, 'budget'));
-                teams.push(createTeamObj(2, "Luksus-Studiet (AI)", userProd, true, 'premium'));
-                teams.push(createTeamObj(3, "Gadehjørnet ApS (AI)", userProd, true, 'balanced'));
-            } else {
-                for (let i = 0; i < localTeamCount; i++) {
-                    const name = document.getElementById(`localName_${i}`).value.trim() || `Hold ${i + 1}`;
-                    const prod = document.getElementById(`localProd_${i}`).value.trim() || "Produkt";
-                    teams.push(createTeamObj(i, name, prod, false, 'human'));
-                }
-            }
-
-            currentRound = 1;
-            document.getElementById('setupScreen').classList.add('hidden');
-            document.getElementById('gameScreen').classList.remove('hidden');
-            document.getElementById('roundBadge').classList.remove('hidden');
-            document.getElementById('maxRoundsDisplay').textContent = maxRounds;
-
-            initChart();
-            prepareSoloOrLocalRound();
-        }
-
-        // --- HOST MULTIPLAYER FLOW ---
-        function createHostRoom() {
-            SoundFX.click();
-            const statusMsg = document.getElementById('hostStatusMsg');
-
-            if (typeof Peer === 'undefined') {
-                statusMsg.textContent = "Netværksbiblioteket (PeerJS) kunne ikke hentes. Brug i stedet fanen 'Flere hold (1 skærm)' ovenfor.";
-                statusMsg.classList.remove('hidden');
-                return;
-            }
-
-            roomCode = String(Math.floor(1000 + Math.random() * 9000));
-            document.getElementById('hostCreateBox').classList.add('hidden');
-            document.getElementById('hostLobbyActive').classList.remove('hidden');
-            document.getElementById('lobbyRoomCodeDisplay').textContent = roomCode;
-            document.getElementById('headerRoomCode').textContent = roomCode;
-            document.getElementById('roomCodeHeaderBadge').classList.remove('hidden');
-
-            teams = [];
-            hostConnections = {};
-
-            try {
-                peer = new Peer(PEER_PREFIX + roomCode);
-                peer.on('open', () => {
-                    const badge = document.getElementById('hostConnectionStatus');
-                    badge.className = "inline-flex items-center gap-1.5 text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full";
-                    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Online • Klar til elever`;
-                });
-                peer.on('error', (err) => {
-                    const badge = document.getElementById('hostConnectionStatus');
-                    badge.className = "inline-flex items-center gap-1.5 text-xs font-bold bg-rose-100 text-rose-800 px-3 py-1 rounded-full";
-                    badge.textContent = "Netværksfejl (" + err.type + ")";
-                });
-                peer.on('connection', (conn) => {
-                    conn.on('data', (msg) => handleHostMessage(conn, msg));
-                    conn.on('close', () => {
-                        delete hostConnections[conn.peer];
-                        updateHostLobbyUI();
-                    });
-                });
-            } catch (err) {
-                alert("Fejl ved oprettelse af rum: " + err.message);
-            }
-        }
-
-        function handleHostMessage(conn, msg) {
-            if (msg.type === 'JOIN') {
-                let existing = teams.find(t => t.peerId === conn.peer);
-                if (!existing) {
-                    const newId = teams.length;
-                    existing = createTeamObj(newId, msg.name, msg.product, false, 'human', conn.peer);
-                    teams.push(existing);
-                } else {
-                    existing.name = msg.name;
-                    existing.product = msg.product;
-                }
-                hostConnections[conn.peer] = conn;
-                SoundFX.tick(600);
-                conn.send({ type: 'WELCOME', teamId: existing.id, maxRounds });
-                updateHostLobbyUI();
-            } else if (msg.type === 'BUY_RESEARCH') {
-                const t = teams.find(x => x.id === msg.teamId);
-                if (t) {
-                    t.researchBoughtTemp = true;
-                    const adjMax = Math.max(25, roundDice.baseMaxPrice + roundEvent.maxPriceMod);
-                    const adjDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
-                    conn.send({
-                        type: 'RESEARCH_RESULT',
-                        text: `Vejrudsigten siger "${roundDice.label}" (Terning: ${roundDice.roll}). Der kommer ca. ${adjDemand} kunder på gaden, og deres basis-smertegrænse er ${adjMax} kr.`
-                    });
-                }
-            } else if (msg.type === 'SUBMIT_DECISION') {
-                const t = teams.find(x => x.id === msg.teamId);
-                if (t && !roundResolvedFlag) {
-                    t.decision = msg.decision;
-                    SoundFX.tick(520);
-                    renderHostMonitorGrid();
-                    const allDone = teams.every(team => team.decision !== null);
-                    if (allDone && teams.length > 0) {
-                        resolveHostedRound();
-                    }
-                }
-            }
-        }
-
-        function updateHostLobbyUI() {
-            document.getElementById('lobbyPlayerCount').textContent = teams.length;
-            const list = document.getElementById('lobbyPlayersList');
-            if (teams.length === 0) {
-                list.innerHTML = `<div class="text-xs text-slate-500 italic col-span-2 py-3">Venter på at den første elev eller gruppe logger på...</div>`;
-                return;
-            }
-            list.innerHTML = teams.map(t => `
-                <div class="bg-white border border-indigo-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-3.5 h-3.5 rounded-full shrink-0" style="background:${t.color}"></span>
-                        <div>
-                            <div class="font-extrabold text-xs text-slate-900">${t.name}</div>
-                            <div class="text-[11px] text-slate-500">${t.product}</div>
-                        </div>
-                    </div>
-                    <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">Klar</span>
-                </div>
-            `).join('');
-
-            const btn = document.getElementById('btnStartHostedGame');
-            if (teams.length >= 1) {
-                btn.disabled = false;
-                btn.className = "w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base transition shadow-lg cursor-pointer";
-                btn.textContent = `Start spillet med ${teams.length} virksomhed${teams.length > 1 ? 'er' : ''} →`;
-            }
-        }
-
-        function broadcastToClients(payload) {
-            Object.values(hostConnections).forEach(conn => {
-                if (conn.open) conn.send(payload);
-            });
-        }
-
-        function startHostedGame() {
-            if (teams.length === 0) return;
-            SoundFX.cashRegister();
-            currentRound = 1;
-            document.getElementById('setupScreen').classList.add('hidden');
-            document.getElementById('gameScreen').classList.remove('hidden');
-            document.getElementById('roundBadge').classList.remove('hidden');
-            document.getElementById('maxRoundsDisplay').textContent = maxRounds;
-
-            initChart();
-            prepareHostedRound();
-        }
-
-        function prepareHostedRound() {
-            roundResolvedFlag = false;
-            roundEvent = currentRound === 1 ? EVENTS[0] : EVENTS[Math.floor(Math.random() * EVENTS.length)];
-            roundDice = DICE_OUTCOMES[Math.floor(Math.random() * DICE_OUTCOMES.length)];
-
-            teams.forEach(t => {
-                t.decision = null;
-                t.researchBoughtTemp = false;
-            });
-
-            updateStreetHeaderUI();
-            renderStreetBooths(false);
-
-            document.getElementById('roundResultPanel').classList.add('hidden');
-            document.getElementById('decisionPanel').classList.add('hidden');
-            document.getElementById('hostMonitorPanel').classList.remove('hidden');
-            document.getElementById('hostMonitorRound').textContent = currentRound;
-            renderHostMonitorGrid();
-
-            broadcastToClients({
-                type: 'ROUND_START',
-                round: currentRound,
-                maxRounds,
-                event: roundEvent,
-                teams: teams
-            });
-        }
-
-        function renderHostMonitorGrid() {
-            const grid = document.getElementById('hostSubmissionStatusGrid');
-            grid.innerHTML = teams.map(t => {
-                const done = t.decision !== null;
-                return `
-                    <div class="p-4 rounded-2xl border-2 ${done ? 'border-emerald-500 bg-emerald-50/70' : 'border-stone-200 bg-stone-50'} flex items-center justify-between">
-                        <div class="flex items-center gap-2.5">
-                            <span class="w-3.5 h-3.5 rounded-full" style="background:${t.color}"></span>
-                            <div>
-                                <div class="font-extrabold text-sm text-slate-900">${t.name}</div>
-                                <div class="text-xs text-slate-500">${t.product}</div>
-                            </div>
-                        </div>
-                        <span class="text-xs font-extrabold px-2.5 py-1 rounded-lg ${done ? 'bg-emerald-600 text-white' : 'bg-amber-100 text-amber-800'}">
-                            ${done ? '✓ Klar' : '⏳ Tænker...'}
-                        </span>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function forceResolveHostedRound() {
-            const noDil = { costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 };
-            teams.forEach(t => {
-                if (!t.decision) {
-                    t.decision = { qty: 0, price: 50, quality: false, marketing: false, storage: false, researchBought: false, dilemma: noDil };
-                }
-            });
-            resolveHostedRound();
-        }
-
-        function resolveHostedRound() {
-            if (roundResolvedFlag) return;
-            roundResolvedFlag = true;
-            document.getElementById('hostMonitorPanel').classList.add('hidden');
-            const roundSummary = calculateMarketResults();
-            renderRoundResultsUI(roundSummary);
-            broadcastToClients({
-                type: 'ROUND_RESULT',
-                summary: roundSummary,
-                teams: teams
-            });
-        }
-
-        // --- CLIENT (STUDENT) MULTIPLAYER FLOW ---
-        function joinHostRoom() {
-            SoundFX.click();
-            const code = document.getElementById('joinRoomCodeInput').value.trim();
-            const name = document.getElementById('joinTeamName').value.trim() || "Elev-virksomhed";
-            const product = document.getElementById('joinTeamProd').value.trim() || "Eget Produkt";
-            const errBox = document.getElementById('joinErrorMsg');
-
-            if (code.length !== 4) {
-                errBox.textContent = "Indtast den 4-cifrede rumkode fra storskærmen.";
-                errBox.classList.remove('hidden');
-                return;
-            }
-            if (typeof Peer === 'undefined') {
-                errBox.textContent = "Netværksbiblioteket (PeerJS) blev blokeret af din browser eller netværket.";
-                errBox.classList.remove('hidden');
-                return;
-            }
-
-            errBox.classList.add('hidden');
-            const btn = document.getElementById('btnJoinRoom');
-            btn.disabled = true;
-            btn.textContent = "Forbinder til rum " + code + "...";
-
-            roomCode = code;
-            try {
-                peer = new Peer();
-                peer.on('open', () => {
-                    clientConn = peer.connect(PEER_PREFIX + code);
-                    clientConn.on('open', () => {
-                        SoundFX.cashRegister();
-                        clientConn.send({ type: 'JOIN', name, product });
-                    });
-                    clientConn.on('data', (msg) => handleClientMessage(msg, name));
-                    clientConn.on('close', () => {
-                        alert("Forbindelsen til storskærmen blev afbrudt.");
-                    });
-                });
-                peer.on('error', () => {
-                    errBox.textContent = "Kunne ikke finde rumkode " + code + ". Tjek at værten har åbnet rummet.";
-                    errBox.classList.remove('hidden');
-                    btn.disabled = false;
-                    btn.textContent = "Forbind til spillet";
-                });
-            } catch (e) {
-                errBox.textContent = "Fejl ved forbindelse: " + e.message;
-                errBox.classList.remove('hidden');
-                btn.disabled = false;
-                btn.textContent = "Forbind til spillet";
-            }
-        }
-
-        function handleClientMessage(msg, registeredName) {
-            if (msg.type === 'WELCOME') {
-                myTeamId = msg.teamId;
-                maxRounds = msg.maxRounds;
-                document.getElementById('joinFormBox').classList.add('hidden');
-                document.getElementById('clientWaitingBox').classList.remove('hidden');
-                document.getElementById('clientRegisteredName').textContent = registeredName;
-                document.getElementById('headerRoomCode').textContent = roomCode;
-                document.getElementById('roomCodeHeaderBadge').classList.remove('hidden');
-            } else if (msg.type === 'ROUND_START') {
-                currentRound = msg.round;
-                maxRounds = msg.maxRounds;
-                roundEvent = msg.event;
-                teams = msg.teams;
-                activeTurnIdx = myTeamId;
-
-                document.getElementById('setupScreen').classList.add('hidden');
-                document.getElementById('gameScreen').classList.remove('hidden');
-                document.getElementById('roundBadge').classList.remove('hidden');
-                document.getElementById('maxRoundsDisplay').textContent = maxRounds;
-
-                if (!chartInstance) initChart();
-                else updateChart();
-
-                updateStreetHeaderUI();
-                renderStreetBooths(false);
-
-                document.getElementById('roundResultPanel').classList.add('hidden');
-                document.getElementById('clientSubmittedWaitPanel').classList.add('hidden');
-                document.getElementById('decisionPanel').classList.remove('hidden');
-
-                setupWorkbenchForTeam(teams.find(t => t.id === myTeamId));
-            } else if (msg.type === 'RESEARCH_RESULT') {
-                document.getElementById('forecastRevealText').textContent = msg.text;
-                document.getElementById('forecastRevealBox').classList.remove('hidden');
-                document.getElementById('researchBtnWrapper').classList.add('hidden');
-                updateLiveCalc();
-            } else if (msg.type === 'ROUND_RESULT') {
-                teams = msg.teams;
-                document.getElementById('clientSubmittedWaitPanel').classList.add('hidden');
-                document.getElementById('decisionPanel').classList.add('hidden');
-                renderRoundResultsUI(msg.summary);
-            } else if (msg.type === 'GAME_OVER') {
-                teams = msg.teams;
-                SoundFX.cashRegister();
-                showEndScreen();
-            }
-        }
-
-        // --- SHARED WORKBENCH & ROUND HELPERS ---
-        function updateStreetHeaderUI() {
-            document.getElementById('currentRoundDisplay').textContent = currentRound;
-            document.getElementById('streetRoundNum').textContent = currentRound;
-            const unitCost = BASE_UNIT_COST + roundEvent.costMod;
-            const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
-
-            const scene = document.getElementById('marketStreetScene');
-            scene.className = `rounded-3xl overflow-hidden border border-stone-300 shadow-lg transition-colors duration-700 bg-gradient-to-b ${roundEvent.sky}`;
-            document.getElementById('weatherEmoji').textContent = roundEvent.icon;
-            document.getElementById('streetWeatherStatus').textContent = "Boderne klargøres";
-            document.getElementById('eventTitle').textContent = roundEvent.title;
-            document.getElementById('eventDesc').textContent = roundEvent.desc;
-            document.getElementById('currentCostDisplay').textContent = `${unitCost} kr.`;
-            document.getElementById('currentFixedDisplay').textContent = `${fixedCost} kr.`;
-        }
-
-        function renderStreetBooths(isResolved) {
-            const row = document.getElementById('streetBoothsRow');
-            row.innerHTML = '';
-
-            teams.forEach(t => {
-                const cashColor = t.cash < 0 ? 'text-rose-600' : 'text-emerald-700';
-                const priceTag = isResolved && t.lastPrice ? `${t.lastPrice} kr.` : (t.lastPrice ? `Sidst: ${t.lastPrice} kr.` : 'Åbner snart');
-                const stockInfo = isResolved ? `Solgt: ${t.lastSold} stk.` : `Lager: ${t.carriedStock} stk.`;
-
-                row.innerHTML += `
-                    <div class="flex flex-col items-center animate-pop">
-                        <div class="bg-white/95 border border-stone-300 px-3 py-1 rounded-t-xl shadow-sm text-center w-11/12">
-                            <div class="font-extrabold text-xs text-slate-900 truncate">${t.name}</div>
-                            <div class="text-[10px] text-slate-500 truncate">${t.product}</div>
-                        </div>
-                        <div class="w-full h-6 rounded-t-lg awning-stripes shadow-md border-b-2 border-black/15" style="background-color: ${t.color}"></div>
-                        <div class="w-11/12 bg-white border-x border-stone-300 p-3 flex flex-col items-center justify-between space-y-1.5 shadow-inner">
-                            <span class="bg-amber-100 border border-amber-300 text-amber-950 font-extrabold text-xs px-2.5 py-0.5 rounded-md">
-                                ${priceTag}
-                            </span>
-                            <div class="text-[11px] font-semibold text-slate-500">${stockInfo}</div>
-                            <div class="text-base font-extrabold ${cashColor}">${t.cash.toLocaleString('da-DK')} kr.</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function prepareSoloOrLocalRound() {
-            roundEvent = currentRound === 1 ? EVENTS[0] : EVENTS[Math.floor(Math.random() * EVENTS.length)];
-            roundDice = DICE_OUTCOMES[Math.floor(Math.random() * DICE_OUTCOMES.length)];
-            teams.forEach(t => { t.decision = null; t.researchBoughtTemp = false; });
-
-            updateStreetHeaderUI();
-            renderStreetBooths(false);
-
-            activeTurnIdx = 0;
-            myTeamId = 0;
-            document.getElementById('roundResultPanel').classList.add('hidden');
-            document.getElementById('decisionPanel').classList.remove('hidden');
-            setupWorkbenchForTeam(teams[0]);
-        }
-
-        function setupWorkbenchForTeam(team) {
-            document.getElementById('activeTeamHeading').textContent = `${team.name} – Klargør uge ${currentRound}`;
-            document.getElementById('activeTeamSub').textContent = `Produkt: ${team.product} • Kassebeholdning: ${team.cash.toLocaleString('da-DK')} kr.`;
-
-            const humanTeams = teams.filter(t => !t.isAI);
-            if (gameMode === 'local' && humanTeams.length > 1) {
-                document.getElementById('turnProgressBadge').textContent = `Hold ${activeTurnIdx + 1} af ${humanTeams.length} (Skjul skærmen for de andre!)`;
-            } else {
-                document.getElementById('turnProgressBadge').textContent = `Din bod`;
-            }
-
-            const carriedPill = document.getElementById('carriedStockPill');
-            if (team.carriedStock > 0) {
-                carriedPill.classList.remove('hidden');
-                document.getElementById('carriedStockCount').textContent = team.carriedStock;
-            } else {
-                carriedPill.classList.add('hidden');
-            }
-
-            currentDilemma = DILEMMAS[Math.floor(Math.random() * DILEMMAS.length)];
-            selectedDilemmaOption = null;
-            renderDilemmaCard();
-
-            document.getElementById('inputQty').value = 15;
-            document.getElementById('inputPrice').value = 45;
-            document.getElementById('chkQuality').checked = false;
-            document.getElementById('chkMarketing').checked = false;
-            document.getElementById('chkStorage').checked = false;
-            document.getElementById('forecastRevealBox').classList.add('hidden');
-            document.getElementById('researchBtnWrapper').classList.remove('hidden');
-
-            team.researchBoughtTemp = false;
-            updateSubmitLockState();
-            updateLiveCalc();
-        }
-
-        function renderDilemmaCard() {
-            document.getElementById('dilemmaTitle').textContent = currentDilemma.title;
-            document.getElementById('dilemmaText').textContent = currentDilemma.text;
-            document.getElementById('dilemmaStatusTag').textContent = "Vælg en løsning for at låse boden op";
-            document.getElementById('dilemmaStatusTag').className = "text-xs font-bold text-amber-700";
-
-            const container = document.getElementById('dilemmaOptions');
-            container.innerHTML = `
-                <button type="button" onclick="selectDilemma('A')" id="btnDilemmaA" class="p-3.5 rounded-xl border-2 border-amber-300/80 bg-white hover:border-amber-500 text-left text-xs font-bold text-slate-800 transition cursor-pointer">
-                    🅰️ ${currentDilemma.optA.label}
-                </button>
-                <button type="button" onclick="selectDilemma('B')" id="btnDilemmaB" class="p-3.5 rounded-xl border-2 border-amber-300/80 bg-white hover:border-amber-500 text-left text-xs font-bold text-slate-800 transition cursor-pointer">
-                    🅱️ ${currentDilemma.optB.label}
-                </button>
-            `;
-        }
-
-        function selectDilemma(choice) {
-            SoundFX.click();
-            selectedDilemmaOption = choice;
-            const btnA = document.getElementById('btnDilemmaA');
-            const btnB = document.getElementById('btnDilemmaB');
-            if (choice === 'A') {
-                btnA.className = "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold text-emerald-950 transition shadow-sm cursor-pointer";
-                btnB.className = "p-3.5 rounded-xl border-2 border-stone-200 bg-white/60 text-left text-xs font-semibold text-slate-500 transition cursor-pointer";
-            } else {
-                btnB.className = "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold text-emerald-950 transition shadow-sm cursor-pointer";
-                btnA.className = "p-3.5 rounded-xl border-2 border-stone-200 bg-white/60 text-left text-xs font-semibold text-slate-500 transition cursor-pointer";
-            }
-            document.getElementById('dilemmaStatusTag').textContent = "✓ Beslutning taget";
-            document.getElementById('dilemmaStatusTag').className = "text-xs font-extrabold text-emerald-700";
-            updateSubmitLockState();
-            updateLiveCalc();
-        }
-
-        function handleSliderChange(type) {
-            const now = Date.now();
-            if (now - lastSliderTick > 45) {
-                const val = type === 'qty' ? document.getElementById('inputQty').value : document.getElementById('inputPrice').value;
-                SoundFX.tick(280 + parseInt(val) * 4);
-                lastSliderTick = now;
-            }
-            updateLiveCalc();
-        }
-
-        function updateSubmitLockState() {
-            const btn = document.getElementById('btnSubmitTurn');
-            const hint = document.getElementById('autopilotHint');
-            const humanTeams = teams.filter(t => !t.isAI);
-            const isLastLocal = activeTurnIdx >= humanTeams.length - 1;
-
-            if (selectedDilemmaOption !== null) {
-                btn.disabled = false;
-                btn.className = "px-7 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-emerald-600/20 cursor-pointer active:scale-[0.98]";
-                if (gameMode === 'join') {
-                    btn.textContent = "Lås min bod og send til storskærm ✓";
-                } else if (gameMode === 'local' && !isLastLocal) {
-                    btn.textContent = "Lås boden og giv turen til næste hold →";
-                } else {
-                    btn.textContent = "Åbn gaden og slå med terningen!";
-                }
-                hint.classList.add('hidden');
-            } else {
-                btn.disabled = true;
-                btn.className = "px-7 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition cursor-not-allowed";
-                hint.classList.remove('hidden');
-            }
-        }
-
-        function getActiveDilemmaObj() {
-            if (!selectedDilemmaOption) return { costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 };
-            return selectedDilemmaOption === 'A' ? currentDilemma.optA : currentDilemma.optB;
-        }
-
-        function getCurrentActiveTeam() {
-            if (gameMode === 'join') return teams.find(t => t.id === myTeamId) || teams[0];
-            return teams[activeTurnIdx] || teams[0];
-        }
-
-        function updateLiveCalc() {
-            const team = getCurrentActiveTeam();
-            const qty = parseInt(document.getElementById('inputQty').value);
-            const price = parseInt(document.getElementById('inputPrice').value);
-            const quality = document.getElementById('chkQuality').checked;
-            const marketing = document.getElementById('chkMarketing').checked;
-            const storage = document.getElementById('chkStorage').checked;
-            const researchCost = team && team.researchBoughtTemp ? 100 : 0;
-            const dil = getActiveDilemmaObj();
-
-            const unitCost = Math.max(5, BASE_UNIT_COST + roundEvent.costMod + (quality ? 10 : 0) + dil.costMod);
-            const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
-
-            document.querySelectorAll('.unitCostInline').forEach(el => el.textContent = unitCost);
-            document.getElementById('qtyBadge').textContent = `${qty} stk.`;
-            document.getElementById('priceBadge').textContent = `${price} kr.`;
-
-            const carried = team ? team.carriedStock : 0;
-            const totalReady = qty + carried;
-            document.getElementById('totalReadyStock').textContent = `${totalReady} stk.`;
-
-            const shelf = document.getElementById('visualShelf');
-            shelf.innerHTML = '';
-            if (totalReady === 0) {
-                shelf.innerHTML = `<span class="text-xs text-slate-400 italic">Tom disk (ingen varer til salg)</span>`;
-            } else {
-                const maxCarried = Math.min(carried, 36);
-                for (let c = 0; c < maxCarried; c++) shelf.innerHTML += `<span class="w-3.5 h-3.5 rounded bg-sky-400 border border-sky-500/40 inline-block"></span>`;
-                const maxNew = Math.min(qty, Math.max(0, 36 - maxCarried));
-                for (let i = 0; i < maxNew; i++) shelf.innerHTML += `<span class="w-3.5 h-3.5 rounded bg-emerald-500 border border-emerald-600/40 inline-block"></span>`;
-                if (totalReady > 36) shelf.innerHTML += `<span class="text-xs font-bold text-emerald-700 ml-1">+${totalReady - 36} mere</span>`;
-            }
-
-            const prodCost = qty * unitCost;
-            const margin = price - unitCost;
-            const extras = (marketing ? 120 : 0) + (storage ? 100 : 0) + researchCost - dil.cashMod;
-            const totalFixedAndExtras = fixedCost + extras;
-            const totalOutlay = prodCost + totalFixedAndExtras;
-
-            document.getElementById('calcProdCost').textContent = `${prodCost} kr.`;
-            const marginEl = document.getElementById('calcMargin');
-            marginEl.textContent = `${margin >= 0 ? '+' : ''}${margin} kr. pr. stk.`;
-            marginEl.className = margin > 0 ? 'text-lg font-extrabold text-emerald-600' : 'text-lg font-extrabold text-rose-600';
-
-            document.getElementById('calcTotalOutlay').textContent = `${totalOutlay} kr.`;
-            const breakEvenEl = document.getElementById('calcBreakEven');
-            if (margin <= 0) {
-                breakEvenEl.textContent = "Umuligt (for lav pris)";
-                breakEvenEl.className = "text-sm font-extrabold text-rose-600";
-            } else {
-                const be = Math.ceil(totalFixedAndExtras / margin);
-                breakEvenEl.textContent = `Mindst ${be} stk.`;
-                breakEvenEl.className = "text-sm font-extrabold text-slate-800";
-            }
-        }
-
-        function buyMarketResearch() {
-            SoundFX.cashRegister();
-            const team = getCurrentActiveTeam();
-            team.researchBoughtTemp = true;
-
-            if (gameMode === 'join') {
-                clientConn.send({ type: 'BUY_RESEARCH', teamId: myTeamId });
-            } else {
-                const adjMax = Math.max(25, roundDice.baseMaxPrice + roundEvent.maxPriceMod);
-                const adjDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
-                document.getElementById('forecastRevealText').textContent =
-                    `Vejrudsigten siger "${roundDice.label}" (Terning: ${roundDice.roll}). Der kommer ca. ${adjDemand} kunder på gaden, og deres basis-smertegrænse er ${adjMax} kr.`;
-                document.getElementById('forecastRevealBox').classList.remove('hidden');
-                document.getElementById('researchBtnWrapper').classList.add('hidden');
-                updateLiveCalc();
-            }
-        }
-
-        function submitTeamDecision() {
-            if (selectedDilemmaOption === null) return;
-            SoundFX.click();
-
-            const team = getCurrentActiveTeam();
-            const decision = {
-                qty: parseInt(document.getElementById('inputQty').value),
-                price: parseInt(document.getElementById('inputPrice').value),
-                quality: document.getElementById('chkQuality').checked,
-                marketing: document.getElementById('chkMarketing').checked,
-                storage: document.getElementById('chkStorage').checked,
-                researchBought: !!team.researchBoughtTemp,
-                dilemma: getActiveDilemmaObj()
-            };
-
-            if (gameMode === 'solo') {
-                team.decision = decision;
-                teams.filter(t => t.isAI).forEach(ai => generateAIDecision(ai));
-                const summary = calculateMarketResults();
-                renderRoundResultsUI(summary);
-            } else if (gameMode === 'local') {
-                team.decision = decision;
-                activeTurnIdx++;
-                if (activeTurnIdx < teams.length) {
-                    setupWorkbenchForTeam(teams[activeTurnIdx]);
-                } else {
-                    const summary = calculateMarketResults();
-                    renderRoundResultsUI(summary);
-                }
-            } else if (gameMode === 'join') {
-                clientConn.send({ type: 'SUBMIT_DECISION', teamId: myTeamId, decision });
-                document.getElementById('decisionPanel').classList.add('hidden');
-                document.getElementById('clientSubmittedWaitPanel').classList.remove('hidden');
-            }
-        }
-
-        function generateAIDecision(ai) {
-            const unitCost = BASE_UNIT_COST + roundEvent.costMod;
-            const avgDemand = Math.round(8.0 * roundEvent.demandMult);
-            const noDil = { costMod: 0, defectRate: 0, cashMod: 0, maxPriceBonus: 0, demandBonus: 0 };
-
-            if (ai.aiStyle === 'budget') {
-                const targetStock = Math.round(avgDemand * 1.35);
-                const newQty = Math.max(0, targetStock - ai.carriedStock);
-                ai.decision = { qty: newQty, price: unitCost + 14, quality: false, marketing: false, storage: false, researchBought: false, dilemma: noDil };
-            } else if (ai.aiStyle === 'premium') {
-                const targetStock = Math.max(6, Math.round(avgDemand * 0.85));
-                const newQty = Math.max(0, targetStock - ai.carriedStock);
-                ai.decision = { qty: newQty, price: 66 + Math.floor(Math.random() * 10), quality: true, marketing: ai.cash > 600, storage: true, researchBought: false, dilemma: noDil };
-            } else {
-                const targetStock = avgDemand + Math.floor(Math.random() * 4) - 1;
-                const newQty = Math.max(0, targetStock - ai.carriedStock);
-                ai.decision = { qty: newQty, price: 46 + Math.floor(Math.random() * 8), quality: false, marketing: ai.cash > 850 && Math.random() > 0.6, storage: ai.cash > 700, researchBought: false, dilemma: noDil };
-            }
-        }
-
-        // --- MARKET CALCULATION ENGINE ---
-        function calculateMarketResults() {
-            const baseUnitCost = BASE_UNIT_COST + roundEvent.costMod;
-            const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
-            const baseMaxPrice = Math.max(25, roundDice.baseMaxPrice + roundEvent.maxPriceMod);
-            const streetDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
-            let remainingStreetDemand = streetDemand;
-
-            const results = teams.map(t => {
-                const d = t.decision;
-                const dil = d.dilemma;
-
-                const usableNewQty = dil.defectRate > 0 ? Math.floor(d.qty * (1 - dil.defectRate)) : d.qty;
-                const defectiveLost = d.qty - usableNewQty;
-                const totalAvailable = t.carriedStock + usableNewQty;
-
-                const maxWillingness = baseMaxPrice + (d.quality ? 15 : 0) + (d.marketing ? 10 : 0) + dil.maxPriceBonus;
-                const eligible = d.price <= maxWillingness && totalAvailable > 0;
-
-                let directSales = 0;
-                if (eligible && dil.demandBonus > 0) {
-                    directSales = Math.min(totalAvailable, dil.demandBonus);
-                }
-
-                const appealScore = (d.marketing ? 2 : 0) + (d.quality ? 1 : 0);
-
-                return {
-                    teamId: t.id,
-                    d,
-                    dil,
-                    defectiveLost,
-                    totalAvailable,
-                    price: d.price,
-                    sold: directSales,
-                    eligible,
-                    maxWillingness,
-                    appealScore
-                };
-            });
-
-            const eligibleSorted = results.filter(r => r.eligible).sort((a, b) => {
-                if (a.price !== b.price) return a.price - b.price;
-                return b.appealScore - a.appealScore;
-            });
-
-            let i = 0;
-            while (i < eligibleSorted.length && remainingStreetDemand > 0) {
-                let j = i;
-                while (j < eligibleSorted.length && eligibleSorted[j].price === eligibleSorted[i].price && eligibleSorted[j].appealScore === eligibleSorted[i].appealScore) {
-                    j++;
-                }
-                const tieGroup = eligibleSorted.slice(i, j);
-                const totalGroupRemainingStock = tieGroup.reduce((sum, item) => sum + (item.totalAvailable - item.sold), 0);
-
-                if (remainingStreetDemand >= totalGroupRemainingStock) {
-                    tieGroup.forEach(item => {
-                        const canSell = item.totalAvailable - item.sold;
-                        item.sold += canSell;
-                        remainingStreetDemand -= canSell;
-                    });
-                } else {
-                    let toDistribute = remainingStreetDemand;
-                    while (toDistribute > 0) {
-                        let anyGiven = false;
-                        for (let item of tieGroup) {
-                            if (toDistribute > 0 && item.sold < item.totalAvailable) {
-                                item.sold++;
-                                toDistribute--;
-                                anyGiven = true;
-                            }
-                        }
-                        if (!anyGiven) break;
-                    }
-                    remainingStreetDemand = 0;
-                }
-                i = j;
-            }
-
-            const displayOrder = [...results].sort((a, b) => {
-                if (a.price !== b.price) return a.price - b.price;
-                return b.appealScore - a.appealScore;
-            });
-
-            const storefrontCardsData = displayOrder.map(r => {
-                const t = teams.find(x => x.id === r.teamId);
-                const d = r.d;
-                const unitCost = Math.max(5, baseUnitCost + (d.quality ? 10 : 0) + r.dil.costMod);
-
-                const revenue = r.sold * r.price;
-                const prodExpense = d.qty * unitCost;
-                const extraExpense = (d.marketing ? 120 : 0) + (d.storage ? 100 : 0) + (d.researchBought ? 100 : 0) - r.dil.cashMod;
-                const interestExpense = t.cash < 0 ? Math.round(Math.abs(t.cash) * 0.20) : 0;
-                const totalExpenses = prodExpense + fixedCost + extraExpense + interestExpense;
-                const netProfit = revenue - totalExpenses;
-
-                const unsold = r.totalAvailable - r.sold;
-                const savedForNextWeek = d.storage ? Math.floor(unsold * 0.5) : 0;
-                const wasted = unsold - savedForNextWeek + r.defectiveLost;
-
-                t.cash += netProfit;
-                t.carriedStock = savedForNextWeek;
-                t.history.push(t.cash);
-                t.totalSold += r.sold;
-                t.totalWasted += wasted;
-                t.lastPrice = r.price;
-                t.lastSold = r.sold;
-
-                return {
-                    teamId: t.id,
-                    name: t.name,
-                    product: t.product,
-                    color: t.color,
-                    price: r.price,
-                    sold: r.sold,
-                    totalAvailable: r.totalAvailable,
-                    savedForNextWeek,
-                    wasted,
-                    defectiveLost: r.defectiveLost,
-                    eligible: r.eligible,
-                    maxWillingness: r.maxWillingness,
-                    revenue,
-                    totalExpenses,
-                    netProfit,
-                    newCash: t.cash,
-                    quality: d.quality,
-                    marketing: d.marketing,
-                    storage: d.storage
-                };
-            });
-
-            return {
-                round: currentRound,
-                dice: roundDice,
-                streetDemand,
-                baseMaxPrice,
-                cards: storefrontCardsData
-            };
-        }
-
-        function roll3DDice(targetNumber) {
-            SoundFX.diceRoll();
-            const cube = document.getElementById('diceCube');
-            const faceRotations = {
-                1: { x: 0, y: 0 },
-                2: { x: 0, y: -90 },
-                3: { x: 0, y: 180 },
-                4: { x: 0, y: 90 },
-                5: { x: -90, y: 0 },
-                6: { x: 90, y: 0 }
-            };
-            const target = faceRotations[targetNumber];
-            cube.style.transform = `rotateX(${target.x + 720}deg) rotateY(${target.y + 720}deg)`;
-        }
-
-        function renderRoundResultsUI(summary) {
-            document.getElementById('decisionPanel').classList.add('hidden');
-            document.getElementById('roundResultPanel').classList.remove('hidden');
-
-            setTimeout(() => roll3DDice(summary.dice.roll), 50);
-
-            document.getElementById('weatherEmoji').textContent = summary.dice.icon;
-            document.getElementById('streetWeatherStatus').textContent = `Dagens vejr: ${summary.dice.label}`;
-            document.getElementById('resRoundNum').textContent = summary.round;
-            document.getElementById('resWeatherTitle').textContent = `${summary.dice.icon} ${summary.dice.label}`;
-            document.getElementById('resTotalDemand').textContent = `${summary.streetDemand} kunder`;
-            document.getElementById('resMaxPrice').textContent = `${summary.baseMaxPrice} kr.`;
-
-            const grid = document.getElementById('visualStorefrontsGrid');
-            grid.innerHTML = '';
-            let myProfit = 0;
-
-            summary.cards.forEach((c, idx) => {
-                if (c.teamId === myTeamId) myProfit = c.netProfit;
-
-                const profitBadge = c.netProfit >= 0
-                    ? `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1 rounded-xl font-extrabold text-sm">+${c.netProfit} kr.</span>`
-                    : `<span class="bg-rose-100 text-rose-800 border border-rose-300 px-3 py-1 rounded-xl font-extrabold text-sm">${c.netProfit} kr.</span>`;
-
-                let shelfHtml = '';
-                const totalShownItems = c.sold + c.savedForNextWeek + c.wasted;
-                const maxVisual = Math.min(totalShownItems, 36);
-                if (totalShownItems > 0) {
-                    const soldBlocks = Math.round((c.sold / totalShownItems) * maxVisual);
-                    const savedBlocks = Math.round((c.savedForNextWeek / totalShownItems) * maxVisual);
-                    const wastedBlocks = Math.max(0, maxVisual - soldBlocks - savedBlocks);
-                    for (let b = 0; b < soldBlocks; b++) shelfHtml += `<span class="w-3 h-3 rounded-sm bg-emerald-500 inline-block"></span>`;
-                    for (let b = 0; b < savedBlocks; b++) shelfHtml += `<span class="w-3 h-3 rounded-sm bg-sky-400 inline-block"></span>`;
-                    for (let b = 0; b < wastedBlocks; b++) shelfHtml += `<span class="w-3 h-3 rounded-sm bg-rose-400 inline-block"></span>`;
-                } else {
-                    shelfHtml = `<span class="text-xs text-slate-400 italic">Ingen varer på disken</span>`;
-                }
-
-                let feedbackMsg = '';
-                if (!c.eligible && c.totalAvailable > 0) {
-                    feedbackMsg = `<span class="text-rose-600 font-extrabold">For dyrt! (Kundernes grænse: ${c.maxWillingness} kr.)</span>`;
-                } else if (c.totalAvailable > 0 && c.wasted === 0 && c.savedForNextWeek === 0 && c.defectiveLost === 0) {
-                    feedbackMsg = `<span class="text-emerald-700 font-extrabold">Alt udsolgt!</span>`;
-                } else {
-                    const parts = [];
-                    if (c.savedForNextWeek > 0) parts.push(`<span class="text-sky-700 font-bold">${c.savedForNextWeek} gemt</span>`);
-                    if (c.wasted > 0) parts.push(`<span class="text-rose-600 font-bold">${c.wasted} spild</span>`);
-                    feedbackMsg = parts.join(' • ');
-                }
-
-                const tags = [];
-                if (c.quality) tags.push("✨ Luksus");
-                if (c.marketing) tags.push("📣 Blikfang");
-                if (c.storage) tags.push("❄️ Lagersikring");
-                const tagHtml = tags.length > 0 ? `<div class="flex flex-wrap gap-1 mt-1">${tags.map(tg => `<span class="text-[10px] font-bold bg-stone-200/80 text-slate-700 px-2 py-0.5 rounded-md">${tg}</span>`).join('')}</div>` : '';
-
-                grid.innerHTML += `
-                    <div class="bg-stone-50 border border-stone-200 rounded-2xl p-5 flex flex-col justify-between space-y-3 animate-pop" style="animation-delay: ${idx * 80}ms">
-                        <div class="flex justify-between items-start gap-2">
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="w-3.5 h-3.5 rounded-full" style="background:${c.color}"></span>
-                                    <h5 class="font-extrabold text-slate-900 text-base">${c.name}</h5>
-                                </div>
-                                <div class="text-xs text-slate-600">${c.product} • Prisskilt: <strong class="text-amber-700">${c.price} kr.</strong></div>
-                                ${tagHtml}
-                            </div>
-                            ${profitBadge}
-                        </div>
-
-                        <div class="bg-white p-3 rounded-xl border border-stone-200 space-y-2">
-                            <div class="flex justify-between text-xs">
-                                <span class="text-slate-700">Solgt: <strong>${c.sold}</strong> af ${c.totalAvailable} stk.</span>
-                                <div>${feedbackMsg}</div>
-                            </div>
-                            <div class="flex flex-wrap gap-1">${shelfHtml}</div>
-                        </div>
-
-                        <div class="flex justify-between items-center text-xs text-slate-500 pt-1">
-                            <span>Salg: <strong class="text-slate-800">${c.revenue} kr.</strong> | Udgifter: <strong class="text-slate-800">${c.totalExpenses} kr.</strong></span>
-                            <span>Kasse: <strong class="text-slate-900 text-sm">${c.newCash.toLocaleString('da-DK')} kr.</strong></span>
-                        </div>
-                    </div>
-                `;
-            });
-
-            setTimeout(() => {
-                if (myProfit >= 0) SoundFX.cashRegister();
-                else SoundFX.loss();
-            }, 1150);
-
-            renderStreetBooths(true);
-            updateChart();
-
-            if (gameMode === 'join') {
-                document.getElementById('nextRoundBtnContainer').classList.add('hidden');
-                document.getElementById('clientNextRoundWaitNote').classList.remove('hidden');
-            } else {
-                document.getElementById('nextRoundBtnContainer').classList.remove('hidden');
-                document.getElementById('clientNextRoundWaitNote').classList.add('hidden');
-                const btnNext = document.getElementById('btnNextRound');
-                btnNext.textContent = currentRound >= maxRounds ? "Se endelig vinder og slutstilling →" : `Start Uge ${currentRound + 1} →`;
-            }
-        }
-
-        function nextRound() {
-            if (currentRound >= maxRounds) {
-                SoundFX.cashRegister();
-                if (gameMode === 'host') broadcastToClients({ type: 'GAME_OVER', teams });
-                showEndScreen();
-            } else {
-                currentRound++;
-                if (gameMode === 'host') prepareHostedRound();
-                else prepareSoloOrLocalRound();
-            }
-        }
-
-        // --- CHART ---
-        function initChart() {
-            const ctx = document.getElementById('balanceChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
-
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Start'],
-                    datasets: teams.map(t => ({
-                        label: t.name,
-                        data: t.history,
-                        borderColor: t.color,
-                        backgroundColor: t.color,
-                        borderWidth: 3,
-                        tension: 0.25,
-                        pointRadius: 4
-                    }))
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#334155', font: { family: 'Plus Jakarta Sans', weight: '700' } } }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#64748b' }, grid: { color: '#f1f5f9' } },
-                        y: { ticks: { color: '#64748b' }, grid: { color: '#f1f5f9' } }
-                    }
-                }
-            });
-        }
-
-        function updateChart() {
-            if (!chartInstance) return;
-            const labels = ['Start'];
-            for (let r = 1; r <= currentRound; r++) labels.push(`Uge ${r}`);
-            chartInstance.data.labels = labels;
-            teams.forEach((t, idx) => {
-                if (chartInstance.data.datasets[idx]) {
-                    chartInstance.data.datasets[idx].data = t.history;
-                }
-            });
-            chartInstance.update();
-        }
-
-        // --- END SCREEN ---
-        function showEndScreen() {
-            document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('roundBadge').classList.add('hidden');
-            document.getElementById('endScreen').classList.remove('hidden');
-
-            const sorted = [...teams].sort((a, b) => b.cash - a.cash);
-            const podium = document.getElementById('podiumGrid');
-            podium.innerHTML = '';
-
-            sorted.forEach((t, index) => {
-                const medal = index === 0 ? '🏆 1. Plads (Vinder)' : index === 1 ? '🥈 2. Plads' : index === 2 ? '🥉 3. Plads' : `${index + 1}. Plads`;
-                const border = index === 0 ? 'border-amber-400 bg-amber-50/70' : 'border-stone-200 bg-stone-50';
-                const profit = t.cash - STARTING_CASH;
-
-                podium.innerHTML += `
-                    <div class="p-5 rounded-2xl border-2 ${border} flex flex-col justify-between">
-                        <div>
-                            <div class="text-xs font-extrabold uppercase tracking-wider ${index === 0 ? 'text-amber-700' : 'text-slate-500'} mb-1">${medal}</div>
-                            <div class="text-xl font-extrabold text-slate-900">${t.name}</div>
-                            <div class="text-xs text-slate-500 mb-4">${t.product}</div>
-                        </div>
-                        <div class="space-y-1.5 text-xs border-t border-stone-200 pt-3">
-                            <div class="flex justify-between"><span>Slutsaldo:</span> <strong class="text-slate-900 text-sm">${t.cash.toLocaleString('da-DK')} kr.</strong></div>
-                            <div class="flex justify-between"><span>Samlet overskud/tab:</span> <strong class="${profit >= 0 ? 'text-emerald-700' : 'text-rose-600'}">${profit >= 0 ? '+' : ''}${profit} kr.</strong></div>
-                            <div class="flex justify-between"><span>Solgte varer i alt:</span> <span class="text-slate-700 font-semibold">${t.totalSold} stk.</span></div>
-                            <div class="flex justify-between"><span>Samlet spild:</span> <span class="text-slate-500">${t.totalWasted} stk.</span></div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-    </script>
-</body>
-</html>
+            <h2 id="evTitle" class="text-lg md:text-xl font-extrabold text-slate-900">Normal handelsuge</h2>
+            <p id="evDesc" class="text-xs text-slate-700">Ingen uforudsete hændelser denne uge.</p>
+          </div>
+        </div>
+        <div class="flex gap-2 text-xs font-bold">
+          <span class="bg-white/90 px-3 py-2 rounded-xl border border-stone-200 shadow-sm">Basis-råvare: <b id="stCost" class="text-slate-900">20 kr.</b></span>
+          <span class="bg-white/90 px-3 py-2 rounded-xl border border-stone-200 shadow-sm">Husleje: <b id="stRent" class="text-slate-900">200 kr.</b></span>
+        </div>
+      </div>
+
+      <!-- Booths Row with Speech Bubbles, Stars & Permanent Gear -->
+      <div id="boothsRow" class="px-6 pt-6 pb-0 grid grid-cols-2 md:grid-cols-4 gap-4 items-end"></div>
+
+      <div class="bg-stone-700 border-t-4 border-stone-600 text-stone-200 px-6 py-2.5 text-xs flex flex-wrap justify-between items-center gap-2">
+        <span>🚶‍♂️ <b>60% Prisjægere</b> (går efter laveste pris) • 💎 <b>40% Kvalitetskøbere</b> (går efter flest ⭐ stjerner)</span>
+        <span class="font-bold text-stone-400">Handelsgaden</span>
+      </div>
+    </div>
+
+    <!-- HOST MONITOR -->
+    <div id="hostMonitor" class="hidden bg-white border-2 border-indigo-300 rounded-3xl p-6 shadow-xl space-y-4">
+      <div class="flex justify-between items-center border-b pb-3 flex-wrap gap-2">
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900">Eleverne forbereder deres boder...</h3>
+          <p class="text-xs text-slate-500">Holdenes gade-råb dukker live op over boderne, når de låser deres valg.</p>
+        </div>
+        <button type="button" onclick="forceHostResolve()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs cursor-pointer">Tving runde i gang nu →</button>
+      </div>
+      <div id="hostWaitGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+    </div>
+
+    <!-- CLIENT WAIT -->
+    <div id="clientWait" class="hidden bg-white border-2 border-emerald-300 rounded-3xl p-8 text-center shadow-xl space-y-2 anim-pop">
+      <div class="text-4xl">🔒</div>
+      <h3 class="text-xl font-extrabold text-slate-900">Din bod er låst og klar!</h3>
+      <p class="text-xs text-slate-600">Dit gade-råb er sendt til storskærmen. Venter på at de sidste boder åbner...</p>
+    </div>
+
+    <!-- DECISION WORKBENCH -->
+    <div id="workbench" class="bg-white border border-stone-200 rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
+      <div class="flex flex-wrap justify-between items-center gap-3 border-b border-stone-200 pb-4">
+        <div>
+          <span class="text-xs font-extrabold text-emerald-600 uppercase">Klargør din forretning</span>
+          <h3 id="wbTeamName" class="text-2xl font-extrabold text-slate-900">Din bod</h3>
+          <p id="wbSub" class="text-xs text-slate-500"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="wbStarsBadge" class="bg-amber-50 border border-amber-200 text-amber-900 px-3 py-1.5 rounded-xl text-xs font-extrabold">⭐⭐⭐</span>
+          <span id="wbTurnBadge" class="text-xs bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-xl font-bold">Din tur</span>
+        </div>
+      </div>
+
+      <!-- STEP 1: MANDATORY WEEKLY DILEMMA -->
+      <div class="bg-amber-50/90 border-2 border-amber-300 rounded-2xl p-5 space-y-2.5">
+        <div class="flex justify-between items-center text-xs font-extrabold text-amber-900">
+          <span class="bg-amber-200/80 px-2.5 py-0.5 rounded-full">1. UGENS DILEMMA (SKAL BESVARES)</span>
+          <span id="dilStatus">Vælg A eller B for at låse boden op</span>
+        </div>
+        <div id="dilTitle" class="font-extrabold text-base text-slate-900"></div>
+        <p id="dilText" class="text-xs text-slate-700"></p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+          <button type="button" onclick="pickDil('A')" id="btnDilA" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white hover:border-amber-500 text-left text-xs font-bold cursor-pointer transition"></button>
+          <button type="button" onclick="pickDil('B')" id="btnDilB" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white hover:border-amber-500 text-left text-xs font-bold cursor-pointer transition"></button>
+        </div>
+      </div>
+
+      <div id="resReveal" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 text-xs font-bold text-indigo-950 anim-pop"></div>
+
+      <!-- STEP 2: PRODUCTION & PRICE SLIDERS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 space-y-3">
+          <div class="flex justify-between items-baseline">
+            <span class="font-extrabold text-sm text-slate-900">2. Ny produktion</span>
+            <b id="lblQty" class="text-2xl font-extrabold text-emerald-600">15 stk.</b>
+          </div>
+          <p class="text-[11px] text-slate-500">Din råvarepris inkl. maskiner/valg: <b id="lblUnitCost" class="text-slate-800">20 kr./stk.</b></p>
+          <input type="range" id="slQty" min="0" max="60" value="15" oninput="slide()" class="w-full">
+          <div class="bg-white p-3 rounded-xl border border-stone-200 text-xs flex justify-between">
+            <span>Klar på disken (inkl. lager): <b id="lblReady" class="text-slate-900">15 stk.</b></span>
+            <span>Udgift: <b id="lblProdCost" class="text-amber-700">300 kr.</b></span>
+          </div>
+          <div id="shelfIcons" class="flex flex-wrap gap-1 min-h-[22px]"></div>
+        </div>
+
+        <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 space-y-3">
+          <div class="flex justify-between items-baseline">
+            <span class="font-extrabold text-sm text-slate-900">3. Dit prisskilt</span>
+            <b id="lblPrice" class="text-2xl font-extrabold text-amber-600">45 kr.</b>
+          </div>
+          <p class="text-[11px] text-
