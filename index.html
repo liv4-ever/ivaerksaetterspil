@@ -27,24 +27,176 @@
 <body class="bg-amber-50/60 text-slate-800 min-h-screen flex flex-col">
 
 <header class="bg-white border-b border-stone-200 px-6 py-3 flex justify-between items-center sticky top-0 z-30 shadow-sm">
-  <div class="flex items-center gap-3">
+  <div class="flex items-center gap-3 cursor-pointer" onclick="showWelcomeScreen()">
     <div class="bg-emerald-600 text-white font-extrabold px-3 py-1 rounded-xl text-sm">HANDELSGADEN</div>
     <h1 class="font-extrabold text-base md:text-lg text-slate-900">Iværksætterspillet</h1>
   </div>
   <div class="flex items-center gap-2">
     <span id="roomBadge" class="hidden bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full text-xs font-extrabold">Kode: <b id="topCode">----</b></span>
+    <button type="button" onclick="openRulesModal()" class="bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-900 px-3 py-1 rounded-full text-xs font-extrabold cursor-pointer transition">📖 Regler</button>
     <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-stone-100 border border-stone-300 px-3 py-1 rounded-full text-xs font-bold cursor-pointer">🔊 Lyd</button>
     <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-900 px-3 py-1 rounded-full text-xs font-extrabold">Uge <b id="rndNow">1</b>/<b id="rndMax">10</b></span>
   </div>
 </header>
 
-<main class="max-w-5xl w-full mx-auto p-4 md:p-6 flex-grow">
+<main class="max-w-5xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col justify-center">
+
+  <!-- SCREEN 0: LANDING / WELCOME SCREEN -->
+  <section id="scrWelcome" class="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-2xl my-auto">
+    <!-- Illustrated Street Header -->
+    <div class="bg-gradient-to-b from-sky-300 via-sky-100 to-amber-100 p-8 md:p-12 text-center relative border-b border-stone-200">
+      <div class="flex justify-center gap-4 text-4xl md:text-5xl mb-4">
+        <span>🏪</span><span>🌤️</span><span>🎪</span><span>🛍️</span>
+      </div>
+      <span class="bg-white/90 text-emerald-800 text-xs font-extrabold uppercase tracking-widest px-3.5 py-1 rounded-full border border-emerald-200 shadow-sm">
+        Markedssimulator & Forretningsspil
+      </span>
+      <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mt-3 tracking-tight">
+        Handelsgaden
+      </h2>
+      <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium">
+        Byg din egen markedsbod fra bunden, styr uden om ugens kriser, og kæmp om gadens kunder gennem prissætning, kvalitet og psykologisk bluff.
+      </p>
+
+      <!-- Decorative Mini-Booths -->
+      <div class="max-w-lg mx-auto mt-8 grid grid-cols-3 gap-3 items-end">
+        <div class="flex flex-col items-center">
+          <div class="w-full h-4 rounded-t stripes bg-emerald-600"></div>
+          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-emerald-700 shadow-sm">⭐⭐⭐ • 1.000 kr.</div>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-full h-4 rounded-t stripes bg-blue-600"></div>
+          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-blue-700 shadow-sm">❄️ Køledisk</div>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-full h-4 rounded-t stripes bg-amber-600"></div>
+          <div class="w-11/12 bg-white border-x border-t p-2 rounded-b text-[11px] font-extrabold text-amber-700 shadow-sm">✨ Luksusbrand</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Two Main Action Buttons -->
+    <div class="p-6 md:p-10 bg-white">
+      <div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button type="button" onclick="openRulesModal()" class="py-4 px-6 rounded-2xl border-2 border-amber-400 bg-amber-50 hover:bg-amber-100 text-slate-900 font-extrabold text-base md:text-lg flex items-center justify-center gap-2.5 transition cursor-pointer shadow-sm">
+          <span>📖</span> <span>Sådan spiller du spillet</span>
+        </button>
+        <button type="button" onclick="goToSetupScreen()" class="py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base md:text-lg flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/20">
+          <span>🚀</span> <span>Start spillet</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ILLUSTRATED RULES MODAL / GUIDE -->
+  <div id="rulesModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl border border-stone-200 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 space-y-6 my-8">
+      
+      <div class="flex justify-between items-start gap-4 border-b border-stone-200 pb-4">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Spilvejledning</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">Sådan spiller du Handelsgaden</h2>
+        </div>
+        <button type="button" onclick="closeRulesModal()" class="bg-stone-100 hover:bg-stone-200 text-slate-700 font-extrabold px-3.5 py-1.5 rounded-xl text-sm cursor-pointer">✕ Luk</button>
+      </div>
+
+      <!-- 1. Goal & Start -->
+      <div class="bg-stone-50 border border-stone-200 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+        <div class="md:col-span-2 space-y-1">
+          <div class="text-xs font-extrabold uppercase text-emerald-700">🎯 Målet med spillet</div>
+          <h3 class="text-lg font-extrabold text-slate-900">Stå med flest penge i kassen efter sidste uge!</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Du styrer din egen bod gennem 8 til 12 uger. Hver uge koster det <b>200 kr. i fast husleje</b> at holde åbent, og en almindelig vare koster <b>20 kr.</b> at fremstille.</p>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border text-center">
+          <div class="text-2xl">💰</div>
+          <div class="font-extrabold text-sm text-slate-900 mt-1">1.000 kr.</div>
+          <div class="text-[11px] text-slate-500">Startkapital i kassen</div>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border text-center">
+          <div class="text-2xl">⭐⭐⭐</div>
+          <div class="font-extrabold text-sm text-slate-900 mt-1">3 Stjerner</div>
+          <div class="text-[11px] text-slate-500">Dit start-omdømme</div>
+        </div>
+      </div>
+
+      <!-- 2. Two Customer Types -->
+      <div class="space-y-2">
+        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-500">👥 Kend dine kunder på gaden (2 kundetyper)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-amber-50/80 border-2 border-amber-300 rounded-2xl p-4 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-sm text-amber-950">🏷️ 60 % Prisjægere</span>
+              <span class="bg-amber-200 text-amber-900 text-[11px] font-extrabold px-2 py-0.5 rounded-full">Går efter laveste pris</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">Prisjægerne kigger kun på prisskiltet. De handler hos den <b>billigste bod på gaden først</b>, indtil der er udsolgt, og går derefter videre til den næstbilligste.</p>
+          </div>
+          <div class="bg-indigo-50/80 border-2 border-indigo-300 rounded-2xl p-4 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-sm text-indigo-950">💎 40 % Kvalitetskøbere</span>
+              <span class="bg-indigo-200 text-indigo-900 text-[11px] font-extrabold px-2 py-0.5 rounded-full">Går efter flest ⭐ stjerner</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">Kvalitetskøberne går direkte til boden med <b>flest stjerner (⭐)</b>, uanset om naboen er billigere – og de er villige til at betale <b>20–40 kr. mere pr. vare</b>!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Step by step week -->
+      <div class="space-y-2">
+        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-500">🔄 Ugens 4 trin ved din bod</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
+            <div class="font-extrabold text-slate-900 text-sm">1. Tag stilling til Ugens Dilemma</div>
+            <p class="text-slate-600">Hver uge skal I vælge mellem mulighed <b>A</b> eller <b>B</b> for at låse boden op. Pas på: Et billigt restparti giver 20 % defekte varer og koster jer <b>-1 ⭐</b> i omdømme, mens god service og influencers giver flere kunder og <b>+1 ⭐</b>.</p>
+          </div>
+          <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
+            <div class="font-extrabold text-slate-900 text-sm">2. Fyld hylden & Sæt dit prisskilt</div>
+            <p class="text-slate-600">Vælg hvor mange varer I vil producere, og sæt ugens pris. Krydser I <b>💎 Luksus-råvarer</b> af (+10 kr./stk.), får I midlertidigt <b>+1 ekstra ⭐</b> i denne uge.</p>
+          </div>
+          <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
+            <div class="font-extrabold text-slate-900 text-sm">3. Skriv et Gade-råb / Bluff</div>
+            <p class="text-slate-600">Skriv en besked i taleboblen over jeres bod på storskærmen! I må gerne bluffe konkurrenterne (f.eks. <i>"Vi sælger alt til 25 kr. i dag!"</i>, selvom jeres rigtige pris er 65 kr.).</p>
+          </div>
+          <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
+            <div class="font-extrabold text-slate-900 text-sm">4. Terningekast & Live-salg (Kl. 10–18)</div>
+            <p class="text-slate-600">Når alle er klar, ruller 3D-terningen (1 = Regnvejr, 6 = Kundestorm). Uret tæller fra kl. 10:00 til 18:00, mens varerne sælges live. Går kassen i minus, tager banken <b>20 % i strafrente</b>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Permanent Upgrades -->
+      <div class="space-y-2">
+        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-500">🛠️ Permanente opgraderinger (Købes én gang – gælder resten af spillet)</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
+            <div class="font-extrabold text-emerald-950 text-sm">❄️ Køledisk (350 kr.)</div>
+            <p class="text-slate-600 mt-1">Redder fast <b>60 % af dine usolgte varer</b> til næste uge. Uden køledisk smides alle usolgte varer ud!</p>
+          </div>
+          <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
+            <div class="font-extrabold text-emerald-950 text-sm">⚙️ Værkstedsmaskine (400 kr.)</div>
+            <p class="text-slate-600 mt-1">Gør din produktion mere effektiv og sænker din råvarepris med <b>-4 kr. pr. stk.</b> permanent.</p>
+          </div>
+          <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
+            <div class="font-extrabold text-emerald-950 text-sm">✨ Neonskilt & Brand (350 kr.)</div>
+            <p class="text-slate-600 mt-1">Giver dig <b>+1 permanent ⭐</b> og sikrer <b>+3 faste stamkunder</b> hver eneste uge.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-stone-200 flex justify-end gap-3">
+        <button type="button" onclick="closeRulesModal()" class="px-5 py-3 rounded-xl border border-stone-300 bg-stone-100 hover:bg-stone-200 text-xs font-extrabold text-slate-700 cursor-pointer">Luk vindue</button>
+        <button type="button" onclick="closeRulesModal(); goToSetupScreen();" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-extrabold text-white cursor-pointer shadow-md">Gå til Start spillet →</button>
+      </div>
+    </div>
+  </div>
 
   <!-- SETUP SCREEN -->
-  <section id="scrSetup" class="bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl space-y-6">
-    <div>
-      <h2 class="text-2xl font-extrabold text-slate-900">Åbn din bod på Handelsgaden</h2>
-      <p class="text-sm text-slate-600">Alle starter med <b>1.000 kr.</b> og <b>⭐⭐⭐ (3 stjerner)</b> i omdømme. Vælg spiltilstand:</p>
+  <section id="scrSetup" class="hidden bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl space-y-6">
+    <div class="flex justify-between items-center flex-wrap gap-2">
+      <div>
+        <h2 class="text-2xl font-extrabold text-slate-900">Åbn din bod på Handelsgaden</h2>
+        <p class="text-sm text-slate-600">Alle starter med <b>1.000 kr.</b> og <b>⭐⭐⭐ (3 stjerner)</b> i omdømme. Vælg spiltilstand:</p>
+      </div>
+      <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-stone-100 px-3 py-1.5 rounded-xl cursor-pointer">← Tilbage til forsiden</button>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -312,6 +464,27 @@
 </main>
 
 <script>
+// --- NAVIGATION & RULES MODAL ---
+function goToSetupScreen() {
+  playTone(520, 0.05);
+  document.getElementById('scrWelcome').classList.add('hidden');
+  document.getElementById('scrSetup').classList.remove('hidden');
+}
+function showWelcomeScreen() {
+  if (!document.getElementById('scrGame').classList.contains('hidden')) return;
+  playTone(440, 0.04);
+  document.getElementById('scrSetup').classList.add('hidden');
+  document.getElementById('scrWelcome').classList.remove('hidden');
+}
+function openRulesModal() {
+  playTone(580, 0.04);
+  document.getElementById('rulesModal').classList.remove('hidden');
+}
+function closeRulesModal() {
+  playTone(420, 0.04);
+  document.getElementById('rulesModal').classList.add('hidden');
+}
+
 // --- SAFE SOUND ---
 let sndOn = true, aCtx = null;
 function playTone(freq, dur, type='sine') {
@@ -407,6 +580,7 @@ function beginLocal(m) {
     for(let i=0;i<cnt;i++) teams.push(mkTeam(i, document.getElementById('ln_'+i).value||`Hold ${i+1}`, document.getElementById('lp_'+i).value||"Vare"));
   }
   wk = 1;
+  document.getElementById('scrWelcome').classList.add('hidden');
   document.getElementById('scrSetup').classList.add('hidden');
   document.getElementById('scrGame').classList.remove('hidden');
   document.getElementById('rndBadge').classList.remove('hidden');
@@ -470,6 +644,7 @@ function onHostData(conn, msg) {
 }
 function startHostGame() {
   playTone(880, 0.15); wk = 1;
+  document.getElementById('scrWelcome').classList.add('hidden');
   document.getElementById('scrSetup').classList.add('hidden');
   document.getElementById('scrGame').classList.remove('hidden');
   document.getElementById('rndBadge').classList.remove('hidden');
@@ -521,6 +696,7 @@ function joinHost() {
         document.getElementById('joinWait').classList.remove('hidden');
       } else if (msg.type==='START_WK') {
         wk = msg.wk; maxWks = msg.maxWks; curEv = msg.ev; teams = msg.teams; turnIdx = myId;
+        document.getElementById('scrWelcome').classList.add('hidden');
         document.getElementById('scrSetup').classList.add('hidden');
         document.getElementById('scrGame').classList.remove('hidden');
         document.getElementById('rndBadge').classList.remove('hidden');
@@ -779,13 +955,11 @@ function runMarketMath() {
 
   const list = teams.map(t => {
     const d = t.dec;
-    // Apply new permanent purchases
     let permSpend = 0;
     if (d.buyPerms.cool && !t.perms.cool) { t.perms.cool = true; permSpend += 350; }
     if (d.buyPerms.mach && !t.perms.mach) { t.perms.mach = true; permSpend += 400; }
     if (d.buyPerms.neon && !t.perms.neon) { t.perms.neon = true; permSpend += 350; t.stars = Math.min(5, t.stars + 1); }
 
-    // Update reputation stars from dilemma
     t.stars = Math.max(1, Math.min(5, t.stars + (d.dil.starMod || 0)));
     const effStars = Math.min(5, t.stars + (d.qual ? 1 : 0));
 
