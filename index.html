@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iværksætterspillet - Markedssimulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .dice-anim { animation: roll 0.5s ease-out; }
+        @keyframes roll {
+            0% { transform: rotate(0deg) scale(0.8); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Top Navigation -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="bg-emerald-500 text-slate-900 font-extrabold px-3 py-1 rounded-lg text-lg tracking-tight">
+                CEO SIM
+            </div>
+            <div>
+                <h1 class="font-bold text-lg text-white leading-tight">Iværksætterspillet</h1>
+                <p class="text-xs text-slate-400">Prissætning, udbud, efterspørgsel & risikovurdering</p>
+            </div>
+        </div>
+        <div id="roundBadge" class="hidden bg-slate-700 px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-600">
+            Uge <span id="currentRoundDisplay" class="text-emerald-400">1</span> af <span id="maxRoundsDisplay">6</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6">
+
+        <!-- SCREEN 1: SETUP -->
+        <section id="setupScreen" class="max-w-3xl mx-auto bg-slate-800 rounded-2xl border border-slate-700 p-6 md:p-8 shadow-xl">
+            <h2 class="text-2xl font-bold text-white mb-2">Start ny markedssimulering</h2>
+            <p class="text-slate-300 text-sm mb-6">Vælg om du vil spille alene mod computerstyrede konkurrenter, eller om I er flere grupper/elever ved samme skærm. Alle starter med <strong>1.000 kr.</strong> på kontoen.</p>
+
+            <!-- Mode Selector -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <button type="button" onclick="setGameMode('solo')" id="btnModeSolo" class="p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/10 text-left transition">
+                    <div class="font-bold text-white text-base mb-1">Solo (Mod AI-konkurrenter)</div>
+                    <div class="text-xs text-slate-300">Du styrer én virksomhed og konkurrerer mod 3 AI-virksomheder med forskellige strategier.</div>
+                </button>
+                <button type="button" onclick="setGameMode('multi')" id="btnModeMulti" class="p-4 rounded-xl border-2 border-slate-700 bg-slate-800/50 hover:border-slate-600 text-left transition">
+                    <div class="font-bold text-white text-base mb-1">Grupper / Flere spillere</div>
+                    <div class="text-xs text-slate-300">2 til 6 hold indtaster deres valg på skift (med skjult input), hvorefter markedet afgøres samlet.</div>
+                </button>
+            </div>
+
+            <!-- Team Count (Only for Multi) -->
+            <div id="multiCountContainer" class="hidden mb-6 bg-slate-900/60 p-4 rounded-xl border border-slate-700">
+                <label class="block text-sm font-semibold text-slate-200 mb-2">Antal hold/virksomheder:</label>
+                <div class="flex gap-2">
+                    <button type="button" onclick="setTeamCount(2)" class="team-cnt-btn px-4 py-2 rounded-lg bg-emerald-600 text-white font-bold text-sm">2 hold</button>
+                    <button type="button" onclick="setTeamCount(3)" class="team-cnt-btn px-4 py-2 rounded-lg bg-slate-700 text-slate-200 font-bold text-sm">3 hold</button>
+                    <button type="button" onclick="setTeamCount(4)" class="team-cnt-btn px-4 py-2 rounded-lg bg-slate-700 text-slate-200 font-bold text-sm">4 hold</button>
+                    <button type="button" onclick="setTeamCount(5)" class="team-cnt-btn px-4 py-2 rounded-lg bg-slate-700 text-slate-200 font-bold text-sm">5 hold</button>
+                    <button type="button" onclick="setTeamCount(6)" class="team-cnt-btn px-4 py-2 rounded-lg bg-slate-700 text-slate-200 font-bold text-sm">6 hold</button>
+                </div>
+            </div>
+
+            <!-- Company & Product Inputs -->
+            <div id="teamsInputList" class="space-y-4 mb-8"></div>
+
+            <!-- Rules Quick Reference -->
+            <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-700/80 mb-6 text-xs text-slate-300 space-y-1.5">
+                <div class="font-bold text-slate-200 uppercase tracking-wider mb-1">Spillets grundregler</div>
+                <p>• <strong>Produktionspris:</strong> 20 kr. pr. stk. (kan ændre sig ved særlige hændelser). Usolgte varer smides ud ved ugens slutning (0 kr. værdi).</p>
+                <p>• <strong>Faste udgifter:</strong> 200 kr. pr. uge (husleje/drift) trækkes automatisk uanset salg.</p>
+                <p>• <strong>Kunderne:</strong> Går altid til den billigste udbyder først, så længe prisen er under ugens maksimale betalingsvilje.</p>
+                <p>• <strong>Kassekredit:</strong> Går din saldo i minus, betaler du 20 % rente af gælden ved næste uges start.</p>
+            </div>
+
+            <button type="button" onclick="startGame()" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-base transition shadow-lg shadow-emerald-500/20">
+                Start spillet
+            </button>
+        </section>
+
+        <!-- SCREEN 2: ACTIVE GAME -->
+        <section id="gameScreen" class="hidden space-y-6">
+
+            <!-- Top Status Cards -->
+            <div id="scoreboardGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+
+            <!-- Event & Market Info Banner -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <!-- Current Event Card -->
+                <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-md">Ugens markedshændelse</span>
+                            <span class="text-xs text-slate-400">Gælder for alle i uge <span id="eventRoundNum">1</span></span>
+                        </div>
+                        <h3 id="eventTitle" class="text-xl font-bold text-white mb-1">Normal handelsuge</h3>
+                        <p id="eventDesc" class="text-sm text-slate-300">Ingen uforudsete forstyrrelser i forsyningskæden eller lokalområdet denne uge.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/80 flex flex-wrap gap-4 text-xs">
+                        <div>Produktionspris nu: <strong id="currentCostDisplay" class="text-white">20 kr./stk.</strong></div>
+                        <div>Faste udgifter nu: <strong id="currentFixedDisplay" class="text-white">200 kr.</strong></div>
+                    </div>
+                </div>
+
+                <!-- Demand Probability Table -->
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 text-xs">
+                    <div class="font-bold text-slate-200 uppercase tracking-wider mb-2">Mulige markedsudald (Terning)</div>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-slate-400 border-b border-slate-700">
+                                <th class="py-1">Slag</th>
+                                <th class="py-1">Vejr/Stemning</th>
+                                <th class="py-1">Maks. pris</th>
+                                <th class="py-1 text-right">Kunder</th>
+                            </tr>
+                        </thead>
+                        <tbody id="demandTableBody" class="divide-y divide-slate-700/50 text-slate-300"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Decision Panel -->
+            <div id="decisionPanel" class="bg-slate-800 border-2 border-emerald-500/50 rounded-2xl p-6 shadow-xl">
+                <div class="flex flex-wrap justify-between items-center gap-2 mb-4 pb-4 border-b border-slate-700">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Beslutningsfase</span>
+                        <h3 id="activeTeamHeading" class="text-xl font-bold text-white">Hold 1's tur</h3>
+                        <p id="activeTeamSub" class="text-xs text-slate-400">Produkt: Custom T-shirts • Kassebeholdning: 1.000 kr.</p>
+                    </div>
+                    <div id="turnProgressBadge" class="text-xs bg-slate-700 px-3 py-1.5 rounded-lg font-medium text-slate-200">
+                        Indtast valg i hemmelighed
+                    </div>
+                </div>
+
+                <!-- Optional Market Research Reveal Box -->
+                <div id="forecastRevealBox" class="hidden mb-5 bg-indigo-950/60 border border-indigo-500/40 rounded-xl p-4">
+                    <div class="text-xs font-bold uppercase text-indigo-300 mb-1">Markedsanalyse gennemført!</div>
+                    <p id="forecastRevealText" class="text-sm text-white font-medium"></p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Production Input -->
+                    <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-700">
+                        <label class="block text-sm font-bold text-white mb-1">1. Antal der produceres</label>
+                        <p class="text-xs text-slate-400 mb-3">Koster <span class="unitCostInline">20</span> kr. pr. stk. Usolgte varer går tabt.</p>
+                        <input type="number" id="inputQty" min="0" max="200" value="15" oninput="updateLiveCalc()" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white font-bold text-lg focus:outline-none focus:border-emerald-500">
+                        <div class="mt-2 text-xs text-slate-300">Produktionsudgift: <strong id="calcProdCost" class="text-amber-400">300 kr.</strong></div>
+                    </div>
+
+                    <!-- Price Input -->
+                    <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-700">
+                        <label class="block text-sm font-bold text-white mb-1">2. Din salgspris (kr./stk.)</label>
+                        <p class="text-xs text-slate-400 mb-3">Laveste pris sælger først. Skal være under kundernes maks. pris.</p>
+                        <input type="number" id="inputPrice" min="1" max="500" value="45" oninput="updateLiveCalc()" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white font-bold text-lg focus:outline-none focus:border-emerald-500">
+                        <div class="mt-2 text-xs text-slate-300">Dækningsbidrag pr. solgt: <strong id="calcMargin" class="text-emerald-400">+25 kr.</strong></div>
+                    </div>
+
+                    <!-- Upgrades / Investments -->
+                    <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-700 space-y-3">
+                        <div class="text-sm font-bold text-white">3. Valgfrie tilkøb</div>
+                        
+                        <label class="flex items-start gap-2.5 cursor-pointer p-2 rounded-lg hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                            <input type="checkbox" id="chkMarketing" onchange="updateLiveCalc()" class="mt-1 rounded text-emerald-500 focus:ring-0">
+                            <div class="text-xs">
+                                <div class="font-bold text-slate-200">Markedsføring (150 kr.)</div>
+                                <div class="text-slate-400">Kunderne vil betale op til <strong>+10 kr.</strong> mere for netop dit produkt.</div>
+                            </div>
+                        </label>
+
+                        <div id="researchBtnWrapper">
+                            <button type="button" id="btnBuyResearch" onclick="buyMarketResearch()" class="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition text-left flex justify-between items-center">
+                                <span>Køb markedsanalyse (100 kr.)</span>
+                                <span class="bg-indigo-800 px-2 py-0.5 rounded">Se ugens vejr nu</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary & Submit Turn -->
+                <div class="mt-6 pt-4 border-t border-slate-700 flex flex-wrap justify-between items-center gap-4">
+                    <div class="text-xs text-slate-300">
+                        Samlet udlæg før salg (inkl. 200 kr. husleje): <strong id="calcTotalOutlay" class="text-white text-sm">500 kr.</strong>
+                        <span class="mx-2 text-slate-600">|</span>
+                        Break-even (antal salg for 0 kr. resultat): <strong id="calcBreakEven" class="text-emerald-400">20 stk.</strong>
+                    </div>
+                    <button type="button" onclick="submitTeamDecision()" id="btnSubmitTurn" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-sm transition">
+                        Lås valg og send videre
+                    </button>
+                </div>
+            </div>
+
+            <!-- SCREEN 2B: ROUND RESULTS OVERLAY / PANEL -->
+            <div id="roundResultPanel" class="hidden bg-slate-800 border-2 border-amber-400/60 rounded-2xl p-6 shadow-2xl space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-700 pb-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Markedsopgørelse</span>
+                        <h3 class="text-2xl font-bold text-white">Resultat for Uge <span id="resRoundNum">1</span></h3>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-900 px-4 py-3 rounded-xl border border-slate-700">
+                        <div id="diceDisplay" class="w-12 h-12 bg-amber-400 text-slate-950 font-black text-2xl rounded-xl flex items-center justify-center shadow-inner">
+                            4
+                        </div>
+                        <div>
+                            <div id="resWeatherTitle" class="font-bold text-white text-base">Godt vejr / Lønningsdag</div>
+                            <div class="text-xs text-slate-300">
+                                Efterspørgsel: <strong id="resTotalDemand" class="text-emerald-400">40 stk.</strong> • 
+                                Maks. pris: <strong id="resMaxPrice" class="text-amber-400">65 kr.</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Round Results Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="text-slate-400 border-b border-slate-700 text-xs uppercase">
+                                <th class="py-2 px-3">Virksomhed</th>
+                                <th class="py-2 px-3">Pris</th>
+                                <th class="py-2 px-3">Produceret</th>
+                                <th class="py-2 px-3">Solgt</th>
+                                <th class="py-2 px-3">Omsætning</th>
+                                <th class="py-2 px-3">Udgifter</th>
+                                <th class="py-2 px-3 text-right">Ugens resultat</th>
+                                <th class="py-2 px-3 text-right">Ny saldo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roundResultTableBody" class="divide-y divide-slate-700/60"></tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="button" onclick="nextRound()" id="btnNextRound" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-sm transition">
+                        Fortsæt til næste uge →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Chart -->
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5">
+                <h4 class="text-sm font-bold text-slate-200 uppercase tracking-wider mb-3">Udvikling i kassebeholdning (kr.)</h4>
+                <div class="h-64 w-full">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SCREEN 3: FINAL GAME OVER -->
+        <section id="endScreen" class="hidden max-w-4xl mx-auto bg-slate-800 rounded-2xl border border-slate-700 p-6 md:p-8 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full">Simulering afsluttet</span>
+                <h2 class="text-3xl font-extrabold text-white">Endelig stilling efter 6 uger</h2>
+                <p class="text-slate-300 text-sm">Her er det samlede regnskab for alle virksomheder på markedet.</p>
+            </div>
+
+            <div id="podiumGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+
+            <div class="bg-slate-900/80 rounded-xl p-5 border border-slate-700">
+                <h3 class="font-bold text-white mb-3 text-sm uppercase tracking-wider">Opsummering & Refleksionsspørgsmål til klassen</h3>
+                <ul class="text-sm text-slate-300 space-y-2 list-disc pl-5">
+                    <li><strong>Priskrig vs. indtjening:</strong> Hvem endte med at sælge mange varer uden at tjene penge på grund af de faste udgifter?</li>
+                    <li><strong>Lagerstyring:</strong> Hvor meget kapital gik tabt på usolgte varer, der måtte smides ud?</li>
+                    <li><strong>Risikovillighed:</strong> Kunne det betale sig at købe markedsanalyse eller markedsføring, eller var det bedre at holde udgifterne nede?</li>
+                </ul>
+            </div>
+
+            <div class="flex justify-center pt-2">
+                <button type="button" onclick="location.reload()" class="px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-sm transition">
+                    Spil igen med nye virksomheder
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- GAME CONFIGURATION & DATA ---
+        const MAX_ROUNDS = 6;
+        const STARTING_CASH = 1000;
+        const BASE_UNIT_COST = 20;
+        const BASE_FIXED_COST = 200;
+        const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4'];
+
+        const EVENTS = [
+            { title: "Normal handelsuge", desc: "Ingen uforudsete forstyrrelser i lokalområdet. Markedet opfører sig som forventet.", costMod: 0, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0 },
+            { title: "Råvaremangel hos leverandøren", desc: "Prisen på materialer er steget! Produktionsprisen stiger med +8 kr. pr. stk. i denne uge.", costMod: 8, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0 },
+            { title: "Lokal festival i byen", desc: "Massiv tilstrømning af mennesker! Den samlede efterspørgsel stiger med 40 % i denne uge.", costMod: 0, fixedMod: 0, demandMult: 1.4, maxPriceMod: 5 },
+            { title: "Stigende el- og huslejepriser", desc: "De faste ugentlige driftsomkostninger stiger med +100 kr. i denne uge.", costMod: 0, fixedMod: 100, demandMult: 1.0, maxPriceMod: 0 },
+            { title: "Effektiviseret produktion", desc: "En ny arbejdsgang sænker dine materialeudgifter. Produktionsprisen falder med -5 kr. pr. stk.", costMod: -5, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0 },
+            { title: "Forbrugertilliden dykker", desc: "Folk holder på pengene. Kundernes maksimale betalingsvilje falder med -10 kr. i denne uge.", costMod: 0, fixedMod: 0, demandMult: 0.85, maxPriceMod: -10 },
+            { title: "Trend på sociale medier", desc: "Jeres produkttype trender! Kunderne er villige til at betale +10 kr. mere end normalt.", costMod: 0, fixedMod: 0, demandMult: 1.15, maxPriceMod: 10 },
+            { title: "Normal handelsuge", desc: "Stabilt marked uden særlige udsving. Fokusér på skarp prissætning og lagerstyring.", costMod: 0, fixedMod: 0, demandMult: 1.0, maxPriceMod: 0 }
+        ];
+
+        const DICE_OUTCOMES = [
+            { roll: 1, label: "Regnvejr / Krise", baseMaxPrice: 35, baseDemandPerTeam: 3.5 },
+            { roll: 2, label: "Stille hverdag", baseMaxPrice: 50, baseDemandPerTeam: 6.5 },
+            { roll: 3, label: "Almindelig hverdag", baseMaxPrice: 50, baseDemandPerTeam: 6.5 },
+            { roll: 4, label: "Godt vejr", baseMaxPrice: 65, baseDemandPerTeam: 10.0 },
+            { roll: 5, label: "Lønningsdag", baseMaxPrice: 65, baseDemandPerTeam: 10.0 },
+            { roll: 6, label: "Byfest / Hype", baseMaxPrice: 90, baseDemandPerTeam: 15.0 }
+        ];
+
+        // --- STATE ---
+        let gameMode = 'solo'; // 'solo' | 'multi'
+        let teamCount = 2;
+        let currentRound = 1;
+        let teams = [];
+        let currentTurnIndex = 0;
+        let roundEvent = null;
+        let roundDice = null;
+        let chartInstance = null;
+
+        // --- SETUP UI ---
+        function setGameMode(mode) {
+            gameMode = mode;
+            const btnSolo = document.getElementById('btnModeSolo');
+            const btnMulti = document.getElementById('btnModeMulti');
+            const multiContainer = document.getElementById('multiCountContainer');
+
+            if (mode === 'solo') {
+                btnSolo.className = "p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/10 text-left transition";
+                btnMulti.className = "p-4 rounded-xl border-2 border-slate-700 bg-slate-800/50 hover:border-slate-600 text-left transition";
+                multiContainer.classList.add('hidden');
+            } else {
+                btnMulti.className = "p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/10 text-left transition";
+                btnSolo.className = "p-4 rounded-xl border-2 border-slate-700 bg-slate-800/50 hover:border-slate-600 text-left transition";
+                multiContainer.classList.remove('hidden');
+            }
+            renderSetupInputs();
+        }
+
+        function setTeamCount(count) {
+            teamCount = count;
+            document.querySelectorAll('.team-cnt-btn').forEach((btn, idx) => {
+                if (idx + 2 === count) {
+                    btn.className = "team-cnt-btn px-4 py-2 rounded-lg bg-emerald-600 text-white font-bold text-sm";
+                } else {
+                    btn.className = "team-cnt-btn px-4 py-2 rounded-lg bg-slate-700 text-slate-200 font-bold text-sm";
+                }
+            });
+            renderSetupInputs();
+        }
+
+        function renderSetupInputs() {
+            const container = document.getElementById('teamsInputList');
+            container.innerHTML = '';
+            const count = gameMode === 'solo' ? 1 : teamCount;
+            const placeholders = [
+                { name: "Nordic Streetwear", prod: "Custom T-shirts" },
+                { name: "BoostLab", prod: "Økologisk energidrik" },
+                { name: "ByteBite", prod: "Gourmet toast" },
+                { name: "UrbanCases", prod: "3D-printede mobilcovers" },
+                { name: "KaffeKutteren", prod: "Iskaffe & cold brew" },
+                { name: "EcoBags", prod: "Genanvendelige stofnet" }
+            ];
+
+            for (let i = 0; i < count; i++) {
+                const ph = placeholders[i % placeholders.length];
+                const label = gameMode === 'solo' ? 'Din virksomhed' : `Hold ${i + 1}`;
+                container.innerHTML += `
+                    <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">${label} – Virksomhedsnavn</label>
+                            <input type="text" id="teamName_${i}" value="${ph.name}" placeholder="F.eks. ${ph.name}" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Valgt produkt</label>
+                            <input type="text" id="teamProd_${i}" value="${ph.prod}" placeholder="Hvad sælger I?" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- START GAME ---
+        function startGame() {
+            teams = [];
+            if (gameMode === 'solo') {
+                const userName = document.getElementById('teamName_0').value.trim() || "Min Virksomhed";
+                const userProd = document.getElementById('teamProd_0').value.trim() || "Eget Produkt";
+                teams.push(createTeamObj(0, userName, userProd, false, 'human'));
+                teams.push(createTeamObj(1, "Lavpris-Giganten (AI)", userProd, true, 'budget'));
+                teams.push(createTeamObj(2, "Premium Studio (AI)", userProd, true, 'premium'));
+                teams.push(createTeamObj(3, "Balance ApS (AI)", userProd, true, 'balanced'));
+            } else {
+                for (let i = 0; i < teamCount; i++) {
+                    const name = document.getElementById(`teamName_${i}`).value.trim() || `Hold ${i + 1}`;
+                    const prod = document.getElementById(`teamProd_${i}`).value.trim() || "Produkt";
+                    teams.push(createTeamObj(i, name, prod, false, 'human'));
+                }
+            }
+
+            currentRound = 1;
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            document.getElementById('roundBadge').classList.remove('hidden');
+            document.getElementById('maxRoundsDisplay').textContent = MAX_ROUNDS;
+
+            initChart();
+            prepareRound();
+        }
+
+        function createTeamObj(id, name, product, isAI, aiStyle) {
+            return {
+                id,
+                name,
+                product,
+                isAI,
+                aiStyle,
+                color: COLORS[id % COLORS.length],
+                cash: STARTING_CASH,
+                history: [STARTING_CASH],
+                totalSold: 0,
+                totalWasted: 0,
+                decision: null
+            };
+        }
+
+        // --- ROUND LOGIC ---
+        function prepareRound() {
+            document.getElementById('currentRoundDisplay').textContent = currentRound;
+            document.getElementById('eventRoundNum').textContent = currentRound;
+
+            // Pick event (Round 1 is always normal to let players learn)
+            roundEvent = currentRound === 1 ? EVENTS[0] : EVENTS[Math.floor(Math.random() * EVENTS.length)];
+            // Pre-roll dice (hidden unless research is bought)
+            roundDice = DICE_OUTCOMES[Math.floor(Math.random() * DICE_OUTCOMES.length)];
+
+            const unitCost = BASE_UNIT_COST + roundEvent.costMod;
+            const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
+
+            document.getElementById('eventTitle').textContent = roundEvent.title;
+            document.getElementById('eventDesc').textContent = roundEvent.desc;
+            document.getElementById('currentCostDisplay').textContent = `${unitCost} kr./stk.`;
+            document.getElementById('currentFixedDisplay').textContent = `${fixedCost} kr.`;
+            document.querySelectorAll('.unitCostInline').forEach(el => el.textContent = unitCost);
+
+            renderDemandTable();
+            renderScoreboard();
+
+            // Reset turns
+            teams.forEach(t => {
+                t.decision = { qty: 0, price: 0, marketing: false, researchBought: false };
+            });
+
+            currentTurnIndex = 0;
+            document.getElementById('roundResultPanel').classList.add('hidden');
+            document.getElementById('decisionPanel').classList.remove('hidden');
+            setupTurnForCurrentTeam();
+        }
+
+        function renderDemandTable() {
+            const tbody = document.getElementById('demandTableBody');
+            tbody.innerHTML = '';
+            const numTeams = teams.length;
+            const rows = [
+                { roll: "1", label: "Regnvejr / Krise", baseMax: 35, mult: 3.5 },
+                { roll: "2–3", label: "Almindelig hverdag", baseMax: 50, mult: 6.5 },
+                { roll: "4–5", label: "Godt vejr / Lønningsdag", baseMax: 65, mult: 10.0 },
+                { roll: "6", label: "Byfest / Hype", baseMax: 90, mult: 15.0 }
+            ];
+
+            rows.forEach(r => {
+                const adjMax = Math.max(25, r.baseMax + roundEvent.maxPriceMod);
+                const adjDemand = Math.round(r.mult * numTeams * roundEvent.demandMult);
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="py-1.5 font-bold text-amber-400">${r.roll}</td>
+                        <td class="py-1.5">${r.label}</td>
+                        <td class="py-1.5">${adjMax} kr.</td>
+                        <td class="py-1.5 text-right font-semibold">${adjDemand} stk.</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderScoreboard() {
+            const grid = document.getElementById('scoreboardGrid');
+            grid.innerHTML = '';
+            teams.forEach(t => {
+                const cashColor = t.cash < 0 ? 'text-rose-400' : 'text-emerald-400';
+                grid.innerHTML += `
+                    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 flex flex-col justify-between">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="font-bold text-white text-sm truncate">${t.name}</span>
+                            <span class="w-3 h-3 rounded-full shrink-0" style="background:${t.color}"></span>
+                        </div>
+                        <div class="text-xs text-slate-400 truncate mb-2">Produkt: ${t.product}</div>
+                        <div class="text-2xl font-extrabold ${cashColor}">${t.cash.toLocaleString('da-DK')} kr.</div>
+                    </div>
+                `;
+            });
+        }
+
+        function setupTurnForCurrentTeam() {
+            const team = teams[currentTurnIndex];
+            document.getElementById('activeTeamHeading').textContent = `${team.name}'s beslutning`;
+            document.getElementById('activeTeamSub').textContent = `Produkt: ${team.product} • Saldo: ${team.cash.toLocaleString('da-DK')} kr.`;
+
+            const humanTeams = teams.filter(t => !t.isAI);
+            if (humanTeams.length > 1) {
+                document.getElementById('turnProgressBadge').textContent = `Hold ${currentTurnIndex + 1} af ${humanTeams.length} (Hold tallene hemmelige for de andre!)`;
+            } else {
+                document.getElementById('turnProgressBadge').textContent = `Din tur – indtast dine valg`;
+            }
+
+            // Reset inputs
+            document.getElementById('inputQty').value = 15;
+            document.getElementById('inputPrice').value = 45;
+            document.getElementById('chkMarketing').checked = false;
+            document.getElementById('forecastRevealBox').classList.add('hidden');
+            document.getElementById('researchBtnWrapper').classList.remove('hidden');
+
+            updateLiveCalc();
+        }
+
+        function updateLiveCalc() {
+            const qty = Math.max(0, parseInt(document.getElementById('inputQty').value) || 0);
+            const price = Math.max(1, parseInt(document.getElementById('inputPrice').value) || 0);
+            const marketing = document.getElementById('chkMarketing').checked;
+            const team = teams[currentTurnIndex];
+            const researchCost = team && team.decision.researchBought ? 100 : 0;
+
+            const unitCost = BASE_UNIT_COST + roundEvent.costMod;
+            const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
+            const prodCost = qty * unitCost;
+            const margin = price - unitCost;
+            const totalFixedAndExtras = fixedCost + (marketing ? 150 : 0) + researchCost;
+            const totalOutlay = prodCost + totalFixedAndExtras;
+
+            document.getElementById('calcProdCost').textContent = `${prodCost} kr.`;
+            const marginEl = document.getElementById('calcMargin');
+            marginEl.textContent = `${margin >= 0 ? '+' : ''}${margin} kr.`;
+            marginEl.className = margin > 0 ? 'text-emerald-400' : 'text-rose-400';
+
+            document.getElementById('calcTotalOutlay').textContent = `${totalOutlay} kr.`;
+            const breakEvenEl = document.getElementById('calcBreakEven');
+            if (margin <= 0) {
+                breakEvenEl.textContent = "Aldrig (pris er for lav!)";
+                breakEvenEl.className = "text-rose-400";
+            } else {
+                const be = Math.ceil(totalFixedAndExtras / margin);
+                breakEvenEl.textContent = `${be} stk.`;
+                breakEvenEl.className = "text-emerald-400";
+            }
+        }
+
+        function buyMarketResearch() {
+            const team = teams[currentTurnIndex];
+            team.decision.researchBought = true;
+
+            const adjMax = Math.max(25, roundDice.baseMaxPrice + roundEvent.maxPriceMod);
+            const adjDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
+
+            document.getElementById('forecastRevealText').textContent =
+                `Vejrudsigt for uge ${currentRound}: "${roundDice.label}" (Terning: ${roundDice.roll}). Samlet efterspørgsel bliver ${adjDemand} stk., og kunderne betaler maks. ${adjMax} kr.`;
+            document.getElementById('forecastRevealBox').classList.remove('hidden');
+            document.getElementById('researchBtnWrapper').classList.add('hidden');
+            updateLiveCalc();
+        }
+
+        function submitTeamDecision() {
+            const team = teams[currentTurnIndex];
+            const qty = Math.max(0, parseInt(document.getElementById('inputQty').value) || 0);
+            const price = Math.max(1, parseInt(document.getElementById('inputPrice').value) || 0);
+            const marketing = document.getElementById('chkMarketing').checked;
+
+            team.decision.qty = qty;
+            team.decision.price = price;
+            team.decision.marketing = marketing;
+
+            // Check if more human teams need to play
+            currentTurnIndex++;
+            if (currentTurnIndex < teams.length && !teams[currentTurnIndex].isAI) {
+                setupTurnForCurrentTeam();
+            } else {
+                // Generate AI decisions if solo mode
+                teams.filter(t => t.isAI).forEach(ai => generateAIDecision(ai));
+                resolveRound();
+            }
+        }
+
+        function generateAIDecision(ai) {
+            const unitCost = BASE_UNIT_COST + roundEvent.costMod;
+            const avgDemand = Math.round(7.5 * roundEvent.demandMult);
+            let qty = avgDemand;
+            let price = 45;
+            let marketing = false;
+
+            if (ai.aiStyle === 'budget') {
+                qty = Math.round(avgDemand * 1.4) + Math.floor(Math.random() * 4);
+                price = unitCost + 12 + Math.floor(Math.random() * 5); // ~32-36 kr.
+            } else if (ai.aiStyle === 'premium') {
+                qty = Math.max(5, Math.round(avgDemand * 0.8));
+                price = 58 + Math.floor(Math.random() * 10);
+                marketing = ai.cash > 600 && Math.random() > 0.4;
+            } else {
+                qty = avgDemand + Math.floor(Math.random() * 5) - 2;
+                price = 42 + Math.floor(Math.random() * 8);
+                marketing = ai.cash > 800 && Math.random() > 0.7;
+            }
+
+            ai.decision = { qty, price, marketing, researchBought: false };
+        }
+
+        // --- MARKET ALLOCATION & ACCOUNTING ---
+        function resolveRound() {
+            document.getElementById('decisionPanel').classList.add('hidden');
+            document.getElementById('roundResultPanel').classList.remove('hidden');
+
+            const unitCost = BASE_UNIT_COST + roundEvent.costMod;
+            const fixedCost = BASE_FIXED_COST + roundEvent.fixedMod;
+            const baseMaxPrice = Math.max(25, roundDice.baseMaxPrice + roundEvent.maxPriceMod);
+            let remainingDemand = Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult);
+
+            // Prepare allocation objects
+            const results = teams.map(t => {
+                const maxWillingness = baseMaxPrice + (t.decision.marketing ? 10 : 0);
+                const eligible = t.decision.price <= maxWillingness && t.decision.qty > 0;
+                return {
+                    team: t,
+                    price: t.decision.price,
+                    qty: t.decision.qty,
+                    sold: 0,
+                    eligible,
+                    maxWillingness
+                };
+            });
+
+            // Sort eligible teams by lowest price first
+            const eligibleSorted = results.filter(r => r.eligible).sort((a, b) => a.price - b.price);
+
+            // Group by identical price to split demand fairly on ties
+            let i = 0;
+            while (i < eligibleSorted.length && remainingDemand > 0) {
+                let j = i;
+                while (j < eligibleSorted.length && eligibleSorted[j].price === eligibleSorted[i].price) {
+                    j++;
+                }
+                const tieGroup = eligibleSorted.slice(i, j);
+                const totalGroupStock = tieGroup.reduce((sum, item) => sum + item.qty, 0);
+
+                if (remainingDemand >= totalGroupStock) {
+                    tieGroup.forEach(item => {
+                        item.sold = item.qty;
+                        remainingDemand -= item.qty;
+                    });
+                } else {
+                    // Split remaining demand proportionally / evenly among tied teams
+                    let toDistribute = remainingDemand;
+                    while (toDistribute > 0) {
+                        let anyGiven = false;
+                        for (let item of tieGroup) {
+                            if (toDistribute > 0 && item.sold < item.qty) {
+                                item.sold++;
+                                toDistribute--;
+                                anyGiven = true;
+                            }
+                        }
+                        if (!anyGiven) break;
+                    }
+                    remainingDemand = 0;
+                }
+                i = j;
+            }
+
+            // Update financials & render table
+            document.getElementById('resRoundNum').textContent = currentRound;
+            const diceEl = document.getElementById('diceDisplay');
+            diceEl.textContent = roundDice.roll;
+            diceEl.classList.remove('dice-anim');
+            void diceEl.offsetWidth;
+            diceEl.classList.add('dice-anim');
+
+            document.getElementById('resWeatherTitle').textContent = roundDice.label;
+            document.getElementById('resTotalDemand').textContent = `${Math.round(roundDice.baseDemandPerTeam * teams.length * roundEvent.demandMult)} stk.`;
+            document.getElementById('resMaxPrice').textContent = `${baseMaxPrice} kr.`;
+
+            const tbody = document.getElementById('roundResultTableBody');
+            tbody.innerHTML = '';
+
+            results.forEach(r => {
+                const t = r.team;
+                const revenue = r.sold * r.price;
+                const prodExpense = r.qty * unitCost;
+                const extraExpense = (t.decision.marketing ? 150 : 0) + (t.decision.researchBought ? 100 : 0);
+                const interestExpense = t.cash < 0 ? Math.round(Math.abs(t.cash) * 0.20) : 0;
+                const totalExpenses = prodExpense + fixedCost + extraExpense + interestExpense;
+                const netProfit = revenue - totalExpenses;
+
+                t.cash += netProfit;
+                t.history.push(t.cash);
+                t.totalSold += r.sold;
+                t.totalWasted += (r.qty - r.sold);
+
+                const profitClass = netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400';
+                const statusNote = !r.eligible && r.qty > 0 ? `<span class="block text-[11px] text-rose-400">For dyr (maks ${r.maxWillingness} kr.)</span>` : '';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-white">
+                            ${t.name}
+                            <span class="block text-xs font-normal text-slate-400">${t.product}</span>
+                        </td>
+                        <td class="py-3 px-3">${r.price} kr. ${statusNote}</td>
+                        <td class="py-3 px-3">${r.qty} stk.</td>
+                        <td class="py-3 px-3 font-semibold text-white">${r.sold} stk.</td>
+                        <td class="py-3 px-3 text-slate-300">${revenue} kr.</td>
+                        <td class="py-3 px-3 text-slate-400">${totalExpenses} kr.${interestExpense > 0 ? ` <span class="text-rose-400 text-xs">(inkl. ${interestExpense} kr. rente)</span>` : ''}</td>
+                        <td class="py-3 px-3 text-right font-bold ${profitClass}">${netProfit >= 0 ? '+' : ''}${netProfit} kr.</td>
+                        <td class="py-3 px-3 text-right font-extrabold text-white">${t.cash.toLocaleString('da-DK')} kr.</td>
+                    </tr>
+                `;
+            });
+
+            renderScoreboard();
+            updateChart();
+
+            const btnNext = document.getElementById('btnNextRound');
+            btnNext.textContent = currentRound >= MAX_ROUNDS ? "Se endelig vinder og slutstilling →" : `Start Uge ${currentRound + 1} →`;
+        }
+
+        function nextRound() {
+            if (currentRound >= MAX_ROUNDS) {
+                showEndScreen();
+            } else {
+                currentRound++;
+                prepareRound();
+            }
+        }
+
+        // --- CHART ---
+        function initChart() {
+            const ctx = document.getElementById('balanceChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Start'],
+                    datasets: teams.map(t => ({
+                        label: t.name,
+                        data: t.history,
+                        borderColor: t.color,
+                        backgroundColor: t.color,
+                        borderWidth: 3,
+                        tension: 0.25,
+                        pointRadius: 4
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#e2e8f0', font: { family: 'Inter', weight: '600' } } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            const labels = ['Start'];
+            for (let r = 1; r <= currentRound; r++) labels.push(`Uge ${r}`);
+            chartInstance.data.labels = labels;
+            teams.forEach((t, idx) => {
+                chartInstance.data.datasets[idx].data = t.history;
+            });
+            chartInstance.update();
+        }
+
+        // --- END SCREEN ---
+        function showEndScreen() {
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('roundBadge').classList.add('hidden');
+            document.getElementById('endScreen').classList.remove('hidden');
+
+            const sorted = [...teams].sort((a, b) => b.cash - a.cash);
+            const podium = document.getElementById('podiumGrid');
+            podium.innerHTML = '';
+
+            sorted.forEach((t, index) => {
+                const medal = index === 0 ? '1. Plads (Vinder)' : index === 1 ? '2. Plads' : index === 2 ? '3. Plads' : `${index + 1}. Plads`;
+                const border = index === 0 ? 'border-amber-400 bg-amber-400/10' : 'border-slate-700 bg-slate-900/70';
+                const profit = t.cash - STARTING_CASH;
+
+                podium.innerHTML += `
+                    <div class="p-5 rounded-2xl border-2 ${border} flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs font-extrabold uppercase tracking-wider ${index === 0 ? 'text-amber-400' : 'text-slate-400'} mb-1">${medal}</div>
+                            <div class="text-xl font-bold text-white">${t.name}</div>
+                            <div class="text-xs text-slate-400 mb-4">Produkt: ${t.product}</div>
+                        </div>
+                        <div class="space-y-1 text-xs border-t border-slate-700/80 pt-3">
+                            <div class="flex justify-between"><span>Slutsaldo:</span> <strong class="text-white text-sm">${t.cash.toLocaleString('da-DK')} kr.</strong></div>
+                            <div class="flex justify-between"><span>Samlet overskud/tab:</span> <strong class="${profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${profit >= 0 ? '+' : ''}${profit} kr.</strong></div>
+                            <div class="flex justify-between"><span>Solgte enheder i alt:</span> <span class="text-slate-200">${t.totalSold} stk.</span></div>
+                            <div class="flex justify-between"><span>Spild (usolgte varer):</span> <span class="text-slate-400">${t.totalWasted} stk.</span></div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Initialize default setup inputs
+        renderSetupInputs();
+    </script>
+</body>
+</html>
