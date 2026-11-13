@@ -10,13 +10,9 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
   body { font-family: 'Plus Jakarta Sans', sans-serif; }
-  input[type=range] { -webkit-appearance: none; background: transparent; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 26px; width: 26px; border-radius: 50%; background: #059669; border: 3px solid #fff; cursor: pointer; margin-top: -9px; box-shadow: 0 3px 8px rgba(0,0,0,0.3); }
-  input[type=range].price-sl::-webkit-slider-thumb { background: #d97706; }
-  input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: #e2e8f0; border-radius: 999px; }
-  .scene { width: 88px; height: 88px; perspective: 450px; }
-  .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.15s cubic-bezier(0.2, 0.85, 0.3, 1.1); }
-  .face { position: absolute; width: 88px; height: 88px; background: linear-gradient(145deg,#fff,#f1f5f9); border: 3px solid #cbd5e1; border-radius: 16px; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr); padding: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.12); }
+  .scene { width: 88px; height: 88px; perspective: 400px; }
+  .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.1s cubic-bezier(0.2, 0.85, 0.3, 1.1); }
+  .face { position: absolute; width: 88px; height: 88px; background: #fff; border: 3px solid #cbd5e1; border-radius: 16px; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr); padding: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
   .pip { width: 14px; height: 14px; background: #0f172a; border-radius: 50%; place-self: center; }
   .f1 .pip { background: #e11d48; width: 18px; height: 18px; }
   .f1 { transform: rotateY(0deg) translateZ(44px); }
@@ -25,228 +21,935 @@
   .f4 { transform: rotateY(-90deg) translateZ(44px); }
   .f5 { transform: rotateX(90deg) translateZ(44px); }
   .f6 { transform: rotateX(-90deg) translateZ(44px); }
-  .stripes { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.28) 0 12px, transparent 12px 24px); }
-  @keyframes pop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-  .anim-pop { animation: pop 0.3s ease-out forwards; }
+  .stripes { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.3) 0 12px, transparent 12px 24px); }
 </style>
 </head>
 <body class="bg-amber-50/60 text-slate-800 min-h-screen flex flex-col">
 
-<header class="bg-white border-b border-stone-200 px-6 py-3 flex flex-wrap justify-between items-center gap-3 sticky top-0 z-30 shadow-sm">
+<header class="bg-white border-b border-stone-200 px-6 py-3 flex justify-between items-center sticky top-0 z-30 shadow-sm">
   <div class="flex items-center gap-3">
-    <div class="bg-emerald-600 text-white font-extrabold px-3 py-1 rounded-xl text-sm tracking-tight">HANDELSGADEN</div>
-    <div>
-      <h1 class="font-extrabold text-base md:text-lg text-slate-900 leading-tight">Iværksætterspillet</h1>
-      <p class="text-[11px] text-slate-500">Byg omdømme, opgradér din bod og vind gaden</p>
-    </div>
+    <div class="bg-emerald-600 text-white font-extrabold px-3 py-1 rounded-xl text-sm">HANDELSGADEN</div>
+    <h1 class="font-extrabold text-base md:text-lg text-slate-900">Iværksætterspillet</h1>
   </div>
   <div class="flex items-center gap-2">
-    <span id="roomBadge" class="hidden bg-indigo-100 border border-indigo-300 text-indigo-950 px-3 py-1 rounded-full text-xs font-extrabold">Rumkode: <b id="topCode" class="tracking-widest">----</b></span>
-    <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-stone-100 hover:bg-stone-200 border border-stone-300 px-3 py-1 rounded-full text-xs font-bold cursor-pointer">🔊 Lyd til</button>
-    <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-950 px-3.5 py-1 rounded-full text-xs font-extrabold">Uge <b id="rndNow" class="text-emerald-700">1</b> af <b id="rndMax">10</b></span>
+    <span id="roomBadge" class="hidden bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full text-xs font-extrabold">Kode: <b id="topCode">----</b></span>
+    <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-stone-100 border border-stone-300 px-3 py-1 rounded-full text-xs font-bold cursor-pointer">🔊 Lyd</button>
+    <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-900 px-3 py-1 rounded-full text-xs font-extrabold">Uge <b id="rndNow">1</b>/<b id="rndMax">10</b></span>
   </div>
 </header>
 
-<main class="max-w-6xl w-full mx-auto p-4 md:p-6 flex-grow">
+<main class="max-w-5xl w-full mx-auto p-4 md:p-6 flex-grow">
 
-  <!-- SCREEN 1: SETUP -->
-  <section id="scrSetup" class="max-w-4xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl space-y-6">
+  <!-- SETUP SCREEN -->
+  <section id="scrSetup" class="bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl space-y-6">
     <div>
-      <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">Åbn din butik på Handelsgaden</h2>
-      <p class="text-sm text-slate-600 mt-1">Alle starter med <b>1.000 kr.</b> og <b>3 ⭐ i omdømme</b>. Vælg hvordan I vil spille:</p>
+      <h2 class="text-2xl font-extrabold text-slate-900">Åbn din bod på Handelsgaden</h2>
+      <p class="text-sm text-slate-600">Alle starter med <b>1.000 kr.</b> og <b>⭐⭐⭐ (3 stjerner)</b> i omdømme. Vælg spiltilstand:</p>
     </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-      <button type="button" onclick="switchTab('solo')" id="t_solo" class="p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left cursor-pointer transition">
-        <div class="text-xl mb-1">👤</div><div class="font-extrabold text-sm text-slate-900">Solo (Mod AI)</div><div class="text-xs text-slate-500">Spil mod 3 AI-butikker</div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <button type="button" onclick="switchTab('solo')" id="t_solo" class="p-3.5 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer transition">
+        <div class="text-lg">👤</div><div class="font-extrabold text-sm">Solo (Mod AI)</div><div class="text-xs text-slate-500">1 spiller mod 3 AI-boder</div>
       </button>
-      <button type="button" onclick="switchTab('local')" id="t_local" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
-        <div class="text-xl mb-1">👥</div><div class="font-extrabold text-sm text-slate-900">Flere hold (1 skærm)</div><div class="text-xs text-slate-500">2-6 hold på samme PC</div>
+      <button type="button" onclick="switchTab('local')" id="t_local" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-lg">👥</div><div class="font-extrabold text-sm">Flere hold (1 PC)</div><div class="text-xs text-slate-500">2-6 hold på samme skærm</div>
       </button>
-      <button type="button" onclick="switchTab('host')" id="t_host" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
-        <div class="text-xl mb-1">🖥️</div><div class="font-extrabold text-sm text-slate-900">Opret spil (Vært)</div><div class="text-xs text-slate-500">Storskærm med rumkode</div>
+      <button type="button" onclick="switchTab('host')" id="t_host" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-lg">🖥️</div><div class="font-extrabold text-sm">Opret spil (Vært)</div><div class="text-xs text-slate-500">Storskærm med rumkode</div>
       </button>
-      <button type="button" onclick="switchTab('join')" id="t_join" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
-        <div class="text-xl mb-1">📱</div><div class="font-extrabold text-sm text-slate-900">Deltag (Elev)</div><div class="text-xs text-slate-500">Join med 4-cifret kode</div>
+      <button type="button" onclick="switchTab('join')" id="t_join" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-lg">📱</div><div class="font-extrabold text-sm">Deltag (Elev)</div><div class="text-xs text-slate-500">Tast rumkode fra egen PC</div>
       </button>
     </div>
 
-    <div id="durBox" class="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex justify-between items-center flex-wrap gap-3">
-      <div>
-        <div class="text-sm font-extrabold text-slate-800">Antal uger i sæsonen:</div>
-        <div class="text-xs text-slate-500">Flere uger giver tid til at tjene permanente opgraderinger hjem.</div>
-      </div>
+    <div id="durBox" class="bg-stone-50 p-3.5 rounded-2xl border border-stone-200 flex justify-between items-center flex-wrap gap-2">
+      <span class="text-sm font-extrabold">Spillets længde:</span>
       <div class="flex gap-2">
-        <button type="button" onclick="setWeeks(8)" id="w8" class="px-3.5 py-2 rounded-xl bg-white border border-stone-300 text-xs font-bold cursor-pointer">8 uger</button>
-        <button type="button" onclick="setWeeks(10)" id="w10" class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer shadow-sm">10 uger</button>
-        <button type="button" onclick="setWeeks(12)" id="w12" class="px-3.5 py-2 rounded-xl bg-white border border-stone-300 text-xs font-bold cursor-pointer">12 uger</button>
+        <button type="button" onclick="setWeeks(8)" id="w8" class="px-3 py-1.5 rounded-xl bg-white border text-xs font-bold cursor-pointer">8 uger</button>
+        <button type="button" onclick="setWeeks(10)" id="w10" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer">10 uger</button>
+        <button type="button" onclick="setWeeks(12)" id="w12" class="px-3 py-1.5 rounded-xl bg-white border text-xs font-bold cursor-pointer">12 uger</button>
       </div>
     </div>
 
-    <!-- Solo -->
+    <!-- Solo Panel -->
     <div id="p_solo" class="space-y-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-stone-50 p-4 rounded-2xl border border-stone-200">
-        <div><label class="text-xs font-extrabold uppercase text-slate-500">Virksomhedsnavn</label><input id="sName" value="Nordic Streetwear" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
-        <div><label class="text-xs font-extrabold uppercase text-slate-500">Hvad sælger I?</label><input id="sProd" value="Custom T-shirts" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-2xl border">
+        <div><label class="text-xs font-bold text-slate-500">Virksomhedsnavn</label><input id="sName" value="Nordic Streetwear" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
+        <div><label class="text-xs font-bold text-slate-500">Hvad sælger du?</label><input id="sProd" value="Custom T-shirts" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
       </div>
-      <button type="button" onclick="beginLocal('solo')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base shadow-lg cursor-pointer">Slå markisen op og start solo-spil</button>
+      <button type="button" onclick="beginLocal('solo')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Start Solo-spil</button>
     </div>
 
-    <!-- Local Multi -->
+    <!-- Local Multi Panel -->
     <div id="p_local" class="hidden space-y-4">
-      <div class="flex items-center gap-2 bg-stone-50 p-3.5 rounded-2xl border border-stone-200 flex-wrap">
-        <span class="text-xs font-extrabold mr-2">Antal boder på gaden:</span>
-        <button type="button" onclick="buildLocalInputs(2)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">2 hold</button>
-        <button type="button" onclick="buildLocalInputs(3)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">3 hold</button>
-        <button type="button" onclick="buildLocalInputs(4)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">4 hold</button>
-        <button type="button" onclick="buildLocalInputs(5)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">5 hold</button>
-        <button type="button" onclick="buildLocalInputs(6)" class="px-3.5 py-1.5 bg-white border rounded-xl text-xs font-bold cursor-pointer">6 hold</button>
+      <div class="flex items-center gap-2 bg-stone-50 p-3 rounded-2xl border">
+        <span class="text-xs font-bold">Antal hold:</span>
+        <button type="button" onclick="buildLocalInputs(2)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">2</button>
+        <button type="button" onclick="buildLocalInputs(3)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">3</button>
+        <button type="button" onclick="buildLocalInputs(4)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">4</button>
+        <button type="button" onclick="buildLocalInputs(5)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">5</button>
+        <button type="button" onclick="buildLocalInputs(6)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">6</button>
       </div>
-      <div id="localList" class="space-y-2.5"></div>
-      <button type="button" onclick="beginLocal('local')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base shadow-lg cursor-pointer">Start spillet med alle hold på denne skærm</button>
+      <div id="localList" class="space-y-2"></div>
+      <button type="button" onclick="beginLocal('local')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Start spil på denne skærm</button>
     </div>
 
-    <!-- Host -->
+    <!-- Host Panel -->
     <div id="p_host" class="hidden space-y-4">
-      <button type="button" id="btnOpenHost" onclick="openHostLobby()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-2xl text-base shadow-lg cursor-pointer">Opret spilrum og generér 4-cifret rumkode</button>
-      <div id="hostLobby" class="hidden bg-indigo-50/80 border-2 border-indigo-300 rounded-2xl p-6 space-y-4 anim-pop">
-        <div class="flex justify-between items-center border-b border-indigo-200 pb-4 flex-wrap gap-3">
-          <div>
-            <div class="text-xs font-extrabold text-indigo-700 uppercase">Del denne rumkode med eleverne</div>
-            <div id="bigCode" class="text-4xl md:text-5xl font-black text-indigo-950 tracking-widest mt-1">----</div>
-          </div>
-          <span id="hostNetStatus" class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full">Opretter forbindelse...</span>
+      <button type="button" id="btnOpenHost" onclick="openHostLobby()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Generér 4-cifret rumkode</button>
+      <div id="hostLobby" class="hidden bg-indigo-50 border-2 border-indigo-300 rounded-2xl p-5 space-y-4">
+        <div class="flex justify-between items-center border-b border-indigo-200 pb-3">
+          <div><div class="text-xs font-bold text-indigo-700 uppercase">Rumkode til eleverne</div><div id="bigCode" class="text-4xl font-black text-indigo-950 tracking-widest">----</div></div>
+          <span id="hostNetStatus" class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Forbinder...</span>
         </div>
-        <div>
-          <div class="text-xs font-extrabold uppercase text-slate-600 mb-2">Tilmeldte boder:</div>
-          <div id="lobbyTeams" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-500 italic">Venter på at eleverne logger på...</div>
-        </div>
-        <button type="button" id="btnStartHostGame" onclick="startHostGame()" disabled class="w-full py-4 bg-stone-300 text-stone-500 font-extrabold rounded-2xl text-base">Venter på mindst 1 hold...</button>
+        <div id="lobbyTeams" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600 italic">Venter på at elever tilslutter sig...</div>
+        <button type="button" id="btnStartHostGame" onclick="startHostGame()" disabled class="w-full py-3.5 bg-stone-300 text-stone-500 font-extrabold rounded-2xl">Venter på mindst 1 hold...</button>
       </div>
     </div>
 
-    <!-- Join -->
+    <!-- Join Panel -->
     <div id="p_join" class="hidden space-y-4">
-      <div id="joinForm" class="space-y-4">
+      <div id="joinForm" class="space-y-3">
         <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200">
           <label class="text-xs font-extrabold text-indigo-900 uppercase">4-cifret rumkode fra storskærmen</label>
-          <input id="jCode" maxlength="4" placeholder="4829" class="w-full bg-white border-2 border-indigo-300 rounded-xl px-4 py-3 text-2xl font-black text-center tracking-widest mt-1 uppercase">
+          <input id="jCode" maxlength="4" placeholder="1234" class="w-full bg-white border-2 border-indigo-300 rounded-xl px-3 py-2.5 text-2xl font-black text-center tracking-widest mt-1">
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-2xl border border-stone-200">
-          <div><label class="text-xs font-extrabold uppercase text-slate-500">Jeres bod-navn</label><input id="jName" value="Struer Streetfood" class="w-full bg-white border rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
-          <div><label class="text-xs font-extrabold uppercase text-slate-500">Hvad sælger I?</label><input id="jProd" value="Gourmet Burger" class="w-full bg-white border rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-2xl border">
+          <div><label class="text-xs font-bold text-slate-500">Jeres bod-navn</label><input id="jName" value="Struer Streetfood" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
+          <div><label class="text-xs font-bold text-slate-500">Hvad sælger I?</label><input id="jProd" value="Gourmet Burger" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
         </div>
         <div id="jErr" class="hidden text-xs font-bold text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200"></div>
-        <button type="button" id="btnJoin" onclick="joinHost()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base shadow-lg cursor-pointer">Forbind til Handelsgaden</button>
+        <button type="button" id="btnJoin" onclick="joinHost()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Tilslut til spillet</button>
       </div>
-      <div id="joinWait" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-6 text-center space-y-2 anim-pop">
-        <div class="text-4xl">🏪</div>
-        <div class="font-extrabold text-xl text-emerald-950">Din bod står klar på gaden!</div>
-        <p class="text-xs text-emerald-800">Venter på at læreren starter Uge 1 på storskærmen...</p>
+      <div id="joinWait" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-6 text-center space-y-2">
+        <div class="text-3xl">🏪</div>
+        <div class="font-extrabold text-lg text-emerald-950">Du er tilsluttet!</div>
+        <p class="text-xs text-emerald-800">Venter på at læreren starter spillet på storskærmen...</p>
       </div>
     </div>
   </section>
 
-  <!-- SCREEN 2: ACTIVE GAME -->
+  <!-- ACTIVE GAME SCREEN -->
   <section id="scrGame" class="hidden space-y-6">
 
-    <!-- ILLUSTRATED MARKET STREET -->
-    <div id="streetBox" class="rounded-3xl overflow-hidden border border-stone-300 shadow-lg bg-gradient-to-b from-sky-200 via-sky-100 to-amber-100 transition-colors duration-700">
-      <div class="px-6 pt-5 pb-3 flex flex-wrap justify-between items-center gap-4">
+    <!-- ILLUSTRATED STREET -->
+    <div id="streetBox" class="rounded-3xl overflow-hidden border border-stone-300 shadow-lg bg-gradient-to-b from-sky-200 via-sky-100 to-amber-100">
+      <div class="p-5 flex flex-wrap justify-between items-center gap-3">
         <div class="flex items-center gap-3">
-          <span id="evIcon" class="text-4xl drop-shadow-sm">🌤️</span>
+          <span id="evIcon" class="text-4xl">🌤️</span>
           <div>
-            <div class="flex items-center gap-2">
-              <span class="text-[11px] font-extrabold uppercase bg-white/80 text-slate-800 px-2.5 py-0.5 rounded-full">Uge <span id="stWeek">1</span></span>
-              <span id="stStatus" class="text-xs font-bold text-slate-700">Boderne klargøres</span>
-            </div>
-            <h2 id="evTitle" class="text-lg md:text-xl font-extrabold text-slate-900">Normal handelsuge</h2>
+            <div class="text-xs font-extrabold uppercase text-slate-700">Uge <span id="stWeek">1</span> • <span id="stStatus">Klargøring</span></div>
+            <h2 id="evTitle" class="text-lg font-extrabold text-slate-900">Normal handelsuge</h2>
             <p id="evDesc" class="text-xs text-slate-700">Ingen uforudsete hændelser denne uge.</p>
           </div>
         </div>
         <div class="flex gap-2 text-xs font-bold">
-          <span class="bg-white/90 px-3 py-2 rounded-xl border border-stone-200 shadow-sm">Basis-råvare: <b id="stCost" class="text-slate-900">20 kr.</b></span>
-          <span class="bg-white/90 px-3 py-2 rounded-xl border border-stone-200 shadow-sm">Husleje: <b id="stRent" class="text-slate-900">200 kr.</b></span>
+          <span class="bg-white/90 px-3 py-1.5 rounded-xl border">Basis-råvare: <b id="stCost">20 kr.</b></span>
+          <span class="bg-white/90 px-3 py-1.5 rounded-xl border">Husleje: <b id="stRent">200 kr.</b></span>
         </div>
       </div>
-
-      <!-- Booths Row with Speech Bubbles, Stars & Permanent Gear -->
-      <div id="boothsRow" class="px-6 pt-6 pb-0 grid grid-cols-2 md:grid-cols-4 gap-4 items-end"></div>
-
-      <div class="bg-stone-700 border-t-4 border-stone-600 text-stone-200 px-6 py-2.5 text-xs flex flex-wrap justify-between items-center gap-2">
-        <span>🚶‍♂️ <b>60% Prisjægere</b> (går efter laveste pris) • 💎 <b>40% Kvalitetskøbere</b> (går efter flest ⭐ stjerner)</span>
-        <span class="font-bold text-stone-400">Handelsgaden</span>
+      <div id="boothsRow" class="px-5 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3 items-end"></div>
+      <div class="bg-stone-700 text-stone-200 px-5 py-2 text-xs flex justify-between flex-wrap gap-2">
+        <span>🚶‍♀️ <b>60% Prisjægere</b> (går efter laveste pris) • 💎 <b>40% Kvalitetskøbere</b> (går efter flest ⭐ og betaler +25 kr. mere)</span>
+        <span class="font-bold">Handelsgaden</span>
       </div>
     </div>
 
     <!-- HOST MONITOR -->
     <div id="hostMonitor" class="hidden bg-white border-2 border-indigo-300 rounded-3xl p-6 shadow-xl space-y-4">
-      <div class="flex justify-between items-center border-b pb-3 flex-wrap gap-2">
-        <div>
-          <h3 class="text-xl font-extrabold text-slate-900">Eleverne forbereder deres boder...</h3>
-          <p class="text-xs text-slate-500">Holdenes gade-råb dukker live op over boderne, når de låser deres valg.</p>
-        </div>
-        <button type="button" onclick="forceHostResolve()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs cursor-pointer">Tving runde i gang nu →</button>
+      <div class="flex justify-between items-center border-b pb-3">
+        <div><h3 class="text-xl font-extrabold">Eleverne klargør deres boder...</h3><p class="text-xs text-slate-500">Se holdenes gade-råb/bluff oppe på boderne, efterhånden som de låser deres valg!</p></div>
+        <button type="button" onclick="forceHostResolve()" class="px-4 py-2 bg-amber-500 text-slate-950 font-extrabold rounded-xl text-xs cursor-pointer">Tving runde i gang →</button>
       </div>
-      <div id="hostWaitGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+      <div id="hostWaitGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
     </div>
 
     <!-- CLIENT WAIT -->
-    <div id="clientWait" class="hidden bg-white border-2 border-emerald-300 rounded-3xl p-8 text-center shadow-xl space-y-2 anim-pop">
-      <div class="text-4xl">🔒</div>
-      <h3 class="text-xl font-extrabold text-slate-900">Din bod er låst og klar!</h3>
-      <p class="text-xs text-slate-600">Dit gade-råb er sendt til storskærmen. Venter på at de sidste boder åbner...</p>
+    <div id="clientWait" class="hidden bg-white border-2 border-emerald-300 rounded-3xl p-8 text-center shadow-xl space-y-2">
+      <div class="text-3xl">🔒</div>
+      <h3 class="text-xl font-extrabold">Din bod er låst!</h3>
+      <p class="text-xs text-slate-600">Dit gade-råb vises nu på gaden. Venter på de sidste boder, før terningen kastes...</p>
     </div>
 
-    <!-- DECISION WORKBENCH -->
-    <div id="workbench" class="bg-white border border-stone-200 rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
-      <div class="flex flex-wrap justify-between items-center gap-3 border-b border-stone-200 pb-4">
+    <!-- WORKBENCH -->
+    <div id="workbench" class="bg-white border border-stone-200 rounded-3xl p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3 flex-wrap gap-2">
         <div>
-          <span class="text-xs font-extrabold text-emerald-600 uppercase">Klargør din forretning</span>
-          <h3 id="wbTeamName" class="text-2xl font-extrabold text-slate-900">Din bod</h3>
+          <span class="text-xs font-extrabold text-emerald-600 uppercase">Beslutningsfase</span>
+          <h3 id="wbTeamName" class="text-xl font-extrabold text-slate-900">Din bod</h3>
           <p id="wbSub" class="text-xs text-slate-500"></p>
         </div>
         <div class="flex items-center gap-2">
-          <span id="wbStarsBadge" class="bg-amber-50 border border-amber-200 text-amber-900 px-3 py-1.5 rounded-xl text-xs font-extrabold">⭐⭐⭐</span>
-          <span id="wbTurnBadge" class="text-xs bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-xl font-bold">Din tur</span>
+          <span id="wbStars" class="text-xs bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl font-extrabold text-amber-900">⭐⭐⭐</span>
+          <span id="wbTurnBadge" class="text-xs bg-stone-100 border px-3 py-1.5 rounded-xl font-bold">Din tur</span>
         </div>
       </div>
 
-      <!-- STEP 1: MANDATORY WEEKLY DILEMMA -->
-      <div class="bg-amber-50/90 border-2 border-amber-300 rounded-2xl p-5 space-y-2.5">
-        <div class="flex justify-between items-center text-xs font-extrabold text-amber-900">
-          <span class="bg-amber-200/80 px-2.5 py-0.5 rounded-full">1. UGENS DILEMMA (SKAL BESVARES)</span>
+      <!-- Dilemma Card -->
+      <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 space-y-2">
+        <div class="flex justify-between text-xs font-extrabold text-amber-800">
+          <span>UGENS DILEMMA (PÅVIRKER OMDØMME ⭐ & DRIFT)</span>
           <span id="dilStatus">Vælg A eller B for at låse boden op</span>
         </div>
-        <div id="dilTitle" class="font-extrabold text-base text-slate-900"></div>
+        <div id="dilTitle" class="font-extrabold text-sm text-slate-900"></div>
         <p id="dilText" class="text-xs text-slate-700"></p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-          <button type="button" onclick="pickDil('A')" id="btnDilA" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white hover:border-amber-500 text-left text-xs font-bold cursor-pointer transition"></button>
-          <button type="button" onclick="pickDil('B')" id="btnDilB" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white hover:border-amber-500 text-left text-xs font-bold cursor-pointer transition"></button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1">
+          <button type="button" onclick="pickDil('A')" id="btnDilA" class="p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer"></button>
+          <button type="button" onclick="pickDil('B')" id="btnDilB" class="p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer"></button>
         </div>
       </div>
 
-      <div id="resReveal" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 text-xs font-bold text-indigo-950 anim-pop"></div>
+      <div id="resReveal" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-3 text-xs font-bold text-indigo-950"></div>
 
-      <!-- STEP 2: PRODUCTION & PRICE SLIDERS -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 space-y-3">
-          <div class="flex justify-between items-baseline">
-            <span class="font-extrabold text-sm text-slate-900">2. Ny produktion</span>
-            <b id="lblQty" class="text-2xl font-extrabold text-emerald-600">15 stk.</b>
+      <!-- Sliders -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-stone-50 p-4 rounded-2xl border space-y-3">
+          <div class="flex justify-between"><span class="font-extrabold text-sm">1. Ny produktion</span><b id="lblQty" class="text-xl text-emerald-600">15 stk.</b></div>
+          <input type="range" id="slQty" min="0" max="60" value="15" oninput="slide()" class="w-full accent-emerald-600 cursor-pointer">
+          <div class="bg-white p-2.5 rounded-xl border text-xs flex justify-between">
+            <span>Klar på disken (inkl. lager): <b id="lblReady">15 stk.</b></span>
+            <span>Råvarepris: <b id="lblProdCost" class="text-amber-700">300 kr.</b></span>
           </div>
-          <p class="text-[11px] text-slate-500">Din råvarepris inkl. maskiner/valg: <b id="lblUnitCost" class="text-slate-800">20 kr./stk.</b></p>
-          <input type="range" id="slQty" min="0" max="60" value="15" oninput="slide()" class="w-full">
-          <div class="bg-white p-3 rounded-xl border border-stone-200 text-xs flex justify-between">
-            <span>Klar på disken (inkl. lager): <b id="lblReady" class="text-slate-900">15 stk.</b></span>
-            <span>Udgift: <b id="lblProdCost" class="text-amber-700">300 kr.</b></span>
-          </div>
-          <div id="shelfIcons" class="flex flex-wrap gap-1 min-h-[22px]"></div>
+          <div id="shelfIcons" class="flex flex-wrap gap-1 min-h-[24px]"></div>
         </div>
 
-        <div class="bg-stone-50 p-5 rounded-2xl border border-stone-200 space-y-3">
-          <div class="flex justify-between items-baseline">
-            <span class="font-extrabold text-sm text-slate-900">3. Dit prisskilt</span>
-            <b id="lblPrice" class="text-2xl font-extrabold text-amber-600">45 kr.</b>
+        <div class="bg-stone-50 p-4 rounded-2xl border space-y-3">
+          <div class="flex justify-between"><span class="font-extrabold text-sm">2. Dit prisskilt</span><b id="lblPrice" class="text-xl text-amber-600">45 kr.</b></div>
+          <input type="range" id="slPrice" min="15" max="120" value="45" oninput="slide()" class="w-full accent-amber-600 cursor-pointer">
+          <div class="bg-white p-2.5 rounded-xl border text-xs flex justify-between">
+            <span>Avance pr. salg: <b id="lblMargin" class="text-emerald-600">+25 kr.</b></span>
+            <span>Break-even: <b id="lblBE">8 stk.</b></span>
           </div>
-          <p class="text-[11px] text-
+          <label class="flex items-center justify-between bg-amber-50/70 border border-amber-200 p-2 rounded-xl text-xs cursor-pointer">
+            <span>💎 <b>Brug Luksus-råvarer i denne uge</b> (+1 ⭐ her og nu)</span>
+            <input type="checkbox" id="upQual" onchange="calc()" class="w-4 h-4 accent-amber-600">
+          </label>
+        </div>
+      </div>
+
+      <!-- PERMANENT INVESTMENTS & RESEARCH -->
+      <div>
+        <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">3. Permanente Bod-opgraderinger (Købes én gang – gælder resten af spillet)</div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <div id="cardCool" onclick="togglePerm('cool')" class="p-3 rounded-2xl bg-stone-50 border-2 cursor-pointer flex flex-col justify-between">
+            <div class="flex justify-between"><span>❄️ <b>Køledisk</b></span><span id="tagCool" class="font-extrabold text-amber-700">350 kr.</span></div>
+            <span class="text-slate-500 my-1">Redder fast 60% af usolgte varer hver uge</span>
+          </div>
+          <div id="cardMach" onclick="togglePerm('mach')" class="p-3 rounded-2xl bg-stone-50 border-2 cursor-pointer flex flex-col justify-between">
+            <div class="flex justify-between"><span>⚙️ <b>Værkstedsmaskine</b></span><span id="tagMach" class="font-extrabold text-amber-700">400 kr.</span></div>
+            <span class="text-slate-500 my-1">Sænker din råvarepris med -4 kr./stk. permanent</span>
+          </div>
+          <div id="cardNeon" onclick="togglePerm('neon')" class="p-3 rounded-2xl bg-stone-50 border-2 cursor-pointer flex flex-col justify-between">
+            <div class="flex justify-between"><span>✨ <b>Neonskilt & Brand</b></span><span id="tagNeon" class="font-extrabold text-amber-700">350 kr.</span></div>
+            <span class="text-slate-500 my-1">Giver +3 stamkunder hver uge og +1 permanent ⭐</span>
+          </div>
+          <button type="button" id="btnRes" onclick="buyRes()" class="p-3 rounded-2xl bg-indigo-50 border-2 border-indigo-200 text-left flex flex-col justify-between cursor-pointer">
+            <div class="flex justify-between"><span>🔭 <b>Ugens Vejranalyse</b></span><span class="bg-indigo-600 text-white px-1.5 rounded text-[10px]">100 kr.</span></div>
+            <span class="text-indigo-900 my-1">Se ugens terning og kundetal med det samme</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STREET SLOGAN / BLUFF -->
+      <div class="bg-stone-50 p-3.5 rounded-2xl border flex flex-wrap items-center justify-between gap-3">
+        <div class="text-xs">
+          <b class="text-slate-800">📢 Ugens Gade-råb / Bluff (Valgfrit):</b>
+          <span class="text-slate-500">Vises i en taleboble over din bod på gaden!</span>
+        </div>
+        <input id="inpSlogan" maxlength="38" placeholder="F.eks. 'Vi dumper prisen til 25 kr. i dag!'" class="flex-grow max-w-sm bg-white border rounded-xl px-3 py-1.5 text-xs font-bold">
+      </div>
+
+      <div class="pt-3 border-t flex flex-wrap justify-between items-center gap-3">
+        <span class="text-xs">Samlet udlæg nu (inkl. husleje & investeringer): <b id="lblOutlay" class="text-sm">500 kr.</b></span>
+        <button type="button" id="btnLock" onclick="lockTurn()" disabled class="px-6 py-3 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm">Besvar ugens dilemma først</button>
+      </div>
+    </div>
+
+    <!-- RESULTS, LIVE CLOCK & 3D DICE -->
+    <div id="resPanel" class="hidden bg-white border-2 border-amber-400 rounded-3xl p-6 shadow-2xl space-y-5">
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-5">
+          <div class="scene">
+            <div class="cube" id="diceCube">
+              <div class="face f1"><div></div><div></div><div></div><div></div><div class="pip"></div><div></div><div></div><div></div><div></div></div>
+              <div class="face f2"><div class="pip"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip"></div></div>
+              <div class="face f3"><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div></div>
+              <div class="face f4"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
+              <div class="face f5"><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
+              <div class="face f6"><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-extrabold uppercase text-amber-800">Uge <span id="resWk">1</span></span>
+              <span id="liveClockBadge" class="bg-emerald-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-full">🕒 Kl. 10:00</span>
+            </div>
+            <h3 id="resTitle" class="text-2xl font-extrabold text-slate-900 mt-0.5">Solskin</h3>
+            <p class="text-xs text-slate-700">Kunder i alt: <b id="resCust" class="text-emerald-700">40</b> (60% Prisjægere / 40% Kvalitetskøbere) • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
+          </div>
+        </div>
+        <button type="button" id="btnNextWk" onclick="nextWeek()" class="hidden px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md">Næste uge →</button>
+        <span id="clientNextNote" class="hidden text-xs font-bold text-amber-800">Venter på at læreren skifter uge...</span>
+      </div>
+
+      <div id="resCards" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+
+    <!-- CHART -->
+    <div class="bg-white border border-stone-200 rounded-3xl p-5">
+      <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">Kassebeholdning (kr.)</div>
+      <div class="h-52 w-full"><canvas id="chartCanvas"></canvas></div>
+    </div>
+  </section>
+
+  <!-- END SCREEN -->
+  <section id="scrEnd" class="hidden bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-2xl space-y-6 text-center">
+    <h2 class="text-3xl font-extrabold text-slate-900">Slutstilling på Handelsgaden</h2>
+    <div id="podium" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left"></div>
+    <button type="button" onclick="location.reload()" class="px-8 py-3.5 bg-emerald-600 text-white font-extrabold rounded-2xl text-sm cursor-pointer">Spil igen</button>
+  </section>
+
+</main>
+
+<script>
+// --- SAFE SOUND ---
+let sndOn = true, aCtx = null;
+function playTone(freq, dur, type='sine') {
+  if (!sndOn) return;
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    if (!aCtx) aCtx = new Ctx();
+    if (aCtx.state === 'suspended') aCtx.resume().catch(()=>{});
+    const o = aCtx.createOscillator(), g = aCtx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, aCtx.currentTime);
+    g.gain.setValueAtTime(0.08, aCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, aCtx.currentTime + dur);
+    o.connect(g); g.connect(aCtx.destination);
+    o.start(); o.stop(aCtx.currentTime + dur);
+  } catch(e){}
+}
+function toggleSound() { sndOn = !sndOn; document.getElementById('sndBtn').textContent = sndOn ? '🔊 Lyd' : '🔇 Lyd'; }
+
+// --- DATA ---
+const COLORS = ['#059669','#2563eb','#d97706','#db2777','#7c3aed','#0891b2'];
+const EVENTS = [
+  { title:"Normal handelsuge", desc:"Stabil handel på gaden.", costMod:0, rentMod:0, dMult:1, pMod:0, icon:"🌤️" },
+  { title:"Råvaremangel", desc:"Råvarer koster +8 kr. ekstra i denne uge.", costMod:8, rentMod:0, dMult:1, pMod:0, icon:"📦" },
+  { title:"Byfest & Festival", desc:"+45% flere kunder og +10 kr. betalingsvilje!", costMod:0, rentMod:0, dMult:1.45, pMod:10, icon:"🎪" },
+  { title:"Dyrere husleje & strøm", desc:"Faste udgifter stiger med +100 kr.", costMod:0, rentMod:100, dMult:1, pMod:0, icon:"⚡" },
+  { title:"Billigt råvare-indkøb", desc:"Råvareprisen falder med -5 kr. pr. stk.", costMod:-5, rentMod:0, dMult:1, pMod:0, icon:"📉" },
+  { title:"Sidst på måneden", desc:"Kunderne sparer: -10 kr. i maks. pris.", costMod:0, rentMod:0, dMult:0.85, pMod:-10, icon:"🌧️" }
+];
+const DICE = [
+  { r:1, lbl:"Regnvejr & tomme gader", maxP:38, dPerTeam:4.5, icon:"⛈️" },
+  { r:2, lbl:"Stille hverdag", maxP:52, dPerTeam:7.5, icon:"🌥️" },
+  { r:3, lbl:"Almindelig handelsdag", maxP:56, dPerTeam:8.5, icon:"⛅" },
+  { r:4, lbl:"Solskin & god handel", maxP:68, dPerTeam:11.0, icon:"☀️" },
+  { r:5, lbl:"Lønningsdag i byen", maxP:74, dPerTeam:12.0, icon:"💸" },
+  { r:6, lbl:"Kæmpe kundestorm!", maxP:95, dPerTeam:16.0, icon:"🎉" }
+];
+const DILS = [
+  { t:"Restparti fra lukket grossist", txt:"Billigere råvarer, men 20% kasseres og kunderne opdager den svingende kvalitet.", A:{l:"Køb restparti (-6 kr./stk., 20% spild og -1 ⭐ omdømme)", cMod:-6, def:0.2, cash:0, pBon:0, dBon:0, starMod:-1}, B:{l:"Køb normale varer (Ingen risiko)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
+  { t:"Lokal mikro-influencer", txt:"En lokal profil tilbyder reklame i sin story.", A:{l:"Betal 90 kr. (+4 garanterede kunder og +1 ⭐ omdømme)", cMod:0, def:0, cash:-90, pBon:5, dBon:4, starMod:1}, B:{l:"Tak nej", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
+  { t:"Gratis smags-/vareprøver", txt:"Del prøver ud foran boden for at øge kundernes lyst.", A:{l:"Del prøver ud (-60 kr., +8 kr. betalingsvilje og +1 ⭐)", cMod:0, def:0, cash:-60, pBon:8, dBon:0, starMod:1}, B:{l:"Ingen prøver", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
+  { t:"Aftenåbent lørdag", txt:"Hold boden åben 3 timer ekstra.", A:{l:"Hold åbent (-70 kr., +3 ekstra kunder)", cMod:0, def:0, cash:-70, pBon:0, dBon:3, starMod:0}, B:{l:"Luk til normal tid", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
+  { t:"Klagende kunde ved disken", txt:"En højlydt kunde er utilfreds og kræver ekstra kompensation.", A:{l:"Giv gavmild kompensation (-50 kr., +1 ⭐ omdømme)", cMod:0, def:0, cash:-50, pBon:0, dBon:0, starMod:1}, B:{l:"Afvis kunden (Spar pengene, men -1 ⭐ omdømme)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:-1} }
+];
+
+let mode='solo', maxWks=10, wk=1, teams=[], turnIdx=0, curEv=EVENTS[0], curDice=DICE[2], curDil=DILS[0], dilChoice=null, chart=null;
+let buyPermTemp = { cool:false, mach:false, neon:false };
+let peer=null, roomCode='', hostConns={}, clientConn=null, myId=0, hostResolved=false;
+
+// --- SETUP ---
+function switchTab(m) {
+  mode = m;
+  ['solo','local','host','join'].forEach(x => {
+    const btn = document.getElementById('t_'+x);
+    const pan = document.getElementById('p_'+x);
+    if (btn) btn.className = x===m ? "p-3.5 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer transition" : "p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition";
+    if (pan) pan.classList.toggle('hidden', x!==m);
+  });
+  const dur = document.getElementById('durBox');
+  if (dur) dur.classList.toggle('hidden', m==='join');
+  if (m==='local' && !document.getElementById('localList').innerHTML) buildLocalInputs(2);
+  playTone(480, 0.04);
+}
+function setWeeks(w) {
+  maxWks = w;
+  [8,10,12].forEach(x => document.getElementById('w'+x).className = x===w ? "px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer" : "px-3 py-1.5 rounded-xl bg-white border text-xs font-bold cursor-pointer");
+  playTone(520, 0.04);
+}
+function buildLocalInputs(cnt) {
+  const list = document.getElementById('localList'); list.innerHTML = '';
+  const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
+  for(let i=0;i<cnt;i++) {
+    list.innerHTML += `<div class="grid grid-cols-2 gap-2 bg-stone-50 p-2.5 rounded-xl border"><input id="ln_${i}" value="${def[i][0]}" class="bg-white border rounded-lg px-2.5 py-1.5 text-xs font-bold"><input id="lp_${i}" value="${def[i][1]}" class="bg-white border rounded-lg px-2.5 py-1.5 text-xs font-bold"></div>`;
+  }
+  list.dataset.cnt = cnt;
+}
+function mkTeam(id, name, prod, isAI=false, style='human', peerId=null) {
+  return {
+    id, peerId, name, prod, isAI, style, color:COLORS[id%COLORS.length],
+    cash:1000, stock:0, stars:3,
+    perms:{ cool:false, mach:false, neon:false },
+    slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
+  };
+}
+
+function beginLocal(m) {
+  mode = m; teams = [];
+  if (m==='solo') {
+    const n = document.getElementById('sName').value || "Min Bod", p = document.getElementById('sProd').value || "Vare";
+    teams.push(mkTeam(0,n,p), mkTeam(1,"Lavpris-Boden (AI)",p,true,'budget'), mkTeam(2,"Luksus-Studiet (AI)",p,true,'premium'), mkTeam(3,"Gadehjørnet (AI)",p,true,'bal'));
+  } else {
+    const cnt = parseInt(document.getElementById('localList').dataset.cnt || 2);
+    for(let i=0;i<cnt;i++) teams.push(mkTeam(i, document.getElementById('ln_'+i).value||`Hold ${i+1}`, document.getElementById('lp_'+i).value||"Vare"));
+  }
+  wk = 1;
+  document.getElementById('scrSetup').classList.add('hidden');
+  document.getElementById('scrGame').classList.remove('hidden');
+  document.getElementById('rndBadge').classList.remove('hidden');
+  document.getElementById('rndMax').textContent = maxWks;
+  playTone(880, 0.15);
+  initChart(); startWeekLocal();
+}
+
+// --- MULTIPLAYER HOST & JOIN ---
+function openHostLobby() {
+  roomCode = String(Math.floor(1000 + Math.random()*9000));
+  document.getElementById('btnOpenHost').classList.add('hidden');
+  document.getElementById('hostLobby').classList.remove('hidden');
+  document.getElementById('bigCode').textContent = roomCode;
+  document.getElementById('topCode').textContent = roomCode;
+  document.getElementById('roomBadge').classList.remove('hidden');
+  teams = []; hostConns = {};
+  playTone(600, 0.08);
+  if (typeof Peer === 'undefined') {
+    document.getElementById('hostNetStatus').textContent = "Netværk blokeret - brug Flere hold (1 PC)";
+    return;
+  }
+  peer = new Peer('hg-dk-' + roomCode);
+  peer.on('open', () => {
+    const st = document.getElementById('hostNetStatus');
+    st.textContent = "Online • Klar"; st.className = "text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full";
+  });
+  peer.on('connection', conn => {
+    conn.on('data', msg => onHostData(conn, msg));
+  });
+}
+function onHostData(conn, msg) {
+  if (msg.type==='JOIN') {
+    let t = teams.find(x=>x.peerId===conn.peer);
+    if (!t) { t = mkTeam(teams.length, msg.name, msg.prod, false, 'human', conn.peer); teams.push(t); }
+    hostConns[conn.peer] = conn; playTone(700, 0.08);
+    conn.send({ type:'WELCOME', id:t.id, maxWks });
+    document.getElementById('lobbyTeams').innerHTML = teams.map(x=>`<div class="bg-white p-2.5 rounded-xl border font-bold text-slate-900 not-italic">🏪 ${x.name} (${x.prod})</div>`).join('');
+    const btn = document.getElementById('btnStartHostGame');
+    btn.disabled = false; btn.className = "w-full py-3.5 bg-emerald-600 text-white font-extrabold rounded-2xl cursor-pointer";
+    btn.textContent = `Start spillet med ${teams.length} hold →`;
+  } else if (msg.type==='RES') {
+    const t = teams.find(x=>x.id===msg.id);
+    if (t) {
+      t.resTemp = true;
+      const maxP = Math.max(25, curDice.maxP + curEv.pMod);
+      const dem = Math.round(curDice.dPerTeam * teams.length * curEv.dMult);
+      conn.send({ type:'RES_ANS', txt:`Vejrudsigt: "${curDice.lbl}" (Terning ${curDice.r}). Ca. ${dem} kunder på gaden, maks. basispris ${maxP} kr.` });
+    }
+  } else if (msg.type==='DEC') {
+    const t = teams.find(x=>x.id===msg.id);
+    if (t && !hostResolved) {
+      t.dec = msg.dec;
+      t.slogan = msg.dec.slogan || "";
+      playTone(550, 0.05);
+      updateStreetUI(false);
+      renderHostWait();
+      if (teams.every(x=>x.dec!==null)) resolveHostWeek();
+    }
+  }
+}
+function startHostGame() {
+  playTone(880, 0.15); wk = 1;
+  document.getElementById('scrSetup').classList.add('hidden');
+  document.getElementById('scrGame').classList.remove('hidden');
+  document.getElementById('rndBadge').classList.remove('hidden');
+  document.getElementById('rndMax').textContent = maxWks;
+  initChart(); startWeekHost();
+}
+function startWeekHost() {
+  hostResolved = false;
+  curEv = wk===1 ? EVENTS[0] : EVENTS[Math.floor(Math.random()*EVENTS.length)];
+  curDice = DICE[Math.floor(Math.random()*DICE.length)];
+  teams.forEach(t => { t.dec = null; t.resTemp = false; t.slogan = ""; });
+  updateStreetUI(false);
+  document.getElementById('resPanel').classList.add('hidden');
+  document.getElementById('workbench').classList.add('hidden');
+  document.getElementById('hostMonitor').classList.remove('hidden');
+  renderHostWait();
+  Object.values(hostConns).forEach(c => c.open && c.send({ type:'START_WK', wk, maxWks, ev:curEv, teams }));
+}
+function renderHostWait() {
+  document.getElementById('hostWaitGrid').innerHTML = teams.map(t => `<div class="p-3 rounded-xl border-2 ${t.dec?'border-emerald-500 bg-emerald-50':'border-stone-200'} flex justify-between items-center text-xs font-bold"><span>${t.name}</span><span>${t.dec?'✓ Klar':'⏳ Tænker'}</span></div>`).join('');
+}
+function forceHostResolve() {
+  const zero = { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
+  teams.forEach(t => { if(!t.dec) t.dec = { qty:0, price:50, qual:false, buyPerms:{cool:false,mach:false,neon:false}, res:false, dil:zero, slogan:"" }; });
+  resolveHostWeek();
+}
+function resolveHostWeek() {
+  if (hostResolved) return; hostResolved = true;
+  document.getElementById('hostMonitor').classList.add('hidden');
+  const sum = runMarketMath();
+  showResultsUI(sum);
+  Object.values(hostConns).forEach(c => c.open && c.send({ type:'RES_WK', sum, teams }));
+}
+
+function joinHost() {
+  const code = document.getElementById('jCode').value.trim();
+  const name = document.getElementById('jName').value.trim() || "Hold";
+  const prod = document.getElementById('jProd').value.trim() || "Vare";
+  if (code.length!==4) return;
+  document.getElementById('btnJoin').textContent = "Forbinder...";
+  peer = new Peer();
+  peer.on('open', () => {
+    clientConn = peer.connect('hg-dk-' + code);
+    clientConn.on('open', () => clientConn.send({ type:'JOIN', name, prod }));
+    clientConn.on('data', msg => {
+      if (msg.type==='WELCOME') {
+        myId = msg.id; maxWks = msg.maxWks;
+        document.getElementById('joinForm').classList.add('hidden');
+        document.getElementById('joinWait').classList.remove('hidden');
+      } else if (msg.type==='START_WK') {
+        wk = msg.wk; maxWks = msg.maxWks; curEv = msg.ev; teams = msg.teams; turnIdx = myId;
+        document.getElementById('scrSetup').classList.add('hidden');
+        document.getElementById('scrGame').classList.remove('hidden');
+        document.getElementById('rndBadge').classList.remove('hidden');
+        document.getElementById('rndMax').textContent = maxWks;
+        if (!chart) initChart(); else updateChart();
+        updateStreetUI(false);
+        document.getElementById('resPanel').classList.add('hidden');
+        document.getElementById('clientWait').classList.add('hidden');
+        document.getElementById('workbench').classList.remove('hidden');
+        loadWorkbench(teams.find(x=>x.id===myId));
+      } else if (msg.type==='RES_ANS') {
+        const box = document.getElementById('resReveal');
+        box.textContent = "🔭 " + msg.txt; box.classList.remove('hidden');
+        document.getElementById('btnRes').classList.add('hidden');
+        calc();
+      } else if (msg.type==='RES_WK') {
+        teams = msg.teams;
+        document.getElementById('clientWait').classList.add('hidden');
+        document.getElementById('workbench').classList.add('hidden');
+        showResultsUI(msg.sum);
+      } else if (msg.type==='END') {
+        teams = msg.teams; showEnd();
+      }
+    });
+  });
+}
+
+// --- STREET & WORKBENCH ---
+function starStr(n) { return '⭐'.repeat(Math.max(1, Math.min(5, n))); }
+function permIcons(p) {
+  let s = '';
+  if (p.cool) s += '<span title="Køledisk">❄️</span>';
+  if (p.mach) s += '<span title="Værkstedsmaskine">⚙️</span>';
+  if (p.neon) s += '<span title="Neonskilt">✨</span>';
+  return s;
+}
+
+function updateStreetUI(resolved) {
+  document.getElementById('rndNow').textContent = wk;
+  document.getElementById('stWeek').textContent = wk;
+  document.getElementById('evIcon').textContent = resolved ? curDice.icon : curEv.icon;
+  document.getElementById('evTitle').textContent = curEv.title;
+  document.getElementById('evDesc').textContent = curEv.desc;
+  document.getElementById('stCost').textContent = (20 + curEv.costMod) + " kr.";
+  document.getElementById('stRent').textContent = (200 + curEv.rentMod) + " kr.";
+
+  document.getElementById('boothsRow').innerHTML = teams.map(t => {
+    const bubble = t.slogan ? `<div class="mb-1.5 bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl shadow max-w-full truncate">💬 "${t.slogan}"</div>` : '';
+    return `
+      <div class="flex flex-col items-center">
+        ${bubble}
+        <div class="bg-white border px-2 py-1 rounded-t-lg text-center w-11/12">
+          <div class="font-extrabold text-xs truncate">${t.name} ${permIcons(t.perms)}</div>
+          <div class="text-[10px]">${starStr(t.stars)}</div>
+        </div>
+        <div class="w-full h-5 rounded-t stripes" style="background:${t.color}"></div>
+        <div class="w-11/12 bg-white border-x p-2 text-center space-y-1">
+          <span class="bg-amber-100 text-amber-900 font-extrabold text-[11px] px-2 py-0.5 rounded">${resolved && t.lastP ? t.lastP+' kr.' : 'Lager: '+t.stock}</span>
+          <div class="font-extrabold text-sm ${t.cash<0?'text-rose-600':'text-emerald-700'}">${t.cash} kr.</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function startWeekLocal() {
+  curEv = wk===1 ? EVENTS[0] : EVENTS[Math.floor(Math.random()*EVENTS.length)];
+  curDice = DICE[Math.floor(Math.random()*DICE.length)];
+  teams.forEach(t => { t.dec = null; t.resTemp = false; t.slogan = ""; });
+  updateStreetUI(false);
+  turnIdx = 0;
+  document.getElementById('resPanel').classList.add('hidden');
+  document.getElementById('workbench').classList.remove('hidden');
+  loadWorkbench(teams[0]);
+}
+
+function loadWorkbench(t) {
+  document.getElementById('wbTeamName').textContent = `${t.name} (Uge ${wk})`;
+  document.getElementById('wbSub').textContent = `Produkt: ${t.prod} • Kasse: ${t.cash} kr. • Overført lager: ${t.stock} stk.`;
+  document.getElementById('wbStars').textContent = starStr(t.stars);
+
+  curDil = DILS[Math.floor(Math.random()*DILS.length)];
+  dilChoice = null;
+  document.getElementById('dilTitle').textContent = curDil.t;
+  document.getElementById('dilText').textContent = curDil.txt;
+  document.getElementById('btnDilA').textContent = "🅰️ " + curDil.A.l;
+  document.getElementById('btnDilB').textContent = "🅱️ " + curDil.B.l;
+  document.getElementById('btnDilA').className = "p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer";
+  document.getElementById('btnDilB').className = "p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer";
+  document.getElementById('dilStatus').textContent = "Vælg A eller B";
+
+  document.getElementById('slQty').value = 15;
+  document.getElementById('slPrice').value = 48;
+  document.getElementById('upQual').checked = false;
+  document.getElementById('inpSlogan').value = "";
+  document.getElementById('resReveal').classList.add('hidden');
+  document.getElementById('btnRes').classList.remove('hidden');
+
+  buyPermTemp = { cool:false, mach:false, neon:false };
+  renderPermCards(t);
+  updateLockBtn(); calc();
+}
+
+function renderPermCards(t) {
+  const cfg = [
+    { k:'cool', id:'cardCool', tag:'tagCool', cost:'350 kr.' },
+    { k:'mach', id:'cardMach', tag:'tagMach', cost:'400 kr.' },
+    { k:'neon', id:'cardNeon', tag:'tagNeon', cost:'350 kr.' }
+  ];
+  cfg.forEach(c => {
+    const card = document.getElementById(c.id), tag = document.getElementById(c.tag);
+    if (t.perms[c.k]) {
+      card.className = "p-3 rounded-2xl bg-emerald-50 border-2 border-emerald-500 flex flex-col justify-between opacity-90";
+      tag.textContent = "✓ Ejet"; tag.className = "font-extrabold text-emerald-700";
+    } else if (buyPermTemp[c.k]) {
+      card.className = "p-3 rounded-2xl bg-amber-50 border-2 border-amber-500 cursor-pointer flex flex-col justify-between";
+      tag.textContent = "Valgt ("+c.cost+")"; tag.className = "font-extrabold text-amber-800";
+    } else {
+      card.className = "p-3 rounded-2xl bg-stone-50 border-2 border-stone-200 cursor-pointer flex flex-col justify-between";
+      tag.textContent = c.cost; tag.className = "font-extrabold text-amber-700";
+    }
+  });
+}
+
+function togglePerm(k) {
+  const t = teams[turnIdx] || teams[0];
+  if (t.perms[k]) return;
+  buyPermTemp[k] = !buyPermTemp[k];
+  playTone(540, 0.04);
+  renderPermCards(t); calc();
+}
+
+function pickDil(c) {
+  dilChoice = c;
+  document.getElementById('btnDilA').className = c==='A' ? "p-3 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer" : "p-3 rounded-xl border bg-white/60 text-left text-xs text-slate-400 cursor-pointer";
+  document.getElementById('btnDilB').className = c==='B' ? "p-3 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer" : "p-3 rounded-xl border bg-white/60 text-left text-xs text-slate-400 cursor-pointer";
+  document.getElementById('dilStatus').textContent = "✓ Valgt";
+  playTone(500, 0.04);
+  updateLockBtn(); calc();
+}
+
+function updateLockBtn() {
+  const b = document.getElementById('btnLock');
+  if (dilChoice) {
+    b.disabled = false;
+    b.className = "px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md";
+    b.textContent = mode==='join' ? "Lås bod og send til storskærm ✓" : "Lås bod og åbn markedet →";
+  } else {
+    b.disabled = true;
+    b.className = "px-6 py-3 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm";
+    b.textContent = "Besvar ugens dilemma først";
+  }
+}
+
+function slide() { playTone(300 + parseInt(document.getElementById('slPrice').value)*2, 0.02); calc(); }
+
+function calc() {
+  const t = teams[turnIdx] || teams[0];
+  const qty = parseInt(document.getElementById('slQty').value);
+  const price = parseInt(document.getElementById('slPrice').value);
+  const qual = document.getElementById('upQual').checked;
+  const dil = dilChoice ? curDil[dilChoice] : { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
+
+  const hasMach = t.perms.mach || buyPermTemp.mach;
+  const uCost = Math.max(5, 20 + curEv.costMod + (qual?10:0) - (hasMach?4:0) + dil.cMod);
+  const rent = 200 + curEv.rentMod;
+  const ready = qty + (t ? t.stock : 0);
+
+  document.getElementById('lblQty').textContent = qty + " stk.";
+  document.getElementById('lblPrice').textContent = price + " kr.";
+  document.getElementById('lblReady').textContent = ready + " stk.";
+  document.getElementById('lblProdCost').textContent = (qty*uCost) + " kr. ("+uCost+" kr./stk)";
+
+  const shelf = document.getElementById('shelfIcons'); shelf.innerHTML = '';
+  for(let i=0;i<Math.min(ready, 35);i++) shelf.innerHTML += `<span class="w-3 h-3 rounded-sm ${i<(t?t.stock:0)?'bg-sky-400':'bg-emerald-500'} inline-block"></span>`;
+
+  const margin = price - uCost;
+  const permCost = (buyPermTemp.cool?350:0) + (buyPermTemp.mach?400:0) + (buyPermTemp.neon?350:0);
+  const extras = rent + permCost + (t&&t.resTemp?100:0) - dil.cash;
+  document.getElementById('lblMargin').textContent = (margin>=0?'+':'') + margin + " kr.";
+  document.getElementById('lblBE').textContent = margin>0 ? Math.ceil(extras/margin) + " stk." : "Umuligt";
+  document.getElementById('lblOutlay').textContent = (qty*uCost + extras) + " kr.";
+}
+
+function buyRes() {
+  playTone(800, 0.1);
+  const t = teams[turnIdx] || teams[0]; t.resTemp = true;
+  if (mode==='join') {
+    clientConn.send({ type:'RES', id:myId });
+  } else {
+    const maxP = Math.max(25, curDice.maxP + curEv.pMod);
+    const dem = Math.round(curDice.dPerTeam * teams.length * curEv.dMult);
+    const box = document.getElementById('resReveal');
+    box.textContent = `🔭 Vejrudsigt: "${curDice.lbl}" (Terning ${curDice.r}). Ca. ${dem} kunder på gaden, maks. basispris ${maxP} kr.`;
+    box.classList.remove('hidden');
+    document.getElementById('btnRes').classList.add('hidden');
+    calc();
+  }
+}
+
+function lockTurn() {
+  if (!dilChoice) return;
+  playTone(600, 0.08);
+  const t = teams[turnIdx] || teams[0];
+  const slogan = document.getElementById('inpSlogan').value.trim();
+  const dec = {
+    qty: parseInt(document.getElementById('slQty').value),
+    price: parseInt(document.getElementById('slPrice').value),
+    qual: document.getElementById('upQual').checked,
+    buyPerms: { ...buyPermTemp },
+    res: !!t.resTemp,
+    dil: curDil[dilChoice],
+    slogan
+  };
+  t.slogan = slogan;
+
+  if (mode==='solo') {
+    t.dec = dec;
+    const zero = { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
+    teams.filter(x=>x.isAI).forEach(ai => {
+      const avg = Math.round(8.5 * curEv.dMult);
+      const bp = { cool:false, mach:false, neon:false };
+      if (ai.style==='budget') {
+        if (!ai.perms.mach && ai.cash>850) bp.mach = true;
+        ai.slogan = "Gadens billigste priser!";
+        ai.dec = { qty:Math.max(0,avg+4-ai.stock), price:35, qual:false, buyPerms:bp, res:false, dil:zero, slogan:ai.slogan };
+      } else if (ai.style==='premium') {
+        if (!ai.perms.neon && ai.cash>800) bp.neon = true;
+        ai.slogan = "5-stjernet luksus til kræsne kunder ✨";
+        ai.dec = { qty:Math.max(0,avg-ai.stock), price:72, qual:true, buyPerms:bp, res:false, dil:zero, slogan:ai.slogan };
+      } else {
+        if (!ai.perms.cool && ai.cash>800) bp.cool = true;
+        ai.slogan = "God kvalitet til fair pris!";
+        ai.dec = { qty:Math.max(0,avg+1-ai.stock), price:49, qual:false, buyPerms:bp, res:false, dil:zero, slogan:ai.slogan };
+      }
+    });
+    showResultsUI(runMarketMath());
+  } else if (mode==='local') {
+    t.dec = dec; updateStreetUI(false); turnIdx++;
+    if (turnIdx < teams.length) loadWorkbench(teams[turnIdx]);
+    else showResultsUI(runMarketMath());
+  } else if (mode==='join') {
+    clientConn.send({ type:'DEC', id:myId, dec });
+    document.getElementById('workbench').classList.add('hidden');
+    document.getElementById('clientWait').classList.remove('hidden');
+  }
+}
+
+// --- 2-SEGMENT MARKET MATH (60% Price Hunters / 40% Quality Buyers) ---
+function runMarketMath() {
+  const baseCost = 20 + curEv.costMod, rent = 200 + curEv.rentMod;
+  const baseMaxP = Math.max(25, curDice.maxP + curEv.pMod);
+  const totalDem = Math.round(curDice.dPerTeam * teams.length * curEv.dMult);
+  let priceHunters = Math.round(totalDem * 0.60);
+  let qualityBuyers = totalDem - priceHunters;
+
+  const list = teams.map(t => {
+    const d = t.dec;
+    // Apply new permanent purchases
+    let permSpend = 0;
+    if (d.buyPerms.cool && !t.perms.cool) { t.perms.cool = true; permSpend += 350; }
+    if (d.buyPerms.mach && !t.perms.mach) { t.perms.mach = true; permSpend += 400; }
+    if (d.buyPerms.neon && !t.perms.neon) { t.perms.neon = true; permSpend += 350; t.stars = Math.min(5, t.stars + 1); }
+
+    // Update reputation stars from dilemma
+    t.stars = Math.max(1, Math.min(5, t.stars + (d.dil.starMod || 0)));
+    const effStars = Math.min(5, t.stars + (d.qual ? 1 : 0));
+
+    const usable = d.dil.def > 0 ? Math.floor(d.qty*(1-d.dil.def)) : d.qty;
+    const avail = t.stock + usable;
+
+    const maxPriceHunter = baseMaxP + d.dil.pBon + (t.perms.neon ? 5 : 0);
+    const maxQualityBuyer = maxPriceHunter + 20 + effStars * 4;
+
+    const loyalCust = (d.dil.dBon || 0) + (t.perms.neon ? 3 : 0);
+    const dirSold = (d.price <= maxQualityBuyer && avail > 0) ? Math.min(avail, loyalCust) : 0;
+
+    return { t, d, permSpend, effStars, avail, price:d.price, sold:dirSold, maxPriceHunter, maxQualityBuyer };
+  });
+
+  // 1. Quality Buyers (40%) pick highest stars first
+  const qualOrder = list.filter(x => x.price <= x.maxQualityBuyer && x.avail > x.sold)
+    .sort((a,b) => b.effStars !== a.effStars ? b.effStars - a.effStars : a.price - b.price);
+  qualOrder.forEach(item => {
+    const canSell = item.avail - item.sold;
+    const take = Math.min(qualityBuyers, canSell);
+    item.sold += take; qualityBuyers -= take;
+  });
+
+  // 2. Price Hunters (60% + any leftover quality buyers) pick lowest price first
+  priceHunters += qualityBuyers;
+  const priceOrder = list.filter(x => x.price <= x.maxPriceHunter && x.avail > x.sold)
+    .sort((a,b) => a.price !== b.price ? a.price - b.price : b.effStars - a.effStars);
+  priceOrder.forEach(item => {
+    const canSell = item.avail - item.sold;
+    const take = Math.min(priceHunters, canSell);
+    item.sold += take; priceHunters -= take;
+  });
+
+  const cards = list.sort((a,b)=>a.price-b.price).map(r => {
+    const t = r.t, d = r.d;
+    const uCost = Math.max(5, baseCost + (d.qual?10:0) - (t.perms.mach?4:0) + d.dil.cMod);
+    const rev = r.sold * r.price;
+    const exp = d.qty*uCost + rent + r.permSpend + (d.res?100:0) - d.dil.cash + (t.cash<0?Math.round(Math.abs(t.cash)*0.2):0);
+    const net = rev - exp;
+    const unsold = r.avail - r.sold;
+    const saved = t.perms.cool ? Math.floor(unsold*0.6) : 0;
+    const waste = unsold - saved;
+
+    t.cash += net; t.stock = saved; t.hist.push(t.cash);
+    t.sold += r.sold; t.waste += waste; t.lastP = r.price; t.lastS = r.sold;
+    return {
+      name:t.name, prod:t.prod, color:t.color, stars:r.effStars, perms:{...t.perms},
+      price:r.price, sold:r.sold, avail:r.avail, saved, waste,
+      tooExpensive: (r.price > r.maxQualityBuyer && r.avail > 0),
+      maxW:r.maxQualityBuyer, rev, exp, net, cash:t.cash
+    };
+  });
+
+  return { wk, dice:curDice, totalDem, baseMaxP, cards };
+}
+
+// --- LIVE 10:00 TO 18:00 DAY SIMULATION ---
+let simTimer = null;
+function showResultsUI(sum) {
+  document.getElementById('workbench').classList.add('hidden');
+  document.getElementById('resPanel').classList.remove('hidden');
+  document.getElementById('btnNextWk').classList.add('hidden');
+  document.getElementById('clientNextNote').classList.add('hidden');
+
+  const rot = {1:[0,0],2:[0,-90],3:[0,180],4:[0,90],5:[-90,0],6:[90,0]}[sum.dice.r];
+  setTimeout(() => {
+    playTone(220, 0.15, 'square');
+    document.getElementById('diceCube').style.transform = `rotateX(${rot[0]+720}deg) rotateY(${rot[1]+720}deg)`;
+  }, 50);
+
+  document.getElementById('resWk').textContent = sum.wk;
+  document.getElementById('resTitle').textContent = `${sum.dice.icon} ${sum.dice.lbl}`;
+  document.getElementById('resCust').textContent = sum.totalDem;
+  document.getElementById('resMaxP').textContent = sum.baseMaxP + " kr.";
+
+  const hours = ["10:00","12:00","14:00","16:00","18:00 (Lukketid)"];
+  let step = 0;
+  if (simTimer) clearInterval(simTimer);
+
+  function renderStep(fraction, isFinal) {
+    document.getElementById('liveClockBadge').textContent = "🕒 Kl. " + hours[step];
+    document.getElementById('resCards').innerHTML = sum.cards.map(c => {
+      const curSold = isFinal ? c.sold : Math.round(c.sold * fraction);
+      const curRev = curSold * c.price;
+      const badge = isFinal
+        ? `<span class="px-2.5 py-1 rounded-lg font-extrabold text-xs ${c.net>=0?'bg-emerald-100 text-emerald-800':'bg-rose-100 text-rose-800'}">${c.net>=0?'+':''}${c.net} kr.</span>`
+        : `<span class="px-2.5 py-1 rounded-lg font-bold text-xs bg-amber-100 text-amber-900">Handel i gang...</span>`;
+
+      let shelf = '';
+      for(let i=0;i<Math.min(c.avail,30);i++) {
+        shelf += `<span class="w-3 h-3 rounded-sm ${i<curSold?'bg-emerald-500':(isFinal?'bg-rose-400':'bg-stone-300')} inline-block"></span>`;
+      }
+
+      return `
+        <div class="bg-stone-50 border rounded-2xl p-4 space-y-2">
+          <div class="flex justify-between items-center">
+            <div><b class="text-sm text-slate-900">${c.name}</b> <span class="text-xs">${starStr(c.stars)}</span> <span class="text-xs font-bold text-amber-700">(${c.price} kr.)</span></div>
+            ${badge}
+          </div>
+          <div class="text-xs text-slate-700">Solgt nu: <b>${curSold}</b> af ${c.avail} stk. ${c.tooExpensive?`<span class="text-rose-600 font-bold">(For dyrt!)</span>`:''} ${isFinal?`• Gemt (❄️): <b>${c.saved}</b> • Spild: <b>${c.waste}</b>`:''}</div>
+          <div class="flex flex-wrap gap-1">${shelf}</div>
+          <div class="text-xs text-slate-500 flex justify-between pt-1 border-t"><span>Salg: ${curRev} kr. | Udgift: ${c.exp} kr.</span><b>Kasse: ${isFinal ? c.cash+' kr.' : '...'}</b></div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  renderStep(0.2, false);
+  simTimer = setInterval(() => {
+    step++;
+    if (step < 4) {
+      playTone(420 + step*60, 0.04);
+      renderStep((step+1)*0.2, false);
+    } else {
+      clearInterval(simTimer);
+      playTone(980, 0.2);
+      renderStep(1.0, true);
+      updateStreetUI(true); updateChart();
+      document.getElementById('btnNextWk').classList.toggle('hidden', mode==='join');
+      document.getElementById('clientNextNote').classList.toggle('hidden', mode!=='join');
+    }
+  }, 650);
+}
+
+function nextWeek() {
+  if (wk >= maxWks) {
+    if (mode==='host') Object.values(hostConns).forEach(c => c.open && c.send({ type:'END', teams }));
+    showEnd();
+  } else {
+    wk++;
+    if (mode==='host') startWeekHost(); else startWeekLocal();
+  }
+}
+
+function initChart() {
+  const ctx = document.getElementById('chartCanvas').getContext('2d');
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type:'line',
+    data:{ labels:['Start'], datasets:teams.map(t=>({ label:t.name, data:t.hist, borderColor:t.color, tension:0.2 })) },
+    options:{ responsive:true, maintainAspectRatio:false }
+  });
+}
+function updateChart() {
+  if (!chart) return;
+  const l = ['Start']; for(let i=1;i<=wk;i++) l.push('Uge '+i);
+  chart.data.labels = l;
+  teams.forEach((t,i) => { if(chart.data.datasets[i]) chart.data.datasets[i].data = t.hist; });
+  chart.update();
+}
+function showEnd() {
+  document.getElementById('scrGame').classList.add('hidden');
+  document.getElementById('scrEnd').classList.remove('hidden');
+  const sorted = [...teams].sort((a,b)=>b.cash-a.cash);
+  document.getElementById('podium').innerHTML = sorted.map((t,i) => `
+    <div class="p-5 rounded-2xl border-2 ${i===0?'border-amber-400 bg-amber-50':'border-stone-200 bg-stone-50'}">
+      <div class="text-xs font-extrabold uppercase text-amber-700">${i+1}. Plads • ${starStr(t.stars)}</div>
+      <div class="text-xl font-extrabold mt-1">${t.name} ${permIcons(t.perms)}</div>
+      <div class="text-sm font-bold text-emerald-700 mt-2">Slutkasse: ${t.cash} kr.</div>
+      <div class="text-xs text-slate-500 mt-1">Solgt i alt: ${t.sold} stk. • Spild: ${t.waste} stk.</div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
