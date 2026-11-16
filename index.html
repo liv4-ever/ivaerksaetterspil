@@ -257,7 +257,7 @@
       <p class="text-xs text-slate-600">Venter på de sidste boder, før terningen og ugens skæbnekort afsløres...</p>
     </div>
 
-    <!-- WORKBENCH (SPLIT INTO 2 CLEAN COLUMNS FOR CLARITY) -->
+    <!-- WORKBENCH -->
     <div id="workbench" class="game-card p-6 md:p-8 space-y-6">
       <div class="flex justify-between items-center border-b border-stone-200 pb-4 flex-wrap gap-2">
         <div>
@@ -299,12 +299,11 @@
 
       <div id="resReveal" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-3 text-xs font-bold text-indigo-950"></div>
 
-      <!-- TWO COLUMN WORKBENCH LAYOUT FOR MAXIMUM OVERBLIK -->
+      <!-- TWO COLUMN WORKBENCH LAYOUT -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- LEFT COLUMN: Indkøb & Produktion -->
         <div class="space-y-6">
-          <!-- STEP 2: Supplier Selection -->
           <div>
             <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">2. Vælg Ugens Råvare-leverandør</div>
             <div class="grid grid-cols-1 gap-2.5 text-xs">
@@ -323,7 +322,6 @@
             </div>
           </div>
 
-          <!-- STEP 3: Production Slider -->
           <div class="bg-stone-50/70 p-4 rounded-2xl border border-stone-200 space-y-3">
             <div class="flex justify-between"><span class="font-extrabold text-sm">3. Ny produktion</span><b id="lblQty" class="text-xl text-emerald-600">15 stk.</b></div>
             <input type="range" id="slQty" min="0" max="60" value="15" oninput="slide()" class="w-full accent-emerald-600 cursor-pointer">
@@ -337,7 +335,6 @@
 
         <!-- RIGHT COLUMN: Pris, Udstyr & Sabotage -->
         <div class="space-y-6">
-          <!-- STEP 4: Price Slider -->
           <div class="bg-stone-50/70 p-4 rounded-2xl border border-stone-200 space-y-3">
             <div class="flex justify-between"><span class="font-extrabold text-sm">4. Dit prisskilt</span><b id="lblPrice" class="text-xl text-amber-600">48 kr.</b></div>
             <input type="range" id="slPrice" min="15" max="120" value="48" oninput="slide()" class="w-full accent-amber-600 cursor-pointer">
@@ -351,7 +348,6 @@
             </div>
           </div>
 
-          <!-- STEP 5: TIERED UPGRADES -->
           <div>
             <div class="flex justify-between items-center mb-2 flex-wrap gap-1">
               <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">5. Bod-udstyr (Maks. 3 aktive)</span>
@@ -363,7 +359,7 @@
 
       </div>
 
-      <!-- BOTTOM ROW: Sabotage & Gade-råb -->
+      <!-- BOTTOM ROW -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-stone-200">
         <div class="bg-rose-50/60 border-2 border-rose-200/80 p-4 rounded-2xl space-y-2 shadow-sm">
           <div class="flex justify-between items-center">
@@ -615,7 +611,18 @@ function beginLocal(m) {
   initChart(); startWeekLocal();
 }
 
-// --- MULTIPLAYER HOST & JOIN ---
+// --- MULTIPLAYER HOST & JOIN (MED OFFENTLIG STUN/TURN OPSÆTNING) ---
+function getPeerConfig() {
+  return {
+    config: {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:global.stun.twilio.com:3478' }
+      ]
+    }
+  };
+}
+
 function openHostLobby() {
   roomCode = String(Math.floor(1000 + Math.random()*9000));
   document.getElementById('btnOpenHost').classList.add('hidden');
@@ -629,10 +636,14 @@ function openHostLobby() {
     document.getElementById('hostNetStatus').textContent = "Netværk blokeret - brug Flere hold (1 PC)";
     return;
   }
-  peer = new Peer('hg-dk-' + roomCode);
+  peer = new Peer('hg-dk-' + roomCode, getPeerConfig());
   peer.on('open', () => {
     const st = document.getElementById('hostNetStatus');
     st.textContent = "Online • Klar"; st.className = "text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full";
+  });
+  peer.on('error', err => {
+    const st = document.getElementById('hostNetStatus');
+    st.textContent = "Fejl: " + err.type; st.className = "text-xs font-bold bg-rose-100 text-rose-800 px-3 py-1 rounded-full";
   });
   peer.on('connection', conn => {
     conn.on('data', msg => onHostData(conn, msg));
@@ -712,7 +723,12 @@ function joinHost() {
   const prod = document.getElementById('jProd').value.trim() || "Vare";
   if (code.length!==4) return;
   document.getElementById('btnJoin').textContent = "Forbinder...";
-  peer = new Peer();
+  peer = new Peer(undefined, getPeerConfig());
+  peer.on('error', err => {
+    document.getElementById('jErr').textContent = "Forbindelsesfejl: " + err.type;
+    document.getElementById('jErr').classList.remove('hidden');
+    document.getElementById('btnJoin').textContent = "Tilslut til spillet";
+  });
   peer.on('open', () => {
     clientConn = peer.connect('hg-dk-' + code);
     clientConn.on('open', () => clientConn.send({ type:'JOIN', name, prod }));
