@@ -54,7 +54,7 @@
         Handelsgaden
       </h2>
       <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium">
-        Start i det små med 1 stjerne (⭐) og 1.000 kr. Vælg leverandører, opgrader boden over 3 niveauer, tilpas dig uventede hændelser – og test gade-råb og beskidte kneb mod dine rivaler!
+        Start i det små med 1 stjerne (⭐) og 1.000 kr. Vælg leverandører, opgrader boden over 3 niveauer, og pas på Klaus KRAMs svingende råd og rivalernes beskidte kneb!
       </p>
 
       <div class="max-w-lg mx-auto mt-8 grid grid-cols-3 gap-3 items-end">
@@ -105,17 +105,17 @@
 
         <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-1">
           <div class="font-extrabold text-sm text-amber-950">👥 To typer kunder på gaden</div>
-          <p><b>Prisjægerne</b> kigger benhårdt på prisskiltet og handler hos den billigste først. <b>Kvalitetskøberne</b> kræver mindst 3 stjerner (⭐⭐⭐), går efter de bedste boder og er villige til at betale en højere pris. Plej jeres rygte!</p>
+          <p><b>Prisjægerne</b> kigger benhårdt på prisskiltet og handler hos den billigste først. <b>Kvalitetskøberne</b> kræver mindst 3 stjerner (⭐⭐⭐), går efter de bedste boder og er villige til at betale en højere pris.</p>
         </div>
 
         <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200 space-y-1">
-          <div class="font-extrabold text-sm text-indigo-950">🚚 Leverandører & Værktøjer</div>
-          <p>Vælg mellem billige råvarer (med risiko for svingende kvalitet og uanmeldt kontrol), standard-grossisten eller luksus-leverandører, der løfter omdømmet. Opgrader boden i 3 niveauer – men pas på: alt udstyr kræver ugentlig vedligeholdelse og slides op over tid.</p>
+          <div class="font-extrabold text-sm text-indigo-950">🚚 Leverandører, Assistent & Værktøjer</div>
+          <p>Brug ugentlige råd fra gade-assistenten Klaus KRAM (men pas på, han tager fejl ind imellem!). Vælg leverandører, opgrader boden i 3 niveauer – men husk: udstyr slides op over tid og koster ugentlig drift.</p>
         </div>
 
         <div class="bg-rose-50 p-4 rounded-2xl border border-rose-200 space-y-1">
           <div class="font-extrabold text-sm text-rose-950">🕵️ Psykologisk spil: Gade-råb og Beskidte Kneb</div>
-          <p>Brug gade-råb til at råbe kunder op – men hvis I bluffer og lover for meget, gennemskuer kunderne jer og straffer omdømmet. I kan også betale for beskidte kneb mod konkurrenterne, men pas på: Bumerangen kan nemt ramme jer selv i nakken!</p>
+          <p>Brug gade-råb til at råbe kunder op – men bluffer I for grovt, gennemskuer kunderne jer. I kan også betale for beskidte kneb mod konkurrenterne, men pas på bagslaget!</p>
         </div>
       </div>
 
@@ -273,6 +273,15 @@
         </div>
       </div>
 
+      <!-- KLAUS KRAM ASSISTANT ADVICE BOX -->
+      <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 flex items-start gap-3.5">
+        <span class="text-2xl mt-0.5">🗣️</span>
+        <div>
+          <div class="text-xs font-extrabold uppercase tracking-wider text-blue-900">Assistentens råd (Klaus KRAM)</div>
+          <p id="assistantAdviceText" class="text-xs text-blue-950 font-medium mt-0.5 leading-relaxed"></p>
+        </div>
+      </div>
+
       <!-- STEP 1: Dilemma Card -->
       <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 space-y-2">
         <div class="flex justify-between text-xs font-extrabold text-amber-800">
@@ -390,7 +399,7 @@
               <div class="face f2"><div class="pip"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip"></div></div>
               <div class="face f3"><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div></div>
               <div class="face f4"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
-              <div class="face f5"><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
+              <div class="face f5"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
               <div class="face f6"><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div></div>
             </div>
           </div>
@@ -403,7 +412,7 @@
             <p class="text-xs text-slate-700">Kunder på gaden: <b id="resCust" class="text-emerald-700">40</b> • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
           </div>
         </div>
-        <button type="button" id="btnNextWk" onclick="nextWeek()" class="px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md">Næste uge →</button>
+        <button type="button" id="btnNextWk" onclick="nextWeek()" class="hidden px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md">Næste uge →</button>
         <span id="clientNextNote" class="hidden text-xs font-bold text-amber-800">Venter på at læreren skifter uge...</span>
       </div>
 
@@ -524,7 +533,16 @@ const DILS = [
   { t:"Lokal mikro-influencer", txt:"En lokal profil tilbyder en anmeldelse af jeres bod.", A:{l:"Betal 110 kr. (+4 kunder og +1 ⭐ omdømme)", cMod:0, def:0, cash:-110, pBon:5, dBon:4, starMod:1}, B:{l:"Tak nej (0 kr.)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
   { t:"Certificeret kvalitets-stempel", txt:"Brancheforeningen tilbyder et officielt kvalitetsmærke efter et tjek.", A:{l:"Betal gebyr (-100 kr., +1 ⭐ permanent)", cMod:0, def:0, cash:-100, pBon:6, dBon:0, starMod:1}, B:{l:"Spar pengene (0 kr.)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
   { t:"Aftenåbent med DJ", txt:"Hold boden åben 3 timer ekstra med musik.", A:{l:"Hold åbent (-75 kr., +4 ekstra kunder)", cMod:0, def:0, cash:-75, pBon:0, dBon:4, starMod:0}, B:{l:"Luk til normal tid", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} },
-  { t:"Lyn-tilbud på tvivlsom emballage", txt:"Spar penge på indpakning, men den går let i stykker.", A:{l:"Brug billig indpakning (-4 kr./stk., men -1 ⭐)", cMod:-4, def:0, cash:0, pBon:0, dBon:0, starMod:-1}, B:{l:"Behold god indpakning (Ingen ændring)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} }
+  { t:"Lyn-tilbud på tvivlsom emballage", txt:"Spar penge på indpakning, men den går let i stykker.", A:{l:"Brug billig emballage (-4 kr./stk., men -1 ⭐)", cMod:-4, def:0, cash:0, pBon:0, dBon:0, starMod:-1}, B:{l:"Behold god indpakning (Ingen ændring)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} }
+];
+
+const ASSISTANT_TIPS = [
+  "Husk at tjekke vejret! Hvis terningen lander på regnvejr, brænder du inde med et stort lager, medmindre du har en køledisk.",
+  "At satse på billige discount-råvarer kan betale sig i starten, men pas på hvis naboen sender fødevarekontrollen efter dig!",
+  "Kvalitetskøberne kigger benhårdt på stjernerne (⭐). Har du færre end 3 stjerner, kigger de ikke engang på din bod, uanset hvor god din vare er.",
+  "De faste udgifter ruller hver uge – både husleje og driften af dit udstyr. Sørg for at sætte en pris, der dækker dine omkostninger (break-even).",
+  "Et gade-råb kan trække ekstra kunder til, men hvis du bluffer om dine priser, mister du hurtigt dit omdømme hos kunderne.",
+  "Når din kasse runder 1.400 kr. eller 2.200 kr., låser du op for kraftigere udstyr. Det kan være nøglen til at stikke af fra konkurrenterne!"
 ];
 
 let mode='solo', maxWks=10, wk=1, teams=[], turnIdx=0, curEv=EVENTS[0], curDice=DICE[2], curFate=FATE_CARDS[5], curDil=DILS[0], dilChoice=null, supChoice='norm', chart=null;
@@ -722,7 +740,7 @@ function joinHost() {
   });
 }
 
-// --- HELPERS FOR STARS, TIERS & UPGRADES ---
+// --- HELPERS ---
 function updateTeamTier(t) {
   if (t.cash >= 2200) t.unlockedLvl = Math.max(t.unlockedLvl, 3);
   else if (t.cash >= 1400) t.unlockedLvl = Math.max(t.unlockedLvl, 2);
@@ -787,8 +805,15 @@ function loadWorkbench(t) {
   document.getElementById('wbTeamName').textContent = `${t.name} (Uge ${wk})`;
   document.getElementById('wbSub').textContent = `Produkt: ${t.prod} • Kasse: ${t.cash} kr. • Overført lager: ${t.stock} stk.`;
 
-  curDil = DILS[Math.floor(Math.random()*DILS.length)];
+  // Random assistant advice
+  const randTip = ASSISTANT_TIPS[Math.floor(Math.random() * ASSISTANT_TIPS.length)];
+  document.getElementById('assistantAdviceText').textContent = `"${randTip}"`;
+
+  // Safely pick dilemma
+  const dList = DILS;
+  curDil = dList[Math.floor(Math.random() * dList.length)] || { t:"Ugens valg", txt:"Vælg venligst en af mulige handlinger.", A:{l:"Mulighed A", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0}, B:{l:"Mulighed B", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} };
   dilChoice = null;
+  
   document.getElementById('dilTitle').textContent = curDil.t;
   document.getElementById('dilText').textContent = curDil.txt;
   document.getElementById('btnDilA').textContent = "🅰️ " + curDil.A.l;
@@ -1055,7 +1080,7 @@ function lockTurn() {
   }
 }
 
-// --- COMPLETE MARKET, SABOTAGE, SLOGAN & FATE ENGINE ---
+// --- MARKET MATH ---
 function runMarketMath() {
   const baseCost = 20 + curEv.costMod, rent = 200 + curEv.rentMod;
   const baseMaxP = Math.max(25, curDice.maxP + curEv.pMod);
@@ -1092,7 +1117,6 @@ function runMarketMath() {
     };
   });
 
-  // Sabotage actions
   teams.forEach(attacker => {
     const d = attacker.dec;
     if (!d.trick || d.target === null || !stateMap[d.target]) return;
@@ -1131,7 +1155,6 @@ function runMarketMath() {
     }
   });
 
-  // Slogan check
   const avgPrice = teams.reduce((s, x) => s + x.dec.price, 0) / teams.length;
   teams.forEach(t => {
     const st = stateMap[t.id];
@@ -1191,7 +1214,6 @@ function runMarketMath() {
     }
   }
 
-  // Quality buyers (require >= 3 stars)
   const qualEligible = list.filter(x => x.effStars >= 3 && x.price <= x.maxQualityBuyer && x.avail > x.sold)
     .sort((a,b) => b.effStars !== a.effStars ? b.effStars - a.effStars : a.price - b.price);
   qualEligible.forEach(item => {
@@ -1200,7 +1222,6 @@ function runMarketMath() {
     item.sold += take; qualityBuyers -= take;
   });
 
-  // Price hunters
   priceHunters += qualityBuyers;
   const priceEligible = list.filter(x => x.perceivedPrice <= x.maxPriceHunter && x.avail > x.sold)
     .sort((a,b) => a.perceivedPrice !== b.perceivedPrice ? a.perceivedPrice - b.perceivedPrice : a.effStars - b.effStars);
