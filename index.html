@@ -85,7 +85,7 @@
     </div>
   </section>
 
-  <!-- CLOUDED RULES MODAL / GUIDE (No spoiler numbers) -->
+  <!-- RULES MODAL -->
   <div id="rulesModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl border border-stone-200 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 space-y-5 my-8">
       
@@ -110,12 +110,12 @@
 
         <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200 space-y-1">
           <div class="font-extrabold text-sm text-indigo-950">🚚 Leverandører & Værktøjer</div>
-          <p>Vælg mellem billige råvarer (med risiko for svingende kvalitet og uanmeldte kontrolbesøg), standard-grossisten eller luksus-leverandører, der løfter omdømmet. Opgrader boden i 3 niveauer – men pas på: alt udstyr kræver ugentlig vedligeholdelse og slides op over tid.</p>
+          <p>Vælg mellem billige råvarer (med risiko for svingende kvalitet og uanmeldt kontrol), standard-grossisten eller luksus-leverandører, der løfter omdømmet. Opgrader boden i 3 niveauer – men pas på: alt udstyr kræver ugentlig vedligeholdelse og slides op over tid.</p>
         </div>
 
         <div class="bg-rose-50 p-4 rounded-2xl border border-rose-200 space-y-1">
           <div class="font-extrabold text-sm text-rose-950">🕵️ Psykologisk spil: Gade-råb og Beskidte Kneb</div>
-          <p>Brug gade-råb til at råbe kunder op – men hvis I bluffer og lover for meget, gennemskuer kunderne jer og straffer omdømmet. I kan også betale for beskidte kneb mod konkurrenterne, men pas på: Bumerangen kan nemt ramme jer selv i nakken, hvis I bliver afsløret!</p>
+          <p>Brug gade-råb til at råbe kunder op – men hvis I bluffer og lover for meget, gennemskuer kunderne jer og straffer omdømmet. I kan også betale for beskidte kneb mod konkurrenterne, men pas på: Bumerangen kan nemt ramme jer selv i nakken!</p>
         </div>
       </div>
 
@@ -289,7 +289,7 @@
 
       <div id="resReveal" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-3 text-xs font-bold text-indigo-950"></div>
 
-      <!-- STEP 2: Supplier Selection (Masked risks) -->
+      <!-- STEP 2: Supplier Selection -->
       <div>
         <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">2. Vælg Ugens Råvare-leverandør</div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
@@ -368,7 +368,7 @@
         <div class="bg-stone-50 border-2 border-stone-200 p-3.5 rounded-2xl space-y-2 flex flex-col justify-between">
           <div>
             <div class="text-xs font-extrabold text-slate-800 uppercase">📢 Ugens Gade-råb / Kampagne (Valgfrit)</div>
-            <p class="text-[11px] text-slate-500">Råb op om pris eller kvalitet – men pas på ikke at bluffe for grovt, ellers gennemskuer kunderne jer!</p>
+            <p class="text-[11px] text-slate-500">Råb op om pris eller kvalitet – men pas på ikke at bluffe for grovt!</p>
           </div>
           <input id="inpSlogan" maxlength="40" placeholder="F.eks. 'Gadens bedste tilbud i dag!'" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold">
         </div>
@@ -390,7 +390,7 @@
               <div class="face f2"><div class="pip"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip"></div></div>
               <div class="face f3"><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div></div>
               <div class="face f4"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
-              <div class="face f5"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
+              <div class="face f5"><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
               <div class="face f6"><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div></div>
             </div>
           </div>
@@ -403,7 +403,7 @@
             <p class="text-xs text-slate-700">Kunder på gaden: <b id="resCust" class="text-emerald-700">40</b> • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
           </div>
         </div>
-        <button type="button" id="btnNextWk" onclick="nextWeek()" class="hidden px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md">Næste uge →</button>
+        <button type="button" id="btnNextWk" onclick="nextWeek()" class="px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md">Næste uge →</button>
         <span id="clientNextNote" class="hidden text-xs font-bold text-amber-800">Venter på at læreren skifter uge...</span>
       </div>
 
@@ -733,6 +733,10 @@ function getEffectiveStars(t, sup, upgState) {
   if (upgState.barista > 0) s += 1;
   if (upgState.brand > 0) s += 2;
   return Math.max(1, Math.min(5, s));
+}
+function starStr(n) { return '⭐'.repeat(Math.max(1, Math.min(5, n))); }
+function upgIcons(u) {
+  return UPGRADES.filter(cfg => u[cfg.key] > 0).map(cfg => `<span title="${cfg.name} (${u[cfg.key]} uger tilbage)">${cfg.icon}</span>`).join('');
 }
 
 function updateStreetUI(resolved) {
@@ -1162,7 +1166,7 @@ function runMarketMath() {
     const d = st.d;
     const effStars = getEffectiveStars(t, d.sup, t.upgs);
     const usableNew = Math.floor(d.qty * (1 - st.defectRate));
-    const totalAvail = Math.floor(((t.upgs.web > 0 ? 5 : 0) + t.stock + usableNew) * st.salesCapMult); // webshop adds 5 guaranteed online units
+    const totalAvail = Math.floor(((t.upgs.web > 0 ? 5 : 0) + t.stock + usableNew) * st.salesCapMult);
 
     const maxPriceHunter = baseMaxP + d.dil.pBon;
     const maxQualityBuyer = maxPriceHunter + 18 + effStars * 5;
@@ -1199,7 +1203,7 @@ function runMarketMath() {
   // Price hunters
   priceHunters += qualityBuyers;
   const priceEligible = list.filter(x => x.perceivedPrice <= x.maxPriceHunter && x.avail > x.sold)
-    .sort((a,b) => a.perceivedPrice !== b.perceivedPrice ? a.perceivedPrice - b.perceivedPrice : b.effStars - a.effStars);
+    .sort((a,b) => a.perceivedPrice !== b.perceivedPrice ? a.perceivedPrice - b.perceivedPrice : a.effStars - b.effStars);
   priceEligible.forEach(item => {
     const canSell = item.avail - item.sold;
     const take = Math.min(priceHunters, canSell);
@@ -1317,8 +1321,8 @@ function showResultsUI(sum) {
       playTone(980, 0.2);
       renderStep(1.0, true);
       updateStreetUI(true); updateChart();
-      document.getElementById('btnNextWk').classList.toggle('hidden', mode==='join');
-      document.getElementById('clientNextNote').classList.toggle('hidden', mode!=='join');
+      document.getElementById('btnNextWk').classList.remove('hidden');
+      document.getElementById('clientNextNote').classList.add('hidden');
     }
   }, 650);
 }
@@ -1357,7 +1361,7 @@ function showEnd() {
     <div class="p-5 rounded-2xl border-2 ${i===0?'border-amber-400 bg-amber-50':'border-stone-200 bg-stone-50'}">
       <div class="text-xs font-extrabold uppercase text-amber-700">${i+1}. Plads • ${starStr(t.stars)} • Niv.${t.unlockedLvl}</div>
       <div class="text-xl font-extrabold mt-1">${t.name} ${upgIcons(t.upgs)}</div>
-      <div class="text-sm font-bold text-emerald-700 mt-2">Slutkasse: ${t.cash} kr.</div>
+      <div class="text-sm font-extrabold text-emerald-700 mt-2">Slutkasse: ${t.cash} kr.</div>
       <div class="text-xs text-slate-500 mt-1">Solgt i alt: ${t.sold} stk. • Spild: ${t.waste} stk.</div>
     </div>
   `).join('');
