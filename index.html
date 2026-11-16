@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
-  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfaf7; }
   .scene { width: 88px; height: 88px; perspective: 400px; }
   .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.1s cubic-bezier(0.2, 0.85, 0.3, 1.1); }
   .face { position: absolute; width: 88px; height: 88px; background: #fff; border: 3px solid #cbd5e1; border-radius: 16px; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr); padding: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
@@ -22,39 +22,40 @@
   .f5 { transform: rotateX(90deg) translateZ(44px); }
   .f6 { transform: rotateX(-90deg) translateZ(44px); }
   .stripes { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.3) 0 12px, transparent 12px 24px); }
+  .game-card { background: #ffffff; border: 1px solid #e7e5e4; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); border-radius: 1.5rem; }
 </style>
 </head>
-<body class="bg-amber-50/60 text-slate-800 min-h-screen flex flex-col">
+<body class="text-slate-800 min-h-screen flex flex-col">
 
-<header class="bg-white border-b border-stone-200 px-6 py-3 flex justify-between items-center sticky top-0 z-30 shadow-sm">
+<header class="bg-white/90 backdrop-blur border-b border-stone-200 px-6 py-3.5 flex justify-between items-center sticky top-0 z-30 shadow-sm">
   <div class="flex items-center gap-3 cursor-pointer" onclick="showWelcomeScreen()">
-    <div class="bg-emerald-600 text-white font-extrabold px-3 py-1 rounded-xl text-sm">HANDELSGADEN</div>
-    <h1 class="font-extrabold text-base md:text-lg text-slate-900">Iværksætterspillet</h1>
+    <div class="bg-emerald-600 text-white font-extrabold px-3.5 py-1.5 rounded-xl text-sm shadow-sm">HANDELSGADEN</div>
+    <h1 class="font-extrabold text-base md:text-lg text-slate-900 tracking-tight">Iværksætterspillet</h1>
   </div>
-  <div class="flex items-center gap-2">
-    <span id="roomBadge" class="hidden bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full text-xs font-extrabold">Kode: <b id="topCode">----</b></span>
-    <button type="button" onclick="openRulesModal()" class="bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-900 px-3 py-1 rounded-full text-xs font-extrabold cursor-pointer transition">📖 Regler</button>
-    <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-stone-100 border border-stone-300 px-3 py-1 rounded-full text-xs font-bold cursor-pointer">🔊 Lyd</button>
-    <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-900 px-3 py-1 rounded-full text-xs font-extrabold">Uge <b id="rndNow">1</b>/<b id="rndMax">10</b></span>
+  <div class="flex items-center gap-2.5">
+    <span id="roomBadge" class="hidden bg-indigo-50 border border-indigo-200 text-indigo-900 px-3 py-1.5 rounded-full text-xs font-extrabold">Kode: <b id="topCode">----</b></span>
+    <button type="button" onclick="openRulesModal()" class="bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 px-3.5 py-1.5 rounded-full text-xs font-extrabold cursor-pointer transition shadow-sm">📖 Regler</button>
+    <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-stone-50 hover:bg-stone-100 border border-stone-200 px-3.5 py-1.5 rounded-full text-xs font-bold cursor-pointer transition">🔊 Lyd</button>
+    <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-900 px-3.5 py-1.5 rounded-full text-xs font-extrabold shadow-sm">Uge <b id="rndNow">1</b>/<b id="rndMax">10</b></span>
   </div>
 </header>
 
 <main class="max-w-5xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col justify-center">
 
-  <!-- SCREEN 0: LANDING / WELCOME SCREEN -->
-  <section id="scrWelcome" class="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-2xl my-auto">
-    <div class="bg-gradient-to-b from-sky-300 via-sky-100 to-amber-100 p-8 md:p-12 text-center relative border-b border-stone-200">
+  <!-- SCREEN 0: WELCOME -->
+  <section id="scrWelcome" class="game-card overflow-hidden shadow-xl my-auto">
+    <div class="bg-gradient-to-b from-sky-200 via-sky-100 to-amber-50 p-8 md:p-12 text-center relative border-b border-stone-200">
       <div class="flex justify-center gap-4 text-4xl md:text-5xl mb-4">
         <span>🏪</span><span>🌤️</span><span>🕵️</span><span>🎲</span>
       </div>
-      <span class="bg-white/90 text-emerald-800 text-xs font-extrabold uppercase tracking-widest px-3.5 py-1 rounded-full border border-emerald-200 shadow-sm">
+      <span class="bg-white text-emerald-800 text-xs font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full border border-emerald-200 shadow-sm inline-block">
         Markedssimulator & Forretningsspil
       </span>
       <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mt-3 tracking-tight">
         Handelsgaden
       </h2>
-      <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium">
-        Start i det små med 1 stjerne (⭐) og 1.000 kr. Vælg leverandører, opgrader boden over 3 niveauer, og pas på Klaus KRAMs svingende råd og rivalernes beskidte kneb!
+      <p class="text-slate-600 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium">
+        Start i det små med 1 stjerne (⭐) og 1.000 kr. Vælg leverandører, opgrader boden over 3 niveauer, og pas på Klaus KRAMs råd og rivalernes beskidte kneb!
       </p>
 
       <div class="max-w-lg mx-auto mt-8 grid grid-cols-3 gap-3 items-end">
@@ -75,10 +76,10 @@
 
     <div class="p-6 md:p-10 bg-white">
       <div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <button type="button" onclick="openRulesModal()" class="py-4 px-6 rounded-2xl border-2 border-amber-400 bg-amber-50 hover:bg-amber-100 text-slate-900 font-extrabold text-base md:text-lg flex items-center justify-center gap-2.5 transition cursor-pointer shadow-sm">
+        <button type="button" onclick="openRulesModal()" class="py-4 px-6 rounded-2xl border-2 border-amber-300 bg-amber-50/70 hover:bg-amber-100 text-slate-900 font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-sm">
           <span>📖</span> <span>Sådan spiller du spillet</span>
         </button>
-        <button type="button" onclick="goToSetupScreen()" class="py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base md:text-lg flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/20">
+        <button type="button" onclick="goToSetupScreen()" class="py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/20">
           <span>🚀</span> <span>Start spillet</span>
         </button>
       </div>
@@ -98,7 +99,7 @@
       </div>
 
       <div class="text-xs text-slate-700 space-y-3 leading-relaxed">
-        <div class="bg-stone-50 p-4 rounded-2xl border space-y-1">
+        <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-1">
           <div class="font-extrabold text-sm text-slate-900">🎯 Målet og Startbetingelser</div>
           <p>I driver en markedsbod over 8 til 12 uger. Holdet med flest penge i kassen til sidst vinder. I starter på <b>Niveau 1 med 1.000 kr. og 1 stjerne (⭐)</b>. Huslejen er 200 kr. ugentligt plus drift af jeres udstyr.</p>
         </div>
@@ -127,84 +128,84 @@
   </div>
 
   <!-- SETUP SCREEN -->
-  <section id="scrSetup" class="hidden bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-xl space-y-6">
+  <section id="scrSetup" class="hidden game-card p-6 md:p-8 space-y-6">
     <div class="flex justify-between items-center flex-wrap gap-2">
       <div>
         <h2 class="text-2xl font-extrabold text-slate-900">Åbn din bod på Handelsgaden</h2>
         <p class="text-sm text-slate-600">Alle starter med <b>1.000 kr.</b> og <b>⭐ (1 stjerne)</b> på Niveau 1. Vælg spiltilstand:</p>
       </div>
-      <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-stone-100 px-3 py-1.5 rounded-xl cursor-pointer">← Tilbage til forsiden</button>
+      <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-stone-100 px-3.5 py-2 rounded-xl cursor-pointer transition">← Tilbage til forsiden</button>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <button type="button" onclick="switchTab('solo')" id="t_solo" class="p-3.5 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer transition">
-        <div class="text-lg">👤</div><div class="font-extrabold text-sm">Solo (Mod AI)</div><div class="text-xs text-slate-500">1 spiller mod 3 AI-boder</div>
+      <button type="button" onclick="switchTab('solo')" id="t_solo" class="p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left cursor-pointer transition shadow-sm">
+        <div class="text-xl mb-1">👤</div><div class="font-extrabold text-sm">Solo (Mod AI)</div><div class="text-xs text-slate-500 mt-0.5">1 spiller mod 3 AI-boder</div>
       </button>
-      <button type="button" onclick="switchTab('local')" id="t_local" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
-        <div class="text-lg">👥</div><div class="font-extrabold text-sm">Flere hold (1 PC)</div><div class="text-xs text-slate-500">2-6 hold på samme skærm</div>
+      <button type="button" onclick="switchTab('local')" id="t_local" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-xl mb-1">👥</div><div class="font-extrabold text-sm">Flere hold (1 PC)</div><div class="text-xs text-slate-500 mt-0.5">2-6 hold på samme skærm</div>
       </button>
-      <button type="button" onclick="switchTab('host')" id="t_host" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
-        <div class="text-lg">🖥️</div><div class="font-extrabold text-sm">Opret spil (Vært)</div><div class="text-xs text-slate-500">Storskærm med rumkode</div>
+      <button type="button" onclick="switchTab('host')" id="t_host" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-xl mb-1">🖥️</div><div class="font-extrabold text-sm">Opret spil (Vært)</div><div class="text-xs text-slate-500 mt-0.5">Storskærm med rumkode</div>
       </button>
-      <button type="button" onclick="switchTab('join')" id="t_join" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
-        <div class="text-lg">📱</div><div class="font-extrabold text-sm">Deltag (Elev)</div><div class="text-xs text-slate-500">Tast rumkode fra egen PC</div>
+      <button type="button" onclick="switchTab('join')" id="t_join" class="p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+        <div class="text-xl mb-1">📱</div><div class="font-extrabold text-sm">Deltag (Elev)</div><div class="text-xs text-slate-500 mt-0.5">Tast rumkode fra egen PC</div>
       </button>
     </div>
 
-    <div id="durBox" class="bg-stone-50 p-3.5 rounded-2xl border border-stone-200 flex justify-between items-center flex-wrap gap-2">
+    <div id="durBox" class="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex justify-between items-center flex-wrap gap-2">
       <span class="text-sm font-extrabold">Spillets længde:</span>
       <div class="flex gap-2">
-        <button type="button" onclick="setWeeks(8)" id="w8" class="px-3 py-1.5 rounded-xl bg-white border text-xs font-bold cursor-pointer">8 uger</button>
-        <button type="button" onclick="setWeeks(10)" id="w10" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer">10 uger</button>
-        <button type="button" onclick="setWeeks(12)" id="w12" class="px-3 py-1.5 rounded-xl bg-white border text-xs font-bold cursor-pointer">12 uger</button>
+        <button type="button" onclick="setWeeks(8)" id="w8" class="px-3.5 py-2 rounded-xl bg-white border text-xs font-bold cursor-pointer shadow-sm">8 uger</button>
+        <button type="button" onclick="setWeeks(10)" id="w10" class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer shadow-sm">10 uger</button>
+        <button type="button" onclick="setWeeks(12)" id="w12" class="px-3.5 py-2 rounded-xl bg-white border text-xs font-bold cursor-pointer shadow-sm">12 uger</button>
       </div>
     </div>
 
     <div id="p_solo" class="space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-2xl border">
-        <div><label class="text-xs font-bold text-slate-500">Virksomhedsnavn</label><input id="sName" value="Nordic Streetwear" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
-        <div><label class="text-xs font-bold text-slate-500">Hvad sælger du?</label><input id="sProd" value="Custom T-shirts" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
+        <div><label class="text-xs font-bold text-slate-500">Virksomhedsnavn</label><input id="sName" value="Nordic Streetwear" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
+        <div><label class="text-xs font-bold text-slate-500">Hvad sælger du?</label><input id="sProd" value="Custom T-shirts" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
       </div>
-      <button type="button" onclick="beginLocal('solo')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Start Solo-spil</button>
+      <button type="button" onclick="beginLocal('solo')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base">Start Solo-spil</button>
     </div>
 
     <div id="p_local" class="hidden space-y-4">
-      <div class="flex items-center gap-2 bg-stone-50 p-3 rounded-2xl border">
+      <div class="flex items-center gap-2 bg-stone-50 p-3.5 rounded-2xl border">
         <span class="text-xs font-bold">Antal hold:</span>
-        <button type="button" onclick="buildLocalInputs(2)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">2</button>
-        <button type="button" onclick="buildLocalInputs(3)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">3</button>
-        <button type="button" onclick="buildLocalInputs(4)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">4</button>
-        <button type="button" onclick="buildLocalInputs(5)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">5</button>
-        <button type="button" onclick="buildLocalInputs(6)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold cursor-pointer">6</button>
+        <button type="button" onclick="buildLocalInputs(2)" class="px-3.5 py-1.5 bg-white border rounded-lg text-xs font-bold cursor-pointer shadow-sm">2</button>
+        <button type="button" onclick="buildLocalInputs(3)" class="px-3.5 py-1.5 bg-white border rounded-lg text-xs font-bold cursor-pointer shadow-sm">3</button>
+        <button type="button" onclick="buildLocalInputs(4)" class="px-3.5 py-1.5 bg-white border rounded-lg text-xs font-bold cursor-pointer shadow-sm">4</button>
+        <button type="button" onclick="buildLocalInputs(5)" class="px-3.5 py-1.5 bg-white border rounded-lg text-xs font-bold cursor-pointer shadow-sm">5</button>
+        <button type="button" onclick="buildLocalInputs(6)" class="px-3.5 py-1.5 bg-white border rounded-lg text-xs font-bold cursor-pointer shadow-sm">6</button>
       </div>
       <div id="localList" class="space-y-2"></div>
-      <button type="button" onclick="beginLocal('local')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Start spil på denne skærm</button>
+      <button type="button" onclick="beginLocal('local')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base">Start spil på denne skærm</button>
     </div>
 
     <div id="p_host" class="hidden space-y-4">
-      <button type="button" id="btnOpenHost" onclick="openHostLobby()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Generér 4-cifret rumkode</button>
-      <div id="hostLobby" class="hidden bg-indigo-50 border-2 border-indigo-300 rounded-2xl p-5 space-y-4">
+      <button type="button" id="btnOpenHost" onclick="openHostLobby()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-indigo-600/20 text-base">Generér 4-cifret rumkode</button>
+      <div id="hostLobby" class="hidden bg-indigo-50/70 border-2 border-indigo-200 rounded-2xl p-5 space-y-4 shadow-sm">
         <div class="flex justify-between items-center border-b border-indigo-200 pb-3">
           <div><div class="text-xs font-bold text-indigo-700 uppercase">Rumkode til eleverne</div><div id="bigCode" class="text-4xl font-black text-indigo-950 tracking-widest">----</div></div>
           <span id="hostNetStatus" class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Forbinder...</span>
         </div>
         <div id="lobbyTeams" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600 italic">Venter på at elever tilslutter sig...</div>
-        <button type="button" id="btnStartHostGame" onclick="startHostGame()" disabled class="w-full py-3.5 bg-stone-300 text-stone-500 font-extrabold rounded-2xl">Venter på mindst 1 hold...</button>
+        <button type="button" id="btnStartHostGame" onclick="startHostGame()" disabled class="w-full py-4 bg-stone-300 text-stone-500 font-extrabold rounded-2xl">Venter på mindst 1 hold...</button>
       </div>
     </div>
 
     <div id="p_join" class="hidden space-y-4">
       <div id="joinForm" class="space-y-3">
-        <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200">
+        <div class="bg-indigo-50/70 p-4 rounded-2xl border border-indigo-200">
           <label class="text-xs font-extrabold text-indigo-900 uppercase">4-cifret rumkode fra storskærmen</label>
-          <input id="jCode" maxlength="4" placeholder="1234" class="w-full bg-white border-2 border-indigo-300 rounded-xl px-3 py-2.5 text-2xl font-black text-center tracking-widest mt-1">
+          <input id="jCode" maxlength="4" placeholder="1234" class="w-full bg-white border-2 border-indigo-300 rounded-xl px-3 py-2.5 text-2xl font-black text-center tracking-widest mt-1 shadow-sm">
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-2xl border">
-          <div><label class="text-xs font-bold text-slate-500">Jeres bod-navn</label><input id="jName" value="Struer Streetfood" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
-          <div><label class="text-xs font-bold text-slate-500">Hvad sælger I?</label><input id="jProd" value="Gourmet Burger" class="w-full bg-white border rounded-xl px-3 py-2 text-sm font-bold mt-1"></div>
+          <div><label class="text-xs font-bold text-slate-500">Jeres bod-navn</label><input id="jName" value="Struer Streetfood" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
+          <div><label class="text-xs font-bold text-slate-500">Hvad sælger I?</label><input id="jProd" value="Gourmet Burger" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1"></div>
         </div>
         <div id="jErr" class="hidden text-xs font-bold text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200"></div>
-        <button type="button" id="btnJoin" onclick="joinHost()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg">Tilslut til spillet</button>
+        <button type="button" id="btnJoin" onclick="joinHost()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base">Tilslut til spillet</button>
       </div>
       <div id="joinWait" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-6 text-center space-y-2">
         <div class="text-3xl">🏪</div>
@@ -217,64 +218,64 @@
   <!-- ACTIVE GAME SCREEN -->
   <section id="scrGame" class="hidden space-y-6">
 
-    <!-- ILLUSTRATED STREET -->
-    <div id="streetBox" class="rounded-3xl overflow-hidden border border-stone-300 shadow-lg bg-gradient-to-b from-sky-200 via-sky-100 to-amber-100">
+    <!-- STREET -->
+    <div id="streetBox" class="rounded-3xl overflow-hidden border border-stone-200 shadow-md bg-gradient-to-b from-sky-200 via-sky-100 to-amber-50">
       <div class="p-5 flex flex-wrap justify-between items-center gap-3">
         <div class="flex items-center gap-3">
           <span id="evIcon" class="text-4xl">🌤️</span>
           <div>
-            <div class="text-xs font-extrabold uppercase text-slate-700">Uge <span id="stWeek">1</span> • <span id="stStatus">Klargøring</span></div>
+            <div class="text-xs font-extrabold uppercase text-slate-600 tracking-wider">Uge <span id="stWeek">1</span> • <span id="stStatus">Klargøring</span></div>
             <h2 id="evTitle" class="text-lg font-extrabold text-slate-900">Normal handelsuge</h2>
-            <p id="evDesc" class="text-xs text-slate-700">Ingen uforudsete hændelser denne uge.</p>
+            <p id="evDesc" class="text-xs text-slate-600">Ingen uforudsete hændelser denne uge.</p>
           </div>
         </div>
         <div class="flex gap-2 text-xs font-bold">
-          <span class="bg-white/90 px-3 py-1.5 rounded-xl border">Basis-råvare: <b id="stCost">20 kr.</b></span>
-          <span class="bg-white/90 px-3 py-1.5 rounded-xl border">Husleje: <b id="stRent">200 kr.</b></span>
+          <span class="bg-white/90 backdrop-blur px-3.5 py-1.5 rounded-xl border border-stone-200 shadow-sm">Basis-råvare: <b id="stCost">20 kr.</b></span>
+          <span class="bg-white/90 backdrop-blur px-3.5 py-1.5 rounded-xl border border-stone-200 shadow-sm">Husleje: <b id="stRent">200 kr.</b></span>
         </div>
       </div>
       <div id="boothsRow" class="px-5 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3 items-end"></div>
-      <div class="bg-stone-700 text-stone-200 px-5 py-2 text-xs flex justify-between flex-wrap gap-2">
+      <div class="bg-stone-800 text-stone-200 px-5 py-2.5 text-xs flex justify-between flex-wrap gap-2">
         <span>🚶‍♀️ <b>Prisjægere</b> handler billigst først • 💎 <b>Kvalitetskøbere</b> kræver mindst ⭐⭐⭐ og betaler mere</span>
         <span class="font-bold">Handelsgaden</span>
       </div>
     </div>
 
     <!-- HOST MONITOR -->
-    <div id="hostMonitor" class="hidden bg-white border-2 border-indigo-300 rounded-3xl p-6 shadow-xl space-y-4">
-      <div class="flex justify-between items-center border-b pb-3">
+    <div id="hostMonitor" class="hidden game-card p-6 space-y-4 border-2 border-indigo-200">
+      <div class="flex justify-between items-center border-b border-stone-200 pb-3">
         <div><h3 class="text-xl font-extrabold">Eleverne klargør boder og kneb...</h3><p class="text-xs text-slate-500">Se holdenes gade-råb dukke op på boderne!</p></div>
-        <button type="button" onclick="forceHostResolve()" class="px-4 py-2 bg-amber-500 text-slate-950 font-extrabold rounded-xl text-xs cursor-pointer">Tving runde i gang →</button>
+        <button type="button" onclick="forceHostResolve()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs cursor-pointer shadow-sm">Tving runde i gang →</button>
       </div>
       <div id="hostWaitGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
     </div>
 
     <!-- CLIENT WAIT -->
-    <div id="clientWait" class="hidden bg-white border-2 border-emerald-300 rounded-3xl p-8 text-center shadow-xl space-y-2">
+    <div id="clientWait" class="hidden game-card p-8 text-center space-y-2 border-2 border-emerald-200">
       <div class="text-3xl">🔒</div>
       <h3 class="text-xl font-extrabold">Din bod er låst!</h3>
       <p class="text-xs text-slate-600">Venter på de sidste boder, før terningen og ugens skæbnekort afsløres...</p>
     </div>
 
-    <!-- WORKBENCH -->
-    <div id="workbench" class="bg-white border border-stone-200 rounded-3xl p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3 flex-wrap gap-2">
+    <!-- WORKBENCH (SPLIT INTO 2 CLEAN COLUMNS FOR CLARITY) -->
+    <div id="workbench" class="game-card p-6 md:p-8 space-y-6">
+      <div class="flex justify-between items-center border-b border-stone-200 pb-4 flex-wrap gap-2">
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-xs font-extrabold text-emerald-600 uppercase">Beslutningsfase</span>
-            <span id="wbLevelBadge" class="text-[11px] font-extrabold bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded-full">Niveau 1: Gadebod</span>
+            <span class="text-xs font-extrabold text-emerald-700 uppercase tracking-wider">Beslutningsfase</span>
+            <span id="wbLevelBadge" class="text-[11px] font-extrabold bg-emerald-100 text-emerald-900 px-3 py-0.5 rounded-full shadow-sm">Niveau 1: Gadebod</span>
           </div>
           <h3 id="wbTeamName" class="text-xl font-extrabold text-slate-900 mt-0.5">Din bod</h3>
           <p id="wbSub" class="text-xs text-slate-500"></p>
         </div>
-        <div class="flex items-center gap-2">
-          <span id="wbStars" class="text-xs bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl font-extrabold text-amber-900">⭐</span>
-          <span id="wbSlots" class="text-xs bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl font-extrabold text-indigo-900">Udstyr: 0/3</span>
+        <div class="flex items-center gap-2.5">
+          <span id="wbStars" class="text-xs bg-amber-50 border border-amber-200 px-3.5 py-2 rounded-2xl font-extrabold text-amber-900 shadow-sm">⭐</span>
+          <span id="wbSlots" class="text-xs bg-indigo-50 border border-indigo-200 px-3.5 py-2 rounded-2xl font-extrabold text-indigo-900 shadow-sm">Udstyr: 0/3</span>
         </div>
       </div>
 
-      <!-- KLAUS KRAM ASSISTANT ADVICE BOX -->
-      <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 flex items-start gap-3.5">
+      <!-- KLAUS KRAM ASSISTANT -->
+      <div class="bg-blue-50/80 border border-blue-200 rounded-2xl p-4 flex items-start gap-3.5 shadow-sm">
         <span class="text-2xl mt-0.5">🗣️</span>
         <div>
           <div class="text-xs font-extrabold uppercase tracking-wider text-blue-900">Assistentens råd (Klaus KRAM)</div>
@@ -283,87 +284,97 @@
       </div>
 
       <!-- STEP 1: Dilemma Card -->
-      <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 space-y-2">
-        <div class="flex justify-between text-xs font-extrabold text-amber-800">
+      <div class="bg-amber-50/80 border-2 border-amber-300/80 rounded-2xl p-4 space-y-2.5 shadow-sm">
+        <div class="flex justify-between text-xs font-extrabold text-amber-900">
           <span>1. UGENS DILEMMA (PÅVIRKER OMDØMME ⭐ & DRIFT)</span>
           <span id="dilStatus">Vælg A eller B for at låse boden op</span>
         </div>
         <div id="dilTitle" class="font-extrabold text-sm text-slate-900"></div>
-        <p id="dilText" class="text-xs text-slate-700"></p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1">
-          <button type="button" onclick="pickDil('A')" id="btnDilA" class="p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer"></button>
-          <button type="button" onclick="pickDil('B')" id="btnDilB" class="p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer"></button>
+        <p id="dilText" class="text-xs text-slate-700 leading-relaxed"></p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1">
+          <button type="button" onclick="pickDil('A')" id="btnDilA" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm"></button>
+          <button type="button" onclick="pickDil('B')" id="btnDilB" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm"></button>
         </div>
       </div>
 
       <div id="resReveal" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-3 text-xs font-bold text-indigo-950"></div>
 
-      <!-- STEP 2: Supplier Selection -->
-      <div>
-        <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">2. Vælg Ugens Råvare-leverandør</div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-          <button type="button" onclick="setSupplier('disc')" id="sup_disc" class="p-3 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer">
-            <div class="flex justify-between font-extrabold text-slate-900"><span>📦 Discount-Import</span><span class="text-emerald-700">Lav pris</span></div>
-            <p class="text-slate-500 mt-1">Billige råvarer, men svingende kvalitet og risiko for uanmeldt kontrol.</p>
-          </button>
-          <button type="button" onclick="setSupplier('norm')" id="sup_norm" class="p-3 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer">
-            <div class="flex justify-between font-extrabold text-slate-900"><span>🚚 Lokal Grossist</span><span class="text-slate-700">Normalpris</span></div>
-            <p class="text-slate-600 mt-1">100% sikker levering uden uforudsete overraskelser.</p>
-          </button>
-          <button type="button" onclick="setSupplier('lux')" id="sup_lux" class="p-3 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer">
-            <div class="flex justify-between font-extrabold text-slate-900"><span>💎 Luksus-Leverandør</span><span class="text-amber-700">Høj pris</span></div>
-            <p class="text-slate-500 mt-1">Eksklusive råvarer, der giver boden et løft i omdømme i denne uge.</p>
-          </button>
-        </div>
-      </div>
+      <!-- TWO COLUMN WORKBENCH LAYOUT FOR MAXIMUM OVERBLIK -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-      <!-- STEP 3: Sliders -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-stone-50 p-4 rounded-2xl border space-y-3">
-          <div class="flex justify-between"><span class="font-extrabold text-sm">3. Ny produktion</span><b id="lblQty" class="text-xl text-emerald-600">15 stk.</b></div>
-          <input type="range" id="slQty" min="0" max="60" value="15" oninput="slide()" class="w-full accent-emerald-600 cursor-pointer">
-          <div class="bg-white p-2.5 rounded-xl border text-xs flex justify-between">
-            <span>Klar på disken (inkl. lager): <b id="lblReady">15 stk.</b></span>
-            <span>Råvarepris: <b id="lblProdCost" class="text-amber-700">300 kr.</b></span>
+        <!-- LEFT COLUMN: Indkøb & Produktion -->
+        <div class="space-y-6">
+          <!-- STEP 2: Supplier Selection -->
+          <div>
+            <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">2. Vælg Ugens Råvare-leverandør</div>
+            <div class="grid grid-cols-1 gap-2.5 text-xs">
+              <button type="button" onclick="setSupplier('disc')" id="sup_disc" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+                <div class="flex justify-between font-extrabold text-slate-900"><span>📦 Discount-Import</span><span class="text-emerald-700">Lav pris</span></div>
+                <p class="text-slate-500 mt-1">Billige råvarer, men svingende kvalitet og risiko for uanmeldt kontrol.</p>
+              </button>
+              <button type="button" onclick="setSupplier('norm')" id="sup_norm" class="p-3.5 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer transition">
+                <div class="flex justify-between font-extrabold text-slate-900"><span>🚚 Lokal Grossist</span><span class="text-slate-700">Normalpris</span></div>
+                <p class="text-slate-600 mt-1">100% sikker levering uden uforudsete overraskelser.</p>
+              </button>
+              <button type="button" onclick="setSupplier('lux')" id="sup_lux" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+                <div class="flex justify-between font-extrabold text-slate-900"><span>💎 Luksus-Leverandør</span><span class="text-amber-700">Høj pris</span></div>
+                <p class="text-slate-500 mt-1">Eksklusive råvarer, der giver boden et løft i omdømme i denne uge.</p>
+              </button>
+            </div>
           </div>
-          <div id="shelfIcons" class="flex flex-wrap gap-1 min-h-[24px]"></div>
-        </div>
 
-        <div class="bg-stone-50 p-4 rounded-2xl border space-y-3">
-          <div class="flex justify-between"><span class="font-extrabold text-sm">4. Dit prisskilt</span><b id="lblPrice" class="text-xl text-amber-600">48 kr.</b></div>
-          <input type="range" id="slPrice" min="15" max="120" value="48" oninput="slide()" class="w-full accent-amber-600 cursor-pointer">
-          <div class="bg-white p-2.5 rounded-xl border text-xs flex justify-between">
-            <span>Avance pr. salg: <b id="lblMargin" class="text-emerald-600">+28 kr.</b></span>
-            <span>Break-even: <b id="lblBE">8 stk.</b></span>
-          </div>
-          <div class="flex justify-between items-center text-[11px] text-slate-500 pt-1">
-            <span>Fast husleje + udstyrsdrift: <b id="lblFixedTotal" class="text-slate-800">200 kr.</b></span>
-            <button type="button" id="btnRes" onclick="buyRes()" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-extrabold px-2.5 py-1 rounded-lg cursor-pointer">🔭 Køb Vejranalyse (100 kr.)</button>
+          <!-- STEP 3: Production Slider -->
+          <div class="bg-stone-50/70 p-4 rounded-2xl border border-stone-200 space-y-3">
+            <div class="flex justify-between"><span class="font-extrabold text-sm">3. Ny produktion</span><b id="lblQty" class="text-xl text-emerald-600">15 stk.</b></div>
+            <input type="range" id="slQty" min="0" max="60" value="15" oninput="slide()" class="w-full accent-emerald-600 cursor-pointer">
+            <div class="bg-white p-3 rounded-xl border border-stone-200 text-xs flex justify-between shadow-sm">
+              <span>Klar på disken (inkl. lager): <b id="lblReady">15 stk.</b></span>
+              <span>Råvarepris: <b id="lblProdCost" class="text-amber-700">300 kr.</b></span>
+            </div>
+            <div id="shelfIcons" class="flex flex-wrap gap-1 min-h-[24px]"></div>
           </div>
         </div>
-      </div>
 
-      <!-- STEP 4: TIERED UPGRADES -->
-      <div>
-        <div class="flex justify-between items-center mb-2 flex-wrap gap-1">
-          <span class="text-xs font-extrabold uppercase text-slate-500">5. Bod-udstyr (Maks. 3 aktive • Holder i 3 uger • Låses op ved højere kasse)</span>
-          <span class="text-[11px] font-bold text-slate-500">Klik på ejet udstyr hvis du vil sælge det (50% retur)</span>
+        <!-- RIGHT COLUMN: Pris, Udstyr & Sabotage -->
+        <div class="space-y-6">
+          <!-- STEP 4: Price Slider -->
+          <div class="bg-stone-50/70 p-4 rounded-2xl border border-stone-200 space-y-3">
+            <div class="flex justify-between"><span class="font-extrabold text-sm">4. Dit prisskilt</span><b id="lblPrice" class="text-xl text-amber-600">48 kr.</b></div>
+            <input type="range" id="slPrice" min="15" max="120" value="48" oninput="slide()" class="w-full accent-amber-600 cursor-pointer">
+            <div class="bg-white p-3 rounded-xl border border-stone-200 text-xs flex justify-between shadow-sm">
+              <span>Avance pr. salg: <b id="lblMargin" class="text-emerald-600">+28 kr.</b></span>
+              <span>Break-even: <b id="lblBE">8 stk.</b></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] text-slate-500 pt-1">
+              <span>Fast husleje + udstyrsdrift: <b id="lblFixedTotal" class="text-slate-800">200 kr.</b></span>
+              <button type="button" id="btnRes" onclick="buyRes()" class="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-900 font-extrabold px-3 py-1.5 rounded-xl cursor-pointer transition shadow-sm">🔭 Vejranalyse (100 kr.)</button>
+            </div>
+          </div>
+
+          <!-- STEP 5: TIERED UPGRADES -->
+          <div>
+            <div class="flex justify-between items-center mb-2 flex-wrap gap-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">5. Bod-udstyr (Maks. 3 aktive)</span>
+              <span class="text-[11px] font-bold text-slate-500">Klik for at sælge (50% retur)</span>
+            </div>
+            <div id="upgradesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs"></div>
+          </div>
         </div>
-        <div id="upgradesGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs"></div>
+
       </div>
 
-      <!-- STEP 5: BESKIDTE KNEB & GADE-RÅB -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-rose-50/70 border-2 border-rose-200 p-3.5 rounded-2xl space-y-2">
+      <!-- BOTTOM ROW: Sabotage & Gade-råb -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-stone-200">
+        <div class="bg-rose-50/60 border-2 border-rose-200/80 p-4 rounded-2xl space-y-2 shadow-sm">
           <div class="flex justify-between items-center">
-            <span class="text-xs font-extrabold text-rose-950 uppercase">🕵️ Beskidte Kneb mod en rival (Valgfrit)</span>
+            <span class="text-xs font-extrabold text-rose-950 uppercase">🕵️ Beskidte Kneb mod en rival</span>
             <span class="text-[10px] font-bold bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full">Risiko for bagslag!</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <select id="selTarget" onchange="calc()" class="bg-white border border-rose-300 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-800">
+            <select id="selTarget" onchange="calc()" class="bg-white border border-rose-300 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 shadow-sm">
               <option value="">-- Vælg konkurrent --</option>
             </select>
-            <select id="selTrick" onchange="calc()" class="bg-white border border-rose-300 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-800">
+            <select id="selTrick" onchange="calc()" class="bg-white border border-rose-300 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 shadow-sm">
               <option value="">-- Intet kneb (0 kr.) --</option>
               <option value="insp">🚨 Send anonymt tip til Kontrollen (120 kr.)</option>
               <option value="sign">🏷️ Sabotér prisskilt om natten (90 kr.)</option>
@@ -374,24 +385,24 @@
           </div>
         </div>
 
-        <div class="bg-stone-50 border-2 border-stone-200 p-3.5 rounded-2xl space-y-2 flex flex-col justify-between">
+        <div class="bg-stone-50 border-2 border-stone-200 p-4 rounded-2xl space-y-2 flex flex-col justify-between shadow-sm">
           <div>
-            <div class="text-xs font-extrabold text-slate-800 uppercase">📢 Ugens Gade-råb / Kampagne (Valgfrit)</div>
+            <div class="text-xs font-extrabold text-slate-800 uppercase">📢 Ugens Gade-råb / Kampagne</div>
             <p class="text-[11px] text-slate-500">Råb op om pris eller kvalitet – men pas på ikke at bluffe for grovt!</p>
           </div>
-          <input id="inpSlogan" maxlength="40" placeholder="F.eks. 'Gadens bedste tilbud i dag!'" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold">
+          <input id="inpSlogan" maxlength="40" placeholder="F.eks. 'Gadens bedste tilbud i dag!'" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-xs font-bold shadow-sm">
         </div>
       </div>
 
-      <div class="pt-3 border-t flex flex-wrap justify-between items-center gap-3">
-        <span class="text-xs">Samlet udlæg nu (inkl. husleje, udstyr & kneb): <b id="lblOutlay" class="text-sm">500 kr.</b></span>
-        <button type="button" id="btnLock" onclick="lockTurn()" disabled class="px-6 py-3 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm">Besvar ugens dilemma først</button>
+      <div class="pt-4 border-t border-stone-200 flex flex-wrap justify-between items-center gap-4">
+        <span class="text-xs font-bold text-slate-600">Samlet udlæg nu (inkl. husleje, udstyr & kneb): <b id="lblOutlay" class="text-base text-slate-900">500 kr.</b></span>
+        <button type="button" id="btnLock" onclick="lockTurn()" disabled class="px-8 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition shadow-sm">Besvar ugens dilemma først</button>
       </div>
     </div>
 
-    <!-- RESULTS, BREAKING NEWS, FATE CARD & 3D DICE -->
-    <div id="resPanel" class="hidden bg-white border-2 border-amber-400 rounded-3xl p-6 shadow-2xl space-y-5">
-      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
+    <!-- RESULTS PANEL -->
+    <div id="resPanel" class="hidden game-card p-6 md:p-8 shadow-2xl space-y-6 border-2 border-amber-300">
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-sm">
         <div class="flex items-center gap-5">
           <div class="scene">
             <div class="cube" id="diceCube">
@@ -400,30 +411,30 @@
               <div class="face f3"><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div></div>
               <div class="face f4"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
               <div class="face f5"><div class="pip"></div><div></div><div class="pip"></div><div></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
-              <div class="face f6"><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div class="pip"></div></div>
+              <div class="face f6"><div class="pip"></div><div></div><div class="pip"></div><div class="pip"></div><div></div><div></div><div class="pip"></div><div></div><div class="pip"></div></div>
             </div>
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-extrabold uppercase text-amber-800">Uge <span id="resWk">1</span></span>
-              <span id="liveClockBadge" class="bg-emerald-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-full">🕒 Kl. 10:00</span>
+              <span class="text-xs font-extrabold uppercase text-amber-800 tracking-wider">Uge <span id="resWk">1</span></span>
+              <span id="liveClockBadge" class="bg-emerald-600 text-white text-xs font-extrabold px-3 py-0.5 rounded-full shadow-sm">🕒 Kl. 10:00</span>
             </div>
             <h3 id="resTitle" class="text-2xl font-extrabold text-slate-900 mt-0.5">Solskin</h3>
-            <p class="text-xs text-slate-700">Kunder på gaden: <b id="resCust" class="text-emerald-700">40</b> • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
+            <p class="text-xs text-slate-600 mt-0.5">Kunder på gaden: <b id="resCust" class="text-emerald-700">40</b> • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
           </div>
         </div>
-        <button type="button" id="btnNextWk" onclick="nextWeek()" class="hidden px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md">Næste uge →</button>
+        <button type="button" id="btnNextWk" onclick="nextWeek()" class="hidden px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition">Næste uge →</button>
         <span id="clientNextNote" class="hidden text-xs font-bold text-amber-800">Venter på at læreren skifter uge...</span>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 text-xs space-y-1">
-          <div class="font-extrabold text-indigo-900 uppercase">🃏 Ugens Skæbnekort kl. 10:00</div>
-          <div id="resFateText" class="text-slate-800 font-medium"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-indigo-50/80 border border-indigo-200 rounded-2xl p-4 text-xs space-y-1.5 shadow-sm">
+          <div class="font-extrabold text-indigo-900 uppercase tracking-wider">🃏 Ugens Skæbnekort kl. 10:00</div>
+          <div id="resFateText" class="text-slate-800 font-medium leading-relaxed"></div>
         </div>
-        <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3.5 text-xs space-y-1">
-          <div class="font-extrabold text-rose-900 uppercase">🕵️ Drama, Sabotage & Gade-råb</div>
-          <div id="resDramaList" class="text-slate-800 space-y-1"></div>
+        <div class="bg-rose-50/80 border border-rose-200 rounded-2xl p-4 text-xs space-y-1.5 shadow-sm">
+          <div class="font-extrabold text-rose-900 uppercase tracking-wider">🕵️ Drama, Sabotage & Gade-råb</div>
+          <div id="resDramaList" class="text-slate-800 space-y-1 leading-relaxed"></div>
         </div>
       </div>
 
@@ -431,17 +442,17 @@
     </div>
 
     <!-- CHART -->
-    <div class="bg-white border border-stone-200 rounded-3xl p-5">
-      <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">Kassebeholdning (kr.)</div>
-      <div class="h-52 w-full"><canvas id="chartCanvas"></canvas></div>
+    <div class="game-card p-6">
+      <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">Kassebeholdning (kr.)</div>
+      <div class="h-56 w-full"><canvas id="chartCanvas"></canvas></div>
     </div>
   </section>
 
   <!-- END SCREEN -->
-  <section id="scrEnd" class="hidden bg-white rounded-3xl border border-stone-200 p-6 md:p-8 shadow-2xl space-y-6 text-center">
+  <section id="scrEnd" class="hidden game-card p-8 md:p-12 shadow-2xl space-y-6 text-center">
     <h2 class="text-3xl font-extrabold text-slate-900">Slutstilling på Handelsgaden</h2>
     <div id="podium" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left"></div>
-    <button type="button" onclick="location.reload()" class="px-8 py-3.5 bg-emerald-600 text-white font-extrabold rounded-2xl text-sm cursor-pointer">Spil igen</button>
+    <button type="button" onclick="location.reload()" class="px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base cursor-pointer shadow-lg shadow-emerald-600/20 transition">Spil igen</button>
   </section>
 
 </main>
@@ -555,7 +566,7 @@ function switchTab(m) {
   ['solo','local','host','join'].forEach(x => {
     const btn = document.getElementById('t_'+x);
     const pan = document.getElementById('p_'+x);
-    if (btn) btn.className = x===m ? "p-3.5 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer transition" : "p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition";
+    if (btn) btn.className = x===m ? "p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-left cursor-pointer transition shadow-sm" : "p-4 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition";
     if (pan) pan.classList.toggle('hidden', x!==m);
   });
   const dur = document.getElementById('durBox');
@@ -565,14 +576,14 @@ function switchTab(m) {
 }
 function setWeeks(w) {
   maxWks = w;
-  [8,10,12].forEach(x => document.getElementById('w'+x).className = x===w ? "px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer" : "px-3 py-1.5 rounded-xl bg-white border text-xs font-bold cursor-pointer");
+  [8,10,12].forEach(x => document.getElementById('w'+x).className = x===w ? "px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer shadow-sm" : "px-3.5 py-2 rounded-xl bg-white border text-xs font-bold cursor-pointer shadow-sm");
   playTone(520, 0.04);
 }
 function buildLocalInputs(cnt) {
   const list = document.getElementById('localList'); list.innerHTML = '';
   const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
   for(let i=0;i<cnt;i++) {
-    list.innerHTML += `<div class="grid grid-cols-2 gap-2 bg-stone-50 p-2.5 rounded-xl border"><input id="ln_${i}" value="${def[i][0]}" class="bg-white border rounded-lg px-2.5 py-1.5 text-xs font-bold"><input id="lp_${i}" value="${def[i][1]}" class="bg-white border rounded-lg px-2.5 py-1.5 text-xs font-bold"></div>`;
+    list.innerHTML += `<div class="grid grid-cols-2 gap-2 bg-stone-50 p-2.5 rounded-xl border"><input id="ln_${i}" value="${def[i][0]}" class="bg-white border rounded-lg px-3 py-2 text-xs font-bold"><input id="lp_${i}" value="${def[i][1]}" class="bg-white border rounded-lg px-3 py-2 text-xs font-bold"></div>`;
   }
   list.dataset.cnt = cnt;
 }
@@ -635,7 +646,7 @@ function onHostData(conn, msg) {
     conn.send({ type:'WELCOME', id:t.id, maxWks });
     document.getElementById('lobbyTeams').innerHTML = teams.map(x=>`<div class="bg-white p-2.5 rounded-xl border font-bold text-slate-900 not-italic">🏪 ${x.name} (${x.prod})</div>`).join('');
     const btn = document.getElementById('btnStartHostGame');
-    btn.disabled = false; btn.className = "w-full py-3.5 bg-emerald-600 text-white font-extrabold rounded-2xl cursor-pointer";
+    btn.disabled = false; btn.className = "w-full py-4 bg-emerald-600 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base";
     btn.textContent = `Start spillet med ${teams.length} hold →`;
   } else if (msg.type==='RES') {
     const t = teams.find(x=>x.id===msg.id);
@@ -772,12 +783,12 @@ function updateStreetUI(resolved) {
     return `
       <div class="flex flex-col items-center">
         ${bubble}
-        <div class="bg-white border px-2 py-1 rounded-t-lg text-center w-11/12">
-          <div class="font-extrabold text-xs truncate">${t.name} ${upgIcons(t.upgs)}</div>
-          <div class="text-[10px]">${starStr(dispStars)} • Niv.${t.unlockedLvl}</div>
+        <div class="bg-white border border-stone-200 px-2 py-1 rounded-t-xl text-center w-11/12 shadow-sm">
+          <div class="font-extrabold text-xs truncate text-slate-900">${t.name} ${upgIcons(t.upgs)}</div>
+          <div class="text-[10px] text-amber-600 font-bold">${starStr(dispStars)} • Niv.${t.unlockedLvl}</div>
         </div>
-        <div class="w-full h-5 rounded-t stripes" style="background:${t.color}"></div>
-        <div class="w-11/12 bg-white border-x p-2 text-center space-y-1">
+        <div class="w-full h-5 rounded-t stripes shadow-inner" style="background:${t.color}"></div>
+        <div class="w-11/12 bg-white border-x border-b border-stone-200 p-2 text-center space-y-1 rounded-b-xl shadow-sm">
           <span class="bg-amber-100 text-amber-900 font-extrabold text-[11px] px-2 py-0.5 rounded">${resolved && t.lastP ? t.lastP+' kr.' : 'Lager: '+t.stock}</span>
           <div class="font-extrabold text-sm ${t.cash<0?'text-rose-600':'text-emerald-700'}">${t.cash} kr.</div>
         </div>
@@ -805,11 +816,9 @@ function loadWorkbench(t) {
   document.getElementById('wbTeamName').textContent = `${t.name} (Uge ${wk})`;
   document.getElementById('wbSub').textContent = `Produkt: ${t.prod} • Kasse: ${t.cash} kr. • Overført lager: ${t.stock} stk.`;
 
-  // Random assistant advice
   const randTip = ASSISTANT_TIPS[Math.floor(Math.random() * ASSISTANT_TIPS.length)];
   document.getElementById('assistantAdviceText').textContent = `"${randTip}"`;
 
-  // Safely pick dilemma
   const dList = DILS;
   curDil = dList[Math.floor(Math.random() * dList.length)] || { t:"Ugens valg", txt:"Vælg venligst en af mulige handlinger.", A:{l:"Mulighed A", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0}, B:{l:"Mulighed B", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0} };
   dilChoice = null;
@@ -818,8 +827,8 @@ function loadWorkbench(t) {
   document.getElementById('dilText').textContent = curDil.txt;
   document.getElementById('btnDilA').textContent = "🅰️ " + curDil.A.l;
   document.getElementById('btnDilB').textContent = "🅱️ " + curDil.B.l;
-  document.getElementById('btnDilA').className = "p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer";
-  document.getElementById('btnDilB').className = "p-3 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer";
+  document.getElementById('btnDilA').className = "p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm";
+  document.getElementById('btnDilB').className = "p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm";
   document.getElementById('dilStatus').textContent = "Vælg A eller B";
 
   supChoice = 'norm';
@@ -846,8 +855,8 @@ function setSupplier(s, silent=false) {
   if (!silent) playTone(500, 0.03);
   ['disc','norm','lux'].forEach(k => {
     document.getElementById('sup_'+k).className = k===s
-      ? "p-3 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer shadow-sm"
-      : "p-3 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer";
+      ? "p-3.5 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer transition shadow-sm"
+      : "p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition shadow-sm";
   });
   calc();
 }
@@ -874,7 +883,7 @@ function renderUpgradesGrid(t) {
 
     if (locked) {
       return `
-        <div class="p-3 rounded-2xl bg-stone-100 border border-stone-200 opacity-60 flex flex-col justify-between">
+        <div class="p-3.5 rounded-2xl bg-stone-100 border border-stone-200 opacity-60 flex flex-col justify-between shadow-sm">
           <div class="flex justify-between font-bold text-slate-500"><span>🔒 ${u.name}</span><span>Niv. ${u.lvl}</span></div>
           <span class="text-[11px] text-slate-400 mt-1">${u.desc}</span>
         </div>
@@ -884,14 +893,14 @@ function renderUpgradesGrid(t) {
     if (ownedWks > 0) {
       if (action === 'sell') {
         return `
-          <div onclick="toggleUpg('${u.key}')" class="p-3 rounded-2xl bg-rose-50 border-2 border-rose-400 cursor-pointer flex flex-col justify-between">
+          <div onclick="toggleUpg('${u.key}')" class="p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-400 cursor-pointer flex flex-col justify-between transition shadow-sm">
             <div class="flex justify-between font-extrabold text-rose-900"><span>${u.icon} ${u.name}</span><span>Sælges (+${Math.round(u.cost*0.5)} kr.)</span></div>
             <span class="text-[11px] text-rose-700 mt-1">Klik igen for at beholde udstyret</span>
           </div>
         `;
       }
       return `
-        <div onclick="toggleUpg('${u.key}')" class="p-3 rounded-2xl bg-emerald-50 border-2 border-emerald-500 cursor-pointer flex flex-col justify-between">
+        <div onclick="toggleUpg('${u.key}')" class="p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-500 cursor-pointer flex flex-col justify-between transition shadow-sm">
           <div class="flex justify-between font-extrabold text-emerald-950"><span>${u.icon} ${u.name}</span><span class="text-emerald-700">Aktiv (${ownedWks} uger)</span></div>
           <span class="text-[11px] text-slate-600 mt-1">${u.desc}</span>
         </div>
@@ -899,14 +908,14 @@ function renderUpgradesGrid(t) {
     } else {
       if (action === 'buy') {
         return `
-          <div onclick="toggleUpg('${u.key}')" class="p-3 rounded-2xl bg-amber-50 border-2 border-amber-500 cursor-pointer flex flex-col justify-between">
+          <div onclick="toggleUpg('${u.key}')" class="p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-500 cursor-pointer flex flex-col justify-between transition shadow-sm">
             <div class="flex justify-between font-extrabold text-amber-950"><span>${u.icon} ${u.name}</span><span>Valgt (${u.cost} kr.)</span></div>
             <span class="text-[11px] text-amber-800 mt-1">${u.desc}</span>
           </div>
         `;
       }
       return `
-        <div onclick="toggleUpg('${u.key}')" class="p-3 rounded-2xl bg-stone-50 hover:border-stone-400 border-2 border-stone-200 cursor-pointer flex flex-col justify-between">
+        <div onclick="toggleUpg('${u.key}')" class="p-3.5 rounded-2xl bg-stone-50 hover:border-stone-400 border-2 border-stone-200 cursor-pointer flex flex-col justify-between transition shadow-sm">
           <div class="flex justify-between font-extrabold text-slate-900"><span>${u.icon} ${u.name}</span><span class="text-amber-700">${u.cost} kr.</span></div>
           <span class="text-[11px] text-slate-500 mt-1">${u.desc}</span>
         </div>
@@ -943,8 +952,8 @@ function toggleUpg(key) {
 
 function pickDil(c) {
   dilChoice = c;
-  document.getElementById('btnDilA').className = c==='A' ? "p-3 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer" : "p-3 rounded-xl border bg-white/60 text-left text-xs text-slate-400 cursor-pointer";
-  document.getElementById('btnDilB').className = c==='B' ? "p-3 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer" : "p-3 rounded-xl border bg-white/60 text-left text-xs text-slate-400 cursor-pointer";
+  document.getElementById('btnDilA').className = c==='A' ? "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer transition shadow-sm" : "p-3.5 rounded-xl border border-stone-200 bg-white/60 text-left text-xs text-slate-400 cursor-pointer transition";
+  document.getElementById('btnDilB').className = c==='B' ? "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer transition shadow-sm" : "p-3.5 rounded-xl border border-stone-200 bg-white/60 text-left text-xs text-slate-400 cursor-pointer transition";
   document.getElementById('dilStatus').textContent = "✓ Valgt";
   playTone(500, 0.04);
   updateLockBtn(); calc();
@@ -954,11 +963,11 @@ function updateLockBtn() {
   const b = document.getElementById('btnLock');
   if (dilChoice) {
     b.disabled = false;
-    b.className = "px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-md";
+    b.className = "px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition";
     b.textContent = mode==='join' ? "Lås bod og send til storskærm ✓" : "Lås bod og åbn markedet →";
   } else {
     b.disabled = true;
-    b.className = "px-6 py-3 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm";
+    b.className = "px-8 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition shadow-sm";
     b.textContent = "Besvar ugens dilemma først";
   }
 }
@@ -999,7 +1008,7 @@ function calc() {
   document.getElementById('lblFixedTotal').textContent = (rent + upkTotal) + " kr.";
 
   const shelf = document.getElementById('shelfIcons'); shelf.innerHTML = '';
-  for(let i=0;i<Math.min(ready, 35);i++) shelf.innerHTML += `<span class="w-3 h-3 rounded-sm ${i<(t?t.stock:0)?'bg-sky-400':'bg-emerald-500'} inline-block"></span>`;
+  for(let i=0;i<Math.min(ready, 35);i++) shelf.innerHTML += `<span class="w-3 h-3 rounded-sm ${i<(t?t.stock:0)?'bg-sky-400':'bg-emerald-500'} inline-block shadow-sm"></span>`;
 
   const margin = price - uCost;
   const extras = rent + upkTotal + investDelta + trickCost + (t&&t.resTemp?100:0) - dil.cash;
@@ -1314,18 +1323,18 @@ function showResultsUI(sum) {
 
       let shelf = '';
       for(let i=0;i<Math.min(c.avail,30);i++) {
-        shelf += `<span class="w-3 h-3 rounded-sm ${i<curSold?'bg-emerald-500':(isFinal?'bg-rose-400':'bg-stone-300')} inline-block"></span>`;
+        shelf += `<span class="w-3 h-3 rounded-sm ${i<curSold?'bg-emerald-500':(isFinal?'bg-rose-400':'bg-stone-300')} inline-block shadow-sm"></span>`;
       }
 
       return `
-        <div class="bg-stone-50 border rounded-2xl p-4 space-y-2">
+        <div class="bg-stone-50 border border-stone-200 rounded-2xl p-4 space-y-2 shadow-sm">
           <div class="flex justify-between items-center">
             <div><b class="text-sm text-slate-900">${c.name}</b> <span class="text-xs">${starStr(c.stars)}</span> <span class="text-xs font-bold text-amber-700">(${c.price} kr.)</span></div>
             ${badge}
           </div>
           <div class="text-xs text-slate-700">Solgt nu: <b>${curSold}</b> af ${c.avail} stk. ${c.tooExpensive?`<span class="text-rose-600 font-bold">(For dyrt!)</span>`:''} ${isFinal?`• Gemt (❄️): <b>${c.saved}</b> • Spild: <b>${c.waste}</b>`:''}</div>
           <div class="flex flex-wrap gap-1">${shelf}</div>
-          <div class="text-xs text-slate-500 flex justify-between pt-1 border-t"><span>Salg: ${curRev} kr. | Udgift: ${c.exp} kr.</span><b>Kasse: ${isFinal ? c.cash+' kr.' : '...'}</b></div>
+          <div class="text-xs text-slate-500 flex justify-between pt-1 border-t border-stone-200"><span>Salg: ${curRev} kr. | Udgift: ${c.exp} kr.</span><b>Kasse: ${isFinal ? c.cash+' kr.' : '...'}</b></div>
         </div>
       `;
     }).join('');
@@ -1379,9 +1388,9 @@ function showEnd() {
   document.getElementById('scrEnd').classList.remove('hidden');
   const sorted = [...teams].sort((a,b)=>b.cash-a.cash);
   document.getElementById('podium').innerHTML = sorted.map((t,i) => `
-    <div class="p-5 rounded-2xl border-2 ${i===0?'border-amber-400 bg-amber-50':'border-stone-200 bg-stone-50'}">
+    <div class="p-5 rounded-2xl border-2 ${i===0?'border-amber-400 bg-amber-50':'border-stone-200 bg-stone-50'} shadow-sm">
       <div class="text-xs font-extrabold uppercase text-amber-700">${i+1}. Plads • ${starStr(t.stars)} • Niv.${t.unlockedLvl}</div>
-      <div class="text-xl font-extrabold mt-1">${t.name} ${upgIcons(t.upgs)}</div>
+      <div class="text-xl font-extrabold mt-1 text-slate-900">${t.name} ${upgIcons(t.upgs)}</div>
       <div class="text-sm font-extrabold text-emerald-700 mt-2">Slutkasse: ${t.cash} kr.</div>
       <div class="text-xs text-slate-500 mt-1">Solgt i alt: ${t.sold} stk. • Spild: ${t.waste} stk.</div>
     </div>
