@@ -41,6 +41,28 @@
 
 <main class="max-w-5xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col justify-center">
 
+  <!-- MODAL: ELEV NAVN & PRODUKT OPRETTELSE -->
+  <div id="studentModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl border border-stone-200 max-w-md w-full shadow-2xl p-6 md:p-8 space-y-5">
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Velkommen til boden</span>
+        <h2 id="modalHoldTitle" class="text-2xl font-extrabold text-slate-900 mt-2">Navngiv jeres virksomhed</h2>
+        <p class="text-xs text-slate-600 mt-1">Indtast jeres holdnavn og hvad I vil sælge på Handelsgaden, før I går i gang:</p>
+      </div>
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-slate-500">Bodens / Holdets navn</label>
+          <input id="inpCustomName" placeholder="F.eks. Burgerbaronen" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-500">Hvad sælger I?</label>
+          <input id="inpCustomProd" placeholder="F.eks. Gourmet Burger" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1">
+        </div>
+      </div>
+      <button type="button" onclick="saveStudentIdentity()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-sm">Gem og gå ind i boden →</button>
+    </div>
+  </div>
+
   <!-- SCREEN 0: WELCOME -->
   <section id="scrWelcome" class="game-card overflow-hidden shadow-xl my-auto">
     <div class="bg-gradient-to-b from-sky-200 via-sky-100 to-amber-50 p-8 md:p-12 text-center relative border-b border-stone-200">
@@ -64,7 +86,7 @@
           <span>📖</span> <span>Sådan spiller du spillet</span>
         </button>
         <button type="button" onclick="goToSetupScreen()" class="py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/20">
-          <span>🚀</span> <span>Start spillet</span>
+          <span>🚀</span> <span>Start spillet (Lærer)</span>
         </button>
       </div>
     </div>
@@ -97,21 +119,20 @@
     <div class="flex justify-between items-center flex-wrap gap-2">
       <div>
         <h2 class="text-2xl font-extrabold text-slate-900">Spilopsætning for Klasselokalet</h2>
-        <p class="text-sm text-slate-600">Vælg antal hold i klassen. Hvert hold får automatisk sin egen faste webadresse (f.eks. <code class="bg-stone-100 px-2 py-0.5 rounded text-emerald-700 font-bold">?hold=1</code>).</p>
+        <p class="text-sm text-slate-600">Vælg hvor mange hold der deltager. Du får derefter links til hvert hold, som eleverne åbner.</p>
       </div>
       <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-stone-100 px-3.5 py-2 rounded-xl cursor-pointer transition">← Tilbage</button>
     </div>
 
     <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 space-y-3">
-      <div class="font-extrabold text-sm text-indigo-950">📋 Trin 1: Vælg antal hold i klassen (2 til 6 hold)</div>
+      <div class="font-extrabold text-sm text-indigo-950">📋 Vælg antal hold i klassen (2 til 6 hold)</div>
       <div class="flex items-center gap-2 flex-wrap">
-        <button type="button" onclick="buildTeamInputs(2)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">2 hold</button>
-        <button type="button" onclick="buildTeamInputs(3)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">3 hold</button>
-        <button type="button" onclick="buildTeamInputs(4)" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm" id="btnCnt4">4 hold</button>
-        <button type="button" onclick="buildTeamInputs(5)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">5 hold</button>
-        <button type="button" onclick="buildTeamInputs(6)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">6 hold</button>
+        <button type="button" onclick="setTeamCount(2)" id="tc2" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">2 hold</button>
+        <button type="button" onclick="setTeamCount(3)" id="tc3" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">3 hold</button>
+        <button type="button" onclick="setTeamCount(4)" id="tc4" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm">4 hold</button>
+        <button type="button" onclick="setTeamCount(5)" id="tc5" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">5 hold</button>
+        <button type="button" onclick="setTeamCount(6)" id="tc6" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">6 hold</button>
       </div>
-      <div id="teamInputsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2"></div>
     </div>
 
     <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex justify-between items-center flex-wrap gap-2">
@@ -123,7 +144,7 @@
       </div>
     </div>
 
-    <button type="button" onclick="startMultiplayerGame()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base">Start Klassespil (Synkroniseret via URL) →</button>
+    <button type="button" onclick="startMultiplayerGame()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base">Start Spillet & Vis Elev-links →</button>
   </section>
 
   <!-- ACTIVE GAME SCREEN -->
@@ -157,7 +178,7 @@
       <div class="flex justify-between items-center flex-wrap gap-2">
         <div>
           <h3 class="text-lg font-extrabold text-indigo-950">🖥️ Lærerens Storskærms-Kontrolpanel</h3>
-          <p class="text-xs text-indigo-900">Giv eleverne følgende links på deres skærme:</p>
+          <p class="text-xs text-indigo-900">Giv eleverne følgende links (hvor de selv vælger deres holdnavn):</p>
         </div>
         <button type="button" onclick="runTeacherAdvance()" id="btnTeacherRun" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs cursor-pointer shadow-md">Kør ugens marked for alle hold →</button>
       </div>
@@ -365,7 +386,6 @@ function goToSetupScreen() {
   playTone(520, 0.05);
   document.getElementById('scrWelcome').classList.add('hidden');
   document.getElementById('scrSetup').classList.remove('hidden');
-  buildTeamInputs(4);
 }
 function showWelcomeScreen() {
   if (!document.getElementById('scrGame').classList.contains('hidden')) return;
@@ -459,7 +479,7 @@ const ASSISTANT_TIPS = [
   "Når din kasse runder 1.400 kr. eller 2.200 kr., låser du op for kraftigere udstyr. Det kan være nøglen til at stikke af fra konkurrenterne!"
 ];
 
-let maxWks=10, wk=1, teams=[], myHoldIdx=null, curEv=EVENTS[0], curDice=DICE[2], curFate=FATE_CARDS[5], curDil=DILS[0], dilChoice=null, supChoice='norm', chart=null;
+let maxWks=10, wk=1, teams=[], teamCount=4, myHoldIdx=null, curEv=EVENTS[0], curDice=DICE[2], curFate=FATE_CARDS[5], curDil=DILS[0], dilChoice=null, supChoice='norm', chart=null;
 let buyUpgTemp = {};
 
 // --- INITIALISE ON LOAD (URL PARAMS) ---
@@ -467,7 +487,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const holdParam = params.get('hold');
 
-  // Load game state from localStorage if active
   loadGameState();
 
   if (holdParam !== null) {
@@ -476,13 +495,19 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('scrGame').classList.remove('hidden');
     document.getElementById('rndBadge').classList.remove('hidden');
     document.getElementById('rndMax').textContent = maxWks;
-    document.getElementById('topRole').textContent = `Hold ${myHoldIdx+1} (${teams[myHoldIdx]?.name || 'Bod'})`;
-    document.getElementById('urlInfoBadge').textContent = `Individuel enhed: Hold ${myHoldIdx+1}`;
-    initChart();
-    startRoundUI();
+
+    // Check if team has custom name already
+    if (!teams[myHoldIdx] || teams[myHoldIdx].customNamed !== true) {
+      document.getElementById('modalHoldTitle').textContent = `Opsæt Hold ${myHoldIdx+1}`;
+      document.getElementById('studentModal').classList.remove('hidden');
+    } else {
+      document.getElementById('topRole').textContent = `${teams[myHoldIdx].name} (Hold ${myHoldIdx+1})`;
+      document.getElementById('urlInfoBadge').textContent = `Individuel enhed: Hold ${myHoldIdx+1}`;
+      initChart();
+      startRoundUI();
+    }
     startPolling();
   } else {
-    // Teacher / Big screen view
     document.getElementById('topRole').textContent = "Lærer / Storskærm";
     document.getElementById('teacherControlBar').classList.remove('hidden');
     buildTeacherLinks();
@@ -490,20 +515,41 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-function buildTeamInputs(cnt) {
-  const list = document.getElementById('teamInputsList'); list.innerHTML = '';
-  const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
-  for(let i=0;i<cnt;i++) {
-    list.innerHTML += `<div class="bg-white p-3 rounded-xl border space-y-1"><div class="text-xs font-extrabold text-emerald-800">Hold ${i+1} (?hold=${i})</div><input id="tn_${i}" value="${def[i][0]}" class="w-full bg-stone-50 border rounded-lg px-3 py-1.5 text-xs font-bold"><input id="tp_${i}" value="${def[i][1]}" class="w-full bg-stone-50 border rounded-lg px-3 py-1.5 text-xs font-bold"></div>`;
+function setTeamCount(cnt) {
+  teamCount = cnt;
+  [2,3,4,5,6].forEach(x => {
+    const b = document.getElementById('tc'+x);
+    if (b) b.className = x===cnt ? "px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm" : "px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm";
+  });
+  playTone(520, 0.04);
+}
+
+function saveStudentIdentity() {
+  const n = document.getElementById('inpCustomName').value.trim() || `Hold ${myHoldIdx+1}`;
+  const p = document.getElementById('inpCustomProd').value.trim() || "Vare";
+  
+  loadGameState();
+  if (!teams[myHoldIdx]) {
+    teams[myHoldIdx] = mkTeam(myHoldIdx, n, p);
+  } else {
+    teams[myHoldIdx].name = n;
+    teams[myHoldIdx].prod = p;
   }
-  list.dataset.cnt = cnt;
+  teams[myHoldIdx].customNamed = true;
+  saveGameState();
+
+  document.getElementById('studentModal').classList.add('hidden');
+  document.getElementById('topRole').textContent = `${n} (Hold ${myHoldIdx+1})`;
+  document.getElementById('urlInfoBadge').textContent = `Individuel enhed: Hold ${myHoldIdx+1}`;
+  initChart();
+  startRoundUI();
+  playTone(700, 0.08);
 }
 
 function startMultiplayerGame() {
-  const cnt = parseInt(document.getElementById('teamInputsList').dataset.cnt || 4);
   teams = [];
-  for(let i=0;i<cnt;i++) {
-    teams.push(mkTeam(i, document.getElementById('tn_'+i).value||`Hold ${i+1}`, document.getElementById('tp_'+i).value||"Vare"));
+  for(let i=0;i<teamCount;i++) {
+    teams.push(mkTeam(i, `Hold ${i+1}`, "Vare"));
   }
   wk = 1;
   saveGameState();
@@ -522,7 +568,7 @@ function mkTeam(id, name, prod) {
   return {
     id, name, prod, color:COLORS[id%COLORS.length],
     cash:1000, stock:0, stars:1, unlockedLvl:1,
-    upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
+    upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false, customNamed:false
   };
 }
 
@@ -534,7 +580,7 @@ function setWeeks(w) {
 
 // --- STORAGE & POLLING ---
 function saveGameState() {
-  localStorage.setItem('hg_gamestate', JSON.stringify({ teams, wk, maxWks, curEv, curDice, curFate, hostResolved: window.hostResolved || false }));
+  localStorage.setItem('hg_gamestate', JSON.stringify({ teams, wk, maxWks, curEv, curDice, curFate, teamCount }));
 }
 
 function loadGameState() {
@@ -548,10 +594,11 @@ function loadGameState() {
       curEv = data.curEv || EVENTS[0];
       curDice = data.dice || DICE[2];
       curFate = data.fate || FATE_CARDS[5];
+      teamCount = data.teamCount || 4;
     } catch(e){}
   } else {
-    // Default 4 teams if nothing saved
-    teams = [mkTeam(0,"Nordic Wear","T-shirts"), mkTeam(1,"BoostLab","Energidrik"), mkTeam(2,"ByteBite","Toast"), mkTeam(3,"UrbanCase","Covers")];
+    teams = [];
+    for(let i=0;i<4;i++) teams.push(mkTeam(i, `Hold ${i+1}`, "Vare"));
   }
 }
 
@@ -566,11 +613,10 @@ function startPolling() {
         document.getElementById('resPanel').classList.remove('hidden');
       }
     } else {
-      // Teacher view
       if (teams.length > 0) {
         const allReady = teams.every(x => x.dec !== null);
         const btn = document.getElementById('btnTeacherRun');
-        if (allReady) {
+        if (allReady && btn) {
           btn.textContent = "Kør ugens marked for alle hold (Alle klar! 🚀)";
           btn.className = "px-6 py-3 bg-emerald-600 text-white font-extrabold rounded-xl text-xs cursor-pointer shadow-md animate-pulse";
         }
@@ -583,12 +629,16 @@ function buildTeacherLinks() {
   const base = window.location.origin + window.location.pathname;
   const list = document.getElementById('teacherLinksList');
   if (!list) return;
-  list.innerHTML = teams.map((t, i) => `
-    <div class="bg-white p-2.5 rounded-xl border space-y-1 shadow-sm">
-      <div class="font-extrabold text-indigo-950">${t.name}</div>
-      <a href="${base}?hold=${i}" target="_blank" class="text-[11px] text-emerald-700 underline font-bold break-all">Åbn Hold ${i+1} link ↗</a>
-    </div>
-  `).join('');
+  list.innerHTML = '';
+  for(let i=0; i<teamCount; i++) {
+    const tName = teams[i]?.name || `Hold ${i+1}`;
+    list.innerHTML += `
+      <div class="bg-white p-2.5 rounded-xl border space-y-1 shadow-sm">
+        <div class="font-extrabold text-indigo-950">${tName}</div>
+        <a href="${base}?hold=${i}" target="_blank" class="text-[11px] text-emerald-700 underline font-bold break-all">Åbn ?hold=${i} ↗</a>
+      </div>
+    `;
+  }
 }
 
 // --- HELPERS ---
@@ -852,7 +902,6 @@ function runTeacherAdvance() {
   curDice = DICE[Math.floor(Math.random()*DICE.length)];
   curFate = FATE_CARDS[Math.floor(Math.random()*FATE_CARDS.length)];
 
-  // For any team without decision, give default
   const zero = { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
   teams.forEach(t => {
     if (!t.dec) {
@@ -1047,7 +1096,7 @@ function runMarketMath() {
 
     t.cash += net; t.stock = saved; t.hist.push(t.cash);
     t.sold += r.sold; t.waste += waste; t.lastP = r.price; t.lastS = r.sold;
-    t.dec = null; // Reset for next week
+    t.dec = null;
     updateTeamTier(t);
 
     return {
