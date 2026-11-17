@@ -32,7 +32,6 @@
     <h1 class="font-extrabold text-base md:text-lg text-slate-900 tracking-tight">Iværksætterspillet</h1>
   </div>
   <div class="flex items-center gap-2.5">
-    <span id="roleBadge" class="bg-indigo-50 border border-indigo-200 text-indigo-900 px-3 py-1.5 rounded-full text-xs font-extrabold">Rolle: <b id="topRole">Lærer / Storskærm</b></span>
     <button type="button" onclick="openRulesModal()" class="bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 px-3.5 py-1.5 rounded-full text-xs font-extrabold cursor-pointer transition shadow-sm">📖 Regler</button>
     <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-stone-50 hover:bg-stone-100 border border-stone-200 px-3.5 py-1.5 rounded-full text-xs font-bold cursor-pointer transition">🔊 Lyd</button>
     <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-900 px-3.5 py-1.5 rounded-full text-xs font-extrabold shadow-sm">Uge <b id="rndNow">1</b>/<b id="rndMax">10</b></span>
@@ -40,28 +39,6 @@
 </header>
 
 <main class="max-w-5xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col justify-center">
-
-  <!-- MODAL: ELEV NAVN & PRODUKT OPRETTELSE -->
-  <div id="studentModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl border border-stone-200 max-w-md w-full shadow-2xl p-6 md:p-8 space-y-5">
-      <div>
-        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Velkommen til boden</span>
-        <h2 id="modalHoldTitle" class="text-2xl font-extrabold text-slate-900 mt-2">Navngiv jeres virksomhed</h2>
-        <p class="text-xs text-slate-600 mt-1">Indtast jeres holdnavn og hvad I vil sælge på Handelsgaden, før I går i gang:</p>
-      </div>
-      <div class="space-y-3">
-        <div>
-          <label class="text-xs font-bold text-slate-500">Bodens / Holdets navn</label>
-          <input id="inpCustomName" placeholder="F.eks. Burgerbaronen" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-500">Hvad sælger I?</label>
-          <input id="inpCustomProd" placeholder="F.eks. Gourmet Burger" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold mt-1">
-        </div>
-      </div>
-      <button type="button" onclick="saveStudentIdentity()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-sm">Gem og gå ind i boden →</button>
-    </div>
-  </div>
 
   <!-- SCREEN 0: WELCOME -->
   <section id="scrWelcome" class="game-card overflow-hidden shadow-xl my-auto">
@@ -86,7 +63,7 @@
           <span>📖</span> <span>Sådan spiller du spillet</span>
         </button>
         <button type="button" onclick="goToSetupScreen()" class="py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/20">
-          <span>🚀</span> <span>Start spillet (Lærer)</span>
+          <span>🚀</span> <span>Start spillet</span>
         </button>
       </div>
     </div>
@@ -118,21 +95,22 @@
   <section id="scrSetup" class="hidden game-card p-6 md:p-8 space-y-6">
     <div class="flex justify-between items-center flex-wrap gap-2">
       <div>
-        <h2 class="text-2xl font-extrabold text-slate-900">Spilopsætning for Klasselokalet</h2>
-        <p class="text-sm text-slate-600">Vælg hvor mange hold der deltager. Du får derefter links til hvert hold, som eleverne åbner.</p>
+        <h2 class="text-2xl font-extrabold text-slate-900">Spilopsætning</h2>
+        <p class="text-sm text-slate-600">Indtast navn og produkt for holdene i klassen (op til 6 hold).</p>
       </div>
       <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-stone-100 px-3.5 py-2 rounded-xl cursor-pointer transition">← Tilbage</button>
     </div>
 
     <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 space-y-3">
-      <div class="font-extrabold text-sm text-indigo-950">📋 Vælg antal hold i klassen (2 til 6 hold)</div>
+      <div class="font-extrabold text-sm text-indigo-950">Vælg antal hold (2 til 6 hold)</div>
       <div class="flex items-center gap-2 flex-wrap">
-        <button type="button" onclick="setTeamCount(2)" id="tc2" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">2 hold</button>
-        <button type="button" onclick="setTeamCount(3)" id="tc3" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">3 hold</button>
-        <button type="button" onclick="setTeamCount(4)" id="tc4" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm">4 hold</button>
-        <button type="button" onclick="setTeamCount(5)" id="tc5" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">5 hold</button>
-        <button type="button" onclick="setTeamCount(6)" id="tc6" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">6 hold</button>
+        <button type="button" onclick="buildTeamInputs(2)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">2 hold</button>
+        <button type="button" onclick="buildTeamInputs(3)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">3 hold</button>
+        <button type="button" onclick="buildTeamInputs(4)" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm" id="btnCnt4">4 hold</button>
+        <button type="button" onclick="buildTeamInputs(5)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">5 hold</button>
+        <button type="button" onclick="buildTeamInputs(6)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">6 hold</button>
       </div>
+      <div id="teamInputsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2"></div>
     </div>
 
     <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex justify-between items-center flex-wrap gap-2">
@@ -144,7 +122,7 @@
       </div>
     </div>
 
-    <button type="button" onclick="startMultiplayerGame()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base">Start Spillet & Vis Elev-links →</button>
+    <button type="button" onclick="startGame()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base">Start Handelsgaden →</button>
   </section>
 
   <!-- ACTIVE GAME SCREEN -->
@@ -169,20 +147,8 @@
       <div id="boothsRow" class="px-5 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3 items-end"></div>
       <div class="bg-stone-800 text-stone-200 px-5 py-2.5 text-xs flex justify-between flex-wrap gap-2">
         <span>🚶‍♀️ <b>Prisjægere</b> handler billigst først • 💎 <b>Kvalitetskøbere</b> kræver mindst ⭐⭐⭐ og betaler mere</span>
-        <span id="urlInfoBadge" class="font-bold text-amber-300"></span>
+        <span id="activeTeamIndicator" class="font-bold text-amber-300"></span>
       </div>
-    </div>
-
-    <!-- TEACHER CONTROL BAR (Kun synlig på storskærmen uden ?hold=X) -->
-    <div id="teacherControlBar" class="hidden game-card p-5 bg-indigo-50 border-2 border-indigo-300 space-y-3">
-      <div class="flex justify-between items-center flex-wrap gap-2">
-        <div>
-          <h3 class="text-lg font-extrabold text-indigo-950">🖥️ Lærerens Storskærms-Kontrolpanel</h3>
-          <p class="text-xs text-indigo-900">Giv eleverne følgende links (hvor de selv vælger deres holdnavn):</p>
-        </div>
-        <button type="button" onclick="runTeacherAdvance()" id="btnTeacherRun" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs cursor-pointer shadow-md">Kør ugens marked for alle hold →</button>
-      </div>
-      <div id="teacherLinksList" class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs"></div>
     </div>
 
     <!-- WORKBENCH -->
@@ -319,8 +285,8 @@
       </div>
 
       <div class="pt-4 border-t border-stone-200 flex flex-wrap justify-between items-center gap-4">
-        <span class="text-xs font-bold text-slate-600">Samlet udlæg nu (inkl. husleje, udstyr & kneb): <b id="lblOutlay" class="text-base text-slate-900">500 kr.</b></span>
-        <button type="button" id="btnLock" onclick="lockTurn()" disabled class="px-8 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition shadow-sm">Besvar ugens dilemma først</button>
+        <span class="text-xs font-bold text-slate-600">Samlet udlæg nu: <b id="lblOutlay" class="text-base text-slate-900">500 kr.</b></span>
+        <button type="button" id="btnLock" onclick="nextTeamTurn()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition">Lås valg og gå til næste hold →</button>
       </div>
     </div>
 
@@ -347,7 +313,7 @@
             <p class="text-xs text-slate-600 mt-0.5">Kunder på gaden: <b id="resCust" class="text-emerald-700">40</b> • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
           </div>
         </div>
-        <button type="button" id="btnNextWk" onclick="nextWeek()" class="hidden px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition">Næste uge →</button>
+        <button type="button" id="btnNextWk" onclick="advanceWeek()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition">Næste uge →</button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -381,14 +347,14 @@
 </main>
 
 <script>
-// --- NAVIGATION & RULES MODAL ---
+// --- NAVIGATION & RULES ---
 function goToSetupScreen() {
   playTone(520, 0.05);
   document.getElementById('scrWelcome').classList.add('hidden');
   document.getElementById('scrSetup').classList.remove('hidden');
+  buildTeamInputs(4);
 }
 function showWelcomeScreen() {
-  if (!document.getElementById('scrGame').classList.contains('hidden')) return;
   playTone(440, 0.04);
   document.getElementById('scrSetup').classList.add('hidden');
   document.getElementById('scrWelcome').classList.remove('hidden');
@@ -402,7 +368,7 @@ function closeRulesModal() {
   document.getElementById('rulesModal').classList.add('hidden');
 }
 
-// --- SAFE SOUND ---
+// --- SOUND ---
 let sndOn = true, aCtx = null;
 function playTone(freq, dur, type='sine') {
   if (!sndOn) return;
@@ -479,97 +445,16 @@ const ASSISTANT_TIPS = [
   "Når din kasse runder 1.400 kr. eller 2.200 kr., låser du op for kraftigere udstyr. Det kan være nøglen til at stikke af fra konkurrenterne!"
 ];
 
-let maxWks=10, wk=1, teams=[], teamCount=4, myHoldIdx=null, curEv=EVENTS[0], curDice=DICE[2], curFate=FATE_CARDS[5], curDil=DILS[0], dilChoice=null, supChoice='norm', chart=null;
+let maxWks=10, wk=1, teams=[], activeTeamIdx=0, curEv=EVENTS[0], curDice=DICE[2], curFate=FATE_CARDS[5], curDil=DILS[0], dilChoice=null, supChoice='norm', chart=null;
 let buyUpgTemp = {};
 
-// --- INITIALISE ON LOAD (URL PARAMS) ---
-window.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  const holdParam = params.get('hold');
-
-  loadGameState();
-
-  if (holdParam !== null) {
-    myHoldIdx = parseInt(holdParam);
-    document.getElementById('scrWelcome').classList.add('hidden');
-    document.getElementById('scrGame').classList.remove('hidden');
-    document.getElementById('rndBadge').classList.remove('hidden');
-    document.getElementById('rndMax').textContent = maxWks;
-
-    // Check if team has custom name already
-    if (!teams[myHoldIdx] || teams[myHoldIdx].customNamed !== true) {
-      document.getElementById('modalHoldTitle').textContent = `Opsæt Hold ${myHoldIdx+1}`;
-      document.getElementById('studentModal').classList.remove('hidden');
-    } else {
-      document.getElementById('topRole').textContent = `${teams[myHoldIdx].name} (Hold ${myHoldIdx+1})`;
-      document.getElementById('urlInfoBadge').textContent = `Individuel enhed: Hold ${myHoldIdx+1}`;
-      initChart();
-      startRoundUI();
-    }
-    startPolling();
-  } else {
-    document.getElementById('topRole').textContent = "Lærer / Storskærm";
-    document.getElementById('teacherControlBar').classList.remove('hidden');
-    buildTeacherLinks();
-    startPolling();
+function buildTeamInputs(cnt) {
+  const list = document.getElementById('teamInputsList'); list.innerHTML = '';
+  const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
+  for(let i=0;i<cnt;i++) {
+    list.innerHTML += `<div class="bg-white p-3 rounded-xl border space-y-1"><div class="text-xs font-extrabold text-emerald-800">Hold ${i+1}</div><input id="tn_${i}" value="${def[i][0]}" class="w-full bg-stone-50 border rounded-lg px-3 py-1.5 text-xs font-bold"><input id="tp_${i}" value="${def[i][1]}" class="w-full bg-stone-50 border rounded-lg px-3 py-1.5 text-xs font-bold"></div>`;
   }
-});
-
-function setTeamCount(cnt) {
-  teamCount = cnt;
-  [2,3,4,5,6].forEach(x => {
-    const b = document.getElementById('tc'+x);
-    if (b) b.className = x===cnt ? "px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm" : "px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm";
-  });
-  playTone(520, 0.04);
-}
-
-function saveStudentIdentity() {
-  const n = document.getElementById('inpCustomName').value.trim() || `Hold ${myHoldIdx+1}`;
-  const p = document.getElementById('inpCustomProd').value.trim() || "Vare";
-  
-  loadGameState();
-  if (!teams[myHoldIdx]) {
-    teams[myHoldIdx] = mkTeam(myHoldIdx, n, p);
-  } else {
-    teams[myHoldIdx].name = n;
-    teams[myHoldIdx].prod = p;
-  }
-  teams[myHoldIdx].customNamed = true;
-  saveGameState();
-
-  document.getElementById('studentModal').classList.add('hidden');
-  document.getElementById('topRole').textContent = `${n} (Hold ${myHoldIdx+1})`;
-  document.getElementById('urlInfoBadge').textContent = `Individuel enhed: Hold ${myHoldIdx+1}`;
-  initChart();
-  startRoundUI();
-  playTone(700, 0.08);
-}
-
-function startMultiplayerGame() {
-  teams = [];
-  for(let i=0;i<teamCount;i++) {
-    teams.push(mkTeam(i, `Hold ${i+1}`, "Vare"));
-  }
-  wk = 1;
-  saveGameState();
-  document.getElementById('scrSetup').classList.add('hidden');
-  document.getElementById('scrGame').classList.remove('hidden');
-  document.getElementById('rndBadge').classList.remove('hidden');
-  document.getElementById('rndMax').textContent = maxWks;
-  document.getElementById('teacherControlBar').classList.remove('hidden');
-  buildTeacherLinks();
-  initChart();
-  startRoundUI();
-  playTone(880, 0.15);
-}
-
-function mkTeam(id, name, prod) {
-  return {
-    id, name, prod, color:COLORS[id%COLORS.length],
-    cash:1000, stock:0, stars:1, unlockedLvl:1,
-    upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false, customNamed:false
-  };
+  list.dataset.cnt = cnt;
 }
 
 function setWeeks(w) {
@@ -578,70 +463,31 @@ function setWeeks(w) {
   playTone(520, 0.04);
 }
 
-// --- STORAGE & POLLING ---
-function saveGameState() {
-  localStorage.setItem('hg_gamestate', JSON.stringify({ teams, wk, maxWks, curEv, curDice, curFate, teamCount }));
-}
-
-function loadGameState() {
-  const raw = localStorage.getItem('hg_gamestate');
-  if (raw) {
-    try {
-      const data = JSON.parse(raw);
-      teams = data.teams || [];
-      wk = data.wk || 1;
-      maxWks = data.maxWks || 10;
-      curEv = data.curEv || EVENTS[0];
-      curDice = data.dice || DICE[2];
-      curFate = data.fate || FATE_CARDS[5];
-      teamCount = data.teamCount || 4;
-    } catch(e){}
-  } else {
-    teams = [];
-    for(let i=0;i<4;i++) teams.push(mkTeam(i, `Hold ${i+1}`, "Vare"));
+function startGame() {
+  const cnt = parseInt(document.getElementById('teamInputsList').dataset.cnt || 4);
+  teams = [];
+  const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
+  for(let i=0;i<cnt;i++) {
+    teams.push({
+      id:i,
+      name: document.getElementById('tn_'+i).value || def[i][0],
+      prod: document.getElementById('tp_'+i).value || def[i][1],
+      color: COLORS[i%COLORS.length],
+      cash: 1000, stock: 0, stars: 1, unlockedLvl: 1,
+      upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
+    });
   }
+  wk = 1;
+  activeTeamIdx = 0;
+  document.getElementById('scrSetup').classList.add('hidden');
+  document.getElementById('scrGame').classList.remove('hidden');
+  document.getElementById('rndBadge').classList.remove('hidden');
+  document.getElementById('rndMax').textContent = maxWks;
+  initChart();
+  startTeamTurn();
+  playTone(880, 0.15);
 }
 
-function startPolling() {
-  setInterval(() => {
-    loadGameState();
-    updateStreetUI(false);
-    if (myHoldIdx !== null) {
-      const t = teams[myHoldIdx];
-      if (t && t.dec) {
-        document.getElementById('workbench').classList.add('hidden');
-        document.getElementById('resPanel').classList.remove('hidden');
-      }
-    } else {
-      if (teams.length > 0) {
-        const allReady = teams.every(x => x.dec !== null);
-        const btn = document.getElementById('btnTeacherRun');
-        if (allReady && btn) {
-          btn.textContent = "Kør ugens marked for alle hold (Alle klar! 🚀)";
-          btn.className = "px-6 py-3 bg-emerald-600 text-white font-extrabold rounded-xl text-xs cursor-pointer shadow-md animate-pulse";
-        }
-      }
-    }
-  }, 1500);
-}
-
-function buildTeacherLinks() {
-  const base = window.location.origin + window.location.pathname;
-  const list = document.getElementById('teacherLinksList');
-  if (!list) return;
-  list.innerHTML = '';
-  for(let i=0; i<teamCount; i++) {
-    const tName = teams[i]?.name || `Hold ${i+1}`;
-    list.innerHTML += `
-      <div class="bg-white p-2.5 rounded-xl border space-y-1 shadow-sm">
-        <div class="font-extrabold text-indigo-950">${tName}</div>
-        <a href="${base}?hold=${i}" target="_blank" class="text-[11px] text-emerald-700 underline font-bold break-all">Åbn ?hold=${i} ↗</a>
-      </div>
-    `;
-  }
-}
-
-// --- HELPERS ---
 function updateTeamTier(t) {
   if (t.cash >= 2200) t.unlockedLvl = Math.max(t.unlockedLvl, 3);
   else if (t.cash >= 1400) t.unlockedLvl = Math.max(t.unlockedLvl, 2);
@@ -658,29 +504,25 @@ function upgIcons(u) {
   return UPGRADES.filter(cfg => u[cfg.key] > 0).map(cfg => `<span title="${cfg.name} (${u[cfg.key]} uger tilbage)">${cfg.icon}</span>`).join('');
 }
 
-function updateStreetUI(resolved) {
+function updateStreetUI() {
   document.getElementById('rndNow').textContent = wk;
   document.getElementById('stWeek').textContent = wk;
-  document.getElementById('evIcon').textContent = resolved ? curDice.icon : curEv.icon;
-  document.getElementById('evTitle').textContent = curEv.title;
-  document.getElementById('evDesc').textContent = curEv.desc;
   document.getElementById('stCost').textContent = (20 + curEv.costMod) + " kr.";
   document.getElementById('stRent').textContent = (200 + curEv.rentMod) + " kr.";
+  document.getElementById('activeTeamIndicator').textContent = `Turs tur: ${teams[activeTeamIdx].name}`;
 
-  document.getElementById('boothsRow').innerHTML = teams.map(t => {
-    const bubble = t.slogan ? `<div class="mb-1.5 bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl shadow max-w-full truncate">💬 "${t.slogan}"</div>` : '';
+  document.getElementById('boothsRow').innerHTML = teams.map((t, idx) => {
+    const isActive = idx === activeTeamIdx;
     const dispStars = getEffectiveStars(t, 'norm', t.upgs);
-    const readyMark = t.dec ? '✓ Klar' : '⏳ Tænker';
     return `
-      <div class="flex flex-col items-center">
-        ${bubble}
-        <div class="bg-white border border-stone-200 px-2 py-1 rounded-t-xl text-center w-11/12 shadow-sm">
-          <div class="font-extrabold text-xs truncate text-slate-900">${t.name} (${readyMark})</div>
+      <div class="flex flex-col items-center ${isActive ? 'scale-105 transition-transform' : 'opacity-80'}">
+        <div class="bg-white border-2 ${isActive ? 'border-emerald-600 shadow-md' : 'border-stone-200'} px-2 py-1 rounded-t-xl text-center w-11/12">
+          <div class="font-extrabold text-xs truncate text-slate-900">${t.name} ${isActive ? '👉' : ''}</div>
           <div class="text-[10px] text-amber-600 font-bold">${starStr(dispStars)} • Niv.${t.unlockedLvl}</div>
         </div>
         <div class="w-full h-5 rounded-t stripes shadow-inner" style="background:${t.color}"></div>
         <div class="w-11/12 bg-white border-x border-b border-stone-200 p-2 text-center space-y-1 rounded-b-xl shadow-sm">
-          <span class="bg-amber-100 text-amber-900 font-extrabold text-[11px] px-2 py-0.5 rounded">${resolved && t.lastP ? t.lastP+' kr.' : 'Lager: '+t.stock}</span>
+          <span class="bg-amber-100 text-amber-900 font-extrabold text-[11px] px-2 py-0.5 rounded">Lager: ${t.stock}</span>
           <div class="font-extrabold text-sm ${t.cash<0?'text-rose-600':'text-emerald-700'}">${t.cash} kr.</div>
         </div>
       </div>
@@ -688,10 +530,10 @@ function updateStreetUI(resolved) {
   }).join('');
 }
 
-function startRoundUI() {
-  teams.forEach(t => updateTeamTier(t));
-  const t = myHoldIdx !== null ? teams[myHoldIdx] : teams[0];
-  if (!t) return;
+function startTeamTurn() {
+  updateStreetUI();
+  const t = teams[activeTeamIdx];
+  updateTeamTier(t);
 
   const lvlNames = { 1:"Niveau 1: Gadebod", 2:"Niveau 2: Etableret Butik", 3:"Niveau 3: Flagship Store" };
   document.getElementById('wbLevelBadge').textContent = lvlNames[t.unlockedLvl];
@@ -717,7 +559,7 @@ function startRoundUI() {
 
   document.getElementById('slQty').value = 15;
   document.getElementById('slPrice').value = 48;
-  document.getElementById('inpSlogan').value = "";
+  document.getElementById('inpSlogan').value = t.slogan || "";
   document.getElementById('resReveal').classList.add('hidden');
   document.getElementById('btnRes').classList.remove('hidden');
 
@@ -728,7 +570,7 @@ function startRoundUI() {
 
   buyUpgTemp = {};
   renderUpgradesGrid(t);
-  updateLockBtn(); calc();
+  calc();
 }
 
 function setSupplier(s, silent=false) {
@@ -774,7 +616,7 @@ function renderUpgradesGrid(t) {
 }
 
 function toggleUpg(key) {
-  const t = teams[myHoldIdx !== null ? myHoldIdx : 0];
+  const t = teams[activeTeamIdx];
   const cfg = UPGRADES.find(x => x.key === key);
   if (t.unlockedLvl < cfg.lvl) return;
 
@@ -794,26 +636,13 @@ function pickDil(c) {
   document.getElementById('btnDilB').className = c==='B' ? "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer transition shadow-sm" : "p-3.5 rounded-xl border border-stone-200 bg-white/60 text-left text-xs text-slate-400 cursor-pointer transition";
   document.getElementById('dilStatus').textContent = "✓ Valgt";
   playTone(500, 0.04);
-  updateLockBtn(); calc();
-}
-
-function updateLockBtn() {
-  const b = document.getElementById('btnLock');
-  if (dilChoice) {
-    b.disabled = false;
-    b.className = "px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition";
-    b.textContent = "Lås bod og send valg ind ✓";
-  } else {
-    b.disabled = true;
-    b.className = "px-8 py-3.5 bg-stone-200 text-stone-400 font-extrabold rounded-2xl text-sm transition shadow-sm";
-    b.textContent = "Besvar ugens dilemma først";
-  }
+  calc();
 }
 
 function slide() { playTone(300 + parseInt(document.getElementById('slPrice').value)*2, 0.02); calc(); }
 
 function calc() {
-  const t = teams[myHoldIdx !== null ? myHoldIdx : 0];
+  const t = teams[activeTeamIdx];
   const qty = parseInt(document.getElementById('slQty').value);
   const price = parseInt(document.getElementById('slPrice').value);
   const dil = dilChoice ? curDil[dilChoice] : { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
@@ -857,7 +686,7 @@ function calc() {
 
 function buyRes() {
   playTone(800, 0.1);
-  const t = teams[myHoldIdx !== null ? myHoldIdx : 0]; t.resTemp = true;
+  const t = teams[activeTeamIdx]; t.resTemp = true;
   const maxP = Math.max(25, curDice.maxP + curEv.pMod);
   const dem = Math.round(curDice.dPerTeam * teams.length * curEv.dMult);
   const box = document.getElementById('resReveal');
@@ -867,14 +696,18 @@ function buyRes() {
   calc();
 }
 
-function lockTurn() {
-  if (!dilChoice || myHoldIdx === null) return;
+function nextTeamTurn() {
+  if (!dilChoice) {
+    alert("Du skal besvare ugens dilemma (A eller B), før boden kan låses!");
+    return;
+  }
   playTone(600, 0.08);
-  const t = teams[myHoldIdx];
+  const t = teams[activeTeamIdx];
   const slogan = document.getElementById('inpSlogan').value.trim();
   const targetVal = document.getElementById('selTarget').value;
   const trickVal = document.getElementById('selTrick').value;
 
+  t.slogan = slogan;
   t.dec = {
     qty: parseInt(document.getElementById('slQty').value),
     price: parseInt(document.getElementById('slPrice').value),
@@ -886,36 +719,21 @@ function lockTurn() {
     dil: curDil[dilChoice],
     slogan
   };
-  t.slogan = slogan;
 
-  saveGameState();
-  document.getElementById('workbench').classList.add('hidden');
-  document.getElementById('resPanel').classList.remove('hidden');
-  document.getElementById('resWk').textContent = wk;
-  document.getElementById('resTitle').textContent = "Valg låst!";
-  document.getElementById('resFateText').textContent = "Du har låst dine valg for uge " + wk + ". Venter på læreren kører markedet på storskærmen...";
+  activeTeamIdx++;
+  if (activeTeamIdx < teams.length) {
+    startTeamTurn();
+  } else {
+    // Alle hold har valgt – kør markedet
+    runMarket();
+  }
 }
 
-// --- TEACHER RUN MARKET ---
-function runTeacherAdvance() {
+function runMarket() {
   curEv = wk===1 ? EVENTS[0] : EVENTS[Math.floor(Math.random()*EVENTS.length)];
   curDice = DICE[Math.floor(Math.random()*DICE.length)];
   curFate = FATE_CARDS[Math.floor(Math.random()*FATE_CARDS.length)];
 
-  const zero = { cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 };
-  teams.forEach(t => {
-    if (!t.dec) {
-      t.dec = { qty:15, price:48, sup:'norm', upgAct:{}, trick:'', target:null, res:false, dil:zero, slogan:"" };
-    }
-  });
-
-  const sum = runMarketMath();
-  saveGameState();
-  showResultsUI(sum);
-}
-
-// --- MARKET MATH ---
-function runMarketMath() {
   const baseCost = 20 + curEv.costMod, rent = 200 + curEv.rentMod;
   const baseMaxP = Math.max(25, curDice.maxP + curEv.pMod);
   const totalDem = Math.round(curDice.dPerTeam * teams.length * curEv.dMult);
@@ -1109,15 +927,13 @@ function runMarketMath() {
 
   if (dramaLogs.length === 0) dramaLogs.push("Ingen sabotage eller uheld ramte boderne i denne uge.");
 
-  return { wk, dice:curDice, fate:curFate, drama:dramaLogs, totalDem, baseMaxP, cards };
+  showResultsUI({ wk, dice:curDice, fate:curFate, drama:dramaLogs, totalDem, baseMaxP, cards });
 }
 
-// --- RESULTS SIMULATION ---
 let simTimer = null;
 function showResultsUI(sum) {
   document.getElementById('workbench').classList.add('hidden');
   document.getElementById('resPanel').classList.remove('hidden');
-  document.getElementById('btnNextWk').classList.toggle('hidden', myHoldIdx !== null);
 
   const rot = {1:[0,0],2:[0,-90],3:[0,180],4:[0,90],5:[-90,0],6:[90,0]}[sum.dice.r];
   setTimeout(() => {
@@ -1175,19 +991,20 @@ function showResultsUI(sum) {
       clearInterval(simTimer);
       playTone(980, 0.2);
       renderStep(1.0, true);
-      updateStreetUI(true); updateChart();
+      updateChart();
     }
   }, 650);
 }
 
-function nextWeek() {
-  if (myHoldIdx !== null) return;
+function advanceWeek() {
   if (wk >= maxWks) {
     showEnd();
   } else {
     wk++;
-    saveGameState();
-    startWeekHost(); // Skifter uge uden at reloade hele siden
+    activeTeamIdx = 0;
+    document.getElementById('resPanel').classList.add('hidden');
+    document.getElementById('workbench').classList.remove('hidden');
+    startTeamTurn();
   }
 }
 
@@ -1208,7 +1025,7 @@ function updateChart() {
   chart.update();
 }
 function showEnd() {
-  document.getElementById('scrGame').classList.add('hidden');
+  document.getElementById('resPanel').classList.add('hidden');
   document.getElementById('scrEnd').classList.remove('hidden');
   const sorted = [...teams].sort((a,b)=>b.cash-a.cash);
   document.getElementById('podium').innerHTML = sorted.map((t,i) => `
