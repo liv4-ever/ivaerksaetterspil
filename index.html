@@ -8,9 +8,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
-  body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfaf7; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
   .scene { width: 88px; height: 88px; perspective: 400px; }
-  .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.1s cubic-bezier(0.2, 0.85, 0.3, 1.1); }
+  .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   .face { position: absolute; width: 88px; height: 88px; background: #fff; border: 3px solid #cbd5e1; border-radius: 16px; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr); padding: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
   .pip { width: 14px; height: 14px; background: #0f172a; border-radius: 50%; place-self: center; }
   .f1 .pip { background: #e11d48; width: 18px; height: 18px; }
@@ -21,54 +21,61 @@
   .f5 { transform: rotateX(90deg) translateZ(44px); }
   .f6 { transform: rotateX(-90deg) translateZ(44px); }
   .stripes { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.3) 0 12px, transparent 12px 24px); }
-  .game-card { background: #ffffff; border: 1px solid #e7e5e4; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); border-radius: 1.75rem; }
-  @keyframes floatCloud { 0% { transform: translateX(0px); } 50% { transform: translateX(10px); } 100% { transform: translateX(0px); } }
-  .floating { animation: floatCloud 4s ease-in-out infinite; }
+  .game-card { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04); border-radius: 1.75rem; transition: all 0.3s ease; }
+  .game-card:hover { box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12); }
+  @keyframes floatCloud { 0% { transform: translateX(0px) translateY(0px); } 50% { transform: translateX(12px) translateY(-5px); } 100% { transform: translateX(0px) translateY(0px); } }
+  .floating { animation: floatCloud 5s ease-in-out infinite; }
+  @keyframes pulseGlow { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+  .pulse-booth { animation: pulseGlow 2.5s ease-in-out infinite; }
 </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col">
 
-<header class="bg-white/90 backdrop-blur border-b border-stone-200 px-6 py-3.5 flex justify-between items-center sticky top-0 z-30 shadow-sm">
+<header class="bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
   <div class="flex items-center gap-3 cursor-pointer" onclick="showWelcomeScreen()">
-    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold px-3.5 py-1.5 rounded-xl text-sm shadow-md">🏪 HANDELSGADEN</div>
-    <h1 class="font-extrabold text-base md:text-lg text-slate-900 tracking-tight">Iværksætterspillet</h1>
+    <div class="bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-extrabold px-4 py-2 rounded-xl text-sm shadow-md flex items-center gap-2">
+      <span>🏪</span> HANDELSGADEN
+    </div>
+    <h1 class="font-extrabold text-base md:text-lg text-slate-900 tracking-tight hidden sm:block">Iværksætterspillet</h1>
   </div>
   <div class="flex items-center gap-2.5">
-    <button type="button" onclick="openRulesModal()" class="bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 px-3.5 py-1.5 rounded-full text-xs font-extrabold cursor-pointer transition shadow-sm">📖 Regler</button>
-    <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-stone-50 hover:bg-stone-100 border border-stone-200 px-3.5 py-1.5 rounded-full text-xs font-bold cursor-pointer transition">🔊 Lyd</button>
-    <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-900 px-3.5 py-1.5 rounded-full text-xs font-extrabold shadow-sm">Uge <b id="rndNow">1</b>/<b id="rndMax">10</b></span>
+    <button type="button" onclick="openRulesModal()" class="bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 px-4 py-2 rounded-full text-xs font-extrabold cursor-pointer transition shadow-sm flex items-center gap-1.5">📖 Regler</button>
+    <button type="button" onclick="toggleSound()" id="sndBtn" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-4 py-2 rounded-full text-xs font-bold cursor-pointer transition">🔊 Lyd</button>
+    <span id="rndBadge" class="hidden bg-amber-100 border border-amber-300 text-amber-900 px-4 py-2 rounded-full text-xs font-extrabold shadow-sm">Uge <b id="rndNow">1</b>/<b id="rndMax">10</b></span>
   </div>
 </header>
 
 <main class="max-w-5xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col justify-center">
 
   <!-- SCREEN 0: WELCOME -->
-  <section id="scrWelcome" class="game-card overflow-hidden shadow-xl my-auto">
-    <div class="bg-gradient-to-br from-sky-200 via-teal-100 to-amber-100 p-8 md:p-12 text-center relative border-b border-stone-200">
-      <div class="flex justify-center gap-4 text-4xl md:text-5xl mb-4 floating">
+  <section id="scrWelcome" class="game-card overflow-hidden shadow-2xl my-auto">
+    <div class="bg-gradient-to-br from-sky-300 via-teal-200 to-amber-200 p-8 md:p-14 text-center relative border-b border-slate-200 overflow-hidden">
+      <div class="absolute -top-10 -left-10 text-7xl opacity-20 floating">☁️</div>
+      <div class="absolute top-5 -right-5 text-7xl opacity-20 floating" style="animation-delay: 2s;">☀️</div>
+      <div class="flex justify-center gap-4 text-4xl md:text-6xl mb-4 relative z-10">
         <span>🏪</span><span>🚀</span><span>💎</span><span>🎲</span>
       </div>
-      <span class="bg-white text-emerald-800 text-xs font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full border border-emerald-200 shadow-sm inline-block">
-        Levende Markedssimulator & Forretningsspil
+      <span class="bg-white/90 backdrop-blur text-emerald-800 text-xs font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full border border-emerald-300 shadow-sm inline-block relative z-10">
+        Interaktiv Markedssimulator & Forretningsspil
       </span>
-      <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mt-3 tracking-tight">
+      <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mt-3 tracking-tight relative z-10">
         Handelsgaden
       </h2>
-      <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium">
-        Start i det små med 1 stjerne (⭐) og 1.000 kr. Konkurrer mod tilfældige AI-modstandere, vælg leverandører, opgrader boden over 3 niveauer, og spil dine kort klogt!
+      <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium relative z-10">
+        Start i det små med 1 stjerne (⭐) og 1.000 kr. Konkurrer mod skiftende AI-modstandere, vælg leverandører, opgrader boden over 3 niveauer, og spil dine kort klogt!
       </p>
     </div>
 
-    <div class="p-6 md:p-10 bg-white">
-      <div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <button type="button" onclick="openModeSelect('solo')" class="py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-indigo-600/25">
-          <span>🤖</span> <span>Spil Solo vs. Tilfældig AI</span>
+    <div class="p-8 bg-white">
+      <div class="max-w-xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button type="button" onclick="openModeSelect('solo')" class="py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-indigo-600/30 transform hover:-translate-y-0.5">
+          <span>🤖</span> <span>Spil Solo vs. AI</span>
         </button>
-        <button type="button" onclick="openModeSelect('multi')" class="py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/25">
+        <button type="button" onclick="openModeSelect('multi')" class="py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/30 transform hover:-translate-y-0.5">
           <span>👥</span> <span>Flere hold på 1 PC</span>
         </button>
       </div>
-      <div class="mt-4 text-center">
+      <div class="mt-6 text-center">
         <button type="button" onclick="openRulesModal()" class="text-xs font-bold text-amber-800 hover:underline cursor-pointer">Læs spilleregler og vejledning →</button>
       </div>
     </div>
@@ -76,21 +83,21 @@
 
   <!-- RULES MODAL -->
   <div id="rulesModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl border border-stone-200 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 space-y-5 my-8">
-      <div class="flex justify-between items-start gap-4 border-b border-stone-200 pb-4">
+    <div class="bg-white rounded-3xl border border-slate-200 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 space-y-5 my-8">
+      <div class="flex justify-between items-start gap-4 border-b border-slate-200 pb-4">
         <div>
           <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Spillets rammer</span>
           <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Regler & Principper på Handelsgaden</h2>
         </div>
-        <button type="button" onclick="closeRulesModal()" class="bg-stone-100 hover:bg-stone-200 text-slate-700 font-extrabold px-3.5 py-1.5 rounded-xl text-sm cursor-pointer">✕ Luk</button>
+        <button type="button" onclick="closeRulesModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold px-3.5 py-1.5 rounded-xl text-sm cursor-pointer">✕ Luk</button>
       </div>
       <div class="text-xs text-slate-700 space-y-3 leading-relaxed">
-        <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-1">
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
           <div class="font-extrabold text-sm text-slate-900">🎯 Målet og Startbetingelser</div>
           <p>I driver en markedsbod over 8 til 12 uger. Holdet med flest penge i kassen til sidst vinder. I starter på <b>Niveau 1 med 1.000 kr. og 1 stjerne (⭐)</b>.</p>
         </div>
       </div>
-      <div class="pt-3 border-t border-stone-200 flex justify-end">
+      <div class="pt-3 border-t border-slate-200 flex justify-end">
         <button type="button" onclick="closeRulesModal()" class="px-5 py-2.5 rounded-xl bg-emerald-600 text-xs font-extrabold text-white cursor-pointer shadow-md">Forstået, til luk</button>
       </div>
     </div>
@@ -103,20 +110,20 @@
         <h2 id="setupTitle" class="text-2xl font-extrabold text-slate-900">Spilopsætning</h2>
         <p id="setupDesc" class="text-sm text-slate-600">Tilpas spillet før I starter.</p>
       </div>
-      <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-stone-100 px-3.5 py-2 rounded-xl cursor-pointer transition">← Tilbage</button>
+      <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-100 px-3.5 py-2 rounded-xl cursor-pointer transition">← Tilbage</button>
     </div>
 
     <!-- SOLO CONFIG -->
-    <div id="setupSoloDiv" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-5 space-y-4">
+    <div id="setupSoloDiv" class="hidden bg-indigo-50/70 border border-indigo-200 rounded-2xl p-5 space-y-4">
       <div class="font-extrabold text-sm text-indigo-950">🤖 Din virksomhed</div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="text-xs font-bold text-slate-600">Dit hold- / firmanavn</label>
-          <input id="soloName" value="InnovateLab" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-xs font-bold mt-1">
+          <input id="soloName" value="InnovateLab" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-bold mt-1 shadow-sm">
         </div>
         <div>
           <label class="text-xs font-bold text-slate-600">Hvad sælger du?</label>
-          <input id="soloProd" value="Gadgets" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-xs font-bold mt-1">
+          <input id="soloProd" value="Gadgets" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-bold mt-1 shadow-sm">
         </div>
       </div>
       <div class="font-extrabold text-sm text-indigo-950 pt-2">Antal tilfældige AI-modstandere på gaden (1 til 6)</div>
@@ -131,7 +138,7 @@
     </div>
 
     <!-- MULTI CONFIG -->
-    <div id="setupMultiDiv" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-5 space-y-3">
+    <div id="setupMultiDiv" class="hidden bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5 space-y-3">
       <div class="font-extrabold text-sm text-emerald-950">👥 Vælg antal hold i klassen (2 til 6 hold)</div>
       <div class="flex items-center gap-2 flex-wrap">
         <button type="button" onclick="buildTeamInputs(2)" class="tc-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">2 hold</button>
@@ -143,7 +150,7 @@
       <div id="teamInputsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2"></div>
     </div>
 
-    <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex justify-between items-center flex-wrap gap-2">
+    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2">
       <span class="text-sm font-extrabold">Spillets længde (uger):</span>
       <div class="flex gap-2">
         <button type="button" onclick="setWeeks(8)" id="w8" class="px-3.5 py-2 rounded-xl bg-white border text-xs font-bold cursor-pointer shadow-sm">8 uger</button>
@@ -152,30 +159,30 @@
       </div>
     </div>
 
-    <button type="button" onclick="startGame()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/20 text-base">Start Handelsgaden →</button>
+    <button type="button" onclick="startGame()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl cursor-pointer shadow-lg shadow-emerald-600/25 text-base transform hover:-translate-y-0.5 transition">Start Handelsgaden →</button>
   </section>
 
   <!-- ACTIVE GAME SCREEN -->
   <section id="scrGame" class="hidden space-y-6">
 
     <!-- STREET -->
-    <div id="streetBox" class="rounded-3xl overflow-hidden border border-stone-200 shadow-md bg-gradient-to-b from-sky-200 via-sky-100 to-amber-50">
-      <div class="p-5 flex flex-wrap justify-between items-center gap-3">
+    <div id="streetBox" class="rounded-3xl overflow-hidden border border-slate-200 shadow-lg bg-gradient-to-b from-sky-300 via-sky-100 to-amber-50 transition-all duration-500">
+      <div class="p-5 flex flex-wrap justify-between items-center gap-3 bg-white/40 backdrop-blur-sm border-b border-white/60">
         <div class="flex items-center gap-3">
-          <span id="evIcon" class="text-4xl">🌤️</span>
+          <span id="evIcon" class="text-4xl filter drop-shadow">🌤️</span>
           <div>
-            <div class="text-xs font-extrabold uppercase text-slate-600 tracking-wider">Uge <span id="stWeek">1</span> • <span id="stStatus">Handelsgaden</span></div>
+            <div class="text-xs font-extrabold uppercase text-slate-700 tracking-wider">Uge <span id="stWeek">1</span> • <span id="stStatus">Handelsgaden</span></div>
             <h2 id="evTitle" class="text-lg font-extrabold text-slate-900">Normal handelsuge</h2>
-            <p id="evDesc" class="text-xs text-slate-600">Ingen uforudsete hændelser denne uge.</p>
+            <p id="evDesc" class="text-xs text-slate-700 font-medium">Ingen uforudsete hændelser denne uge.</p>
           </div>
         </div>
         <div class="flex gap-2 text-xs font-bold">
-          <span class="bg-white/90 backdrop-blur px-3.5 py-1.5 rounded-xl border border-stone-200 shadow-sm">Basis-råvare: <b id="stCost">20 kr.</b></span>
-          <span class="bg-white/90 backdrop-blur px-3.5 py-1.5 rounded-xl border border-stone-200 shadow-sm">Husleje: <b id="stRent">200 kr.</b></span>
+          <span class="bg-white/90 backdrop-blur px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-sm">Basis-råvare: <b id="stCost">20 kr.</b></span>
+          <span class="bg-white/90 backdrop-blur px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-sm">Husleje: <b id="stRent">200 kr.</b></span>
         </div>
       </div>
-      <div id="boothsRow" class="px-5 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3 items-end"></div>
-      <div class="bg-stone-800 text-stone-200 px-5 py-2.5 text-xs flex justify-between flex-wrap gap-2">
+      <div id="boothsRow" class="px-5 py-4 grid grid-cols-2 md:grid-cols-4 gap-4 items-end"></div>
+      <div class="bg-slate-900 text-slate-200 px-5 py-3 text-xs flex justify-between flex-wrap gap-2 font-medium">
         <span>🚶‍♀️ <b>Prisjægere</b> handler billigst først • 💎 <b>Kvalitetskøbere</b> kræver mindst ⭐⭐⭐ og betaler mere</span>
         <span id="activeTeamIndicator" class="font-bold text-amber-300"></span>
       </div>
@@ -183,7 +190,7 @@
 
     <!-- WORKBENCH -->
     <div id="workbench" class="game-card p-6 md:p-8 space-y-6">
-      <div class="flex justify-between items-center border-b border-stone-200 pb-4 flex-wrap gap-2">
+      <div class="flex justify-between items-center border-b border-slate-200 pb-4 flex-wrap gap-2">
         <div>
           <div class="flex items-center gap-2">
             <span class="text-xs font-extrabold text-emerald-700 uppercase tracking-wider">Beslutningsfase</span>
@@ -216,8 +223,8 @@
         <div id="dilTitle" class="font-extrabold text-sm text-slate-900"></div>
         <p id="dilText" class="text-xs text-slate-700 leading-relaxed"></p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1">
-          <button type="button" onclick="pickDil('A')" id="btnDilA" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm"></button>
-          <button type="button" onclick="pickDil('B')" id="btnDilB" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm"></button>
+          <button type="button" onclick="pickDil('A')" id="btnDilA" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm hover:bg-amber-50"></button>
+          <button type="button" onclick="pickDil('B')" id="btnDilB" class="p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm hover:bg-amber-50"></button>
         </div>
       </div>
 
@@ -231,7 +238,7 @@
           <div>
             <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">2. Vælg Ugens Råvare-leverandør</div>
             <div class="grid grid-cols-1 gap-2.5 text-xs">
-              <button type="button" onclick="setSupplier('disc')" id="sup_disc" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+              <button type="button" onclick="setSupplier('disc')" id="sup_disc" class="p-3.5 rounded-2xl border-2 border-slate-200 bg-slate-50 text-left cursor-pointer transition hover:border-slate-300">
                 <div class="flex justify-between font-extrabold text-slate-900"><span>📦 Discount-Import</span><span class="text-emerald-700">Lav pris</span></div>
                 <p class="text-slate-500 mt-1">Billige råvarer, men svingende kvalitet og risiko for uanmeldt kontrol.</p>
               </button>
@@ -239,17 +246,17 @@
                 <div class="flex justify-between font-extrabold text-slate-900"><span>🚚 Lokal Grossist</span><span class="text-slate-700">Normalpris</span></div>
                 <p class="text-slate-600 mt-1">100% sikker levering uden uforudsete overraskelser.</p>
               </button>
-              <button type="button" onclick="setSupplier('lux')" id="sup_lux" class="p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition">
+              <button type="button" onclick="setSupplier('lux')" id="sup_lux" class="p-3.5 rounded-2xl border-2 border-slate-200 bg-slate-50 text-left cursor-pointer transition hover:border-slate-300">
                 <div class="flex justify-between font-extrabold text-slate-900"><span>💎 Luksus-Leverandør</span><span class="text-amber-700">Høj pris</span></div>
                 <p class="text-slate-500 mt-1">Eksklusive råvarer, der giver boden et løft i omdømme i denne uge.</p>
               </button>
             </div>
           </div>
 
-          <div class="bg-stone-50/70 p-4 rounded-2xl border border-stone-200 space-y-3">
+          <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-200 space-y-3">
             <div class="flex justify-between"><span class="font-extrabold text-sm">3. Ny produktion</span><b id="lblQty" class="text-xl text-emerald-600">15 stk.</b></div>
             <input type="range" id="slQty" min="0" max="60" value="15" oninput="slide()" class="w-full accent-emerald-600 cursor-pointer">
-            <div class="bg-white p-3 rounded-xl border border-stone-200 text-xs flex justify-between shadow-sm">
+            <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs flex justify-between shadow-sm">
               <span>Klar på disken (inkl. lager): <b id="lblReady">15 stk.</b></span>
               <span>Råvarepris: <b id="lblProdCost" class="text-amber-700">300 kr.</b></span>
             </div>
@@ -259,10 +266,10 @@
 
         <!-- RIGHT COLUMN: Pris, Udstyr & Sabotage -->
         <div class="space-y-6">
-          <div class="bg-stone-50/70 p-4 rounded-2xl border border-stone-200 space-y-3">
+          <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-200 space-y-3">
             <div class="flex justify-between"><span class="font-extrabold text-sm">4. Dit prisskilt</span><b id="lblPrice" class="text-xl text-amber-600">48 kr.</b></div>
             <input type="range" id="slPrice" min="15" max="120" value="48" oninput="slide()" class="w-full accent-amber-600 cursor-pointer">
-            <div class="bg-white p-3 rounded-xl border border-stone-200 text-xs flex justify-between shadow-sm">
+            <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs flex justify-between shadow-sm">
               <span>Avance pr. salg: <b id="lblMargin" class="text-emerald-600">+28 kr.</b></span>
               <span>Break-even: <b id="lblBE">8 stk.</b></span>
             </div>
@@ -284,7 +291,7 @@
       </div>
 
       <!-- BOTTOM ROW -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-stone-200">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-200">
         <div class="bg-rose-50/60 border-2 border-rose-200/80 p-4 rounded-2xl space-y-2 shadow-sm">
           <div class="flex justify-between items-center">
             <span class="text-xs font-extrabold text-rose-950 uppercase">🕵️ Beskidte Kneb mod en rival</span>
@@ -305,18 +312,18 @@
           </div>
         </div>
 
-        <div class="bg-stone-50 border-2 border-stone-200 p-4 rounded-2xl space-y-2 flex flex-col justify-between shadow-sm">
+        <div class="bg-slate-50 border-2 border-slate-200 p-4 rounded-2xl space-y-2 flex flex-col justify-between shadow-sm">
           <div>
             <div class="text-xs font-extrabold text-slate-800 uppercase">📢 Ugens Gade-råb / Kampagne</div>
             <p class="text-[11px] text-slate-500">Råb op om pris eller kvalitet – men pas på ikke at bluffe for grovt!</p>
           </div>
-          <input id="inpSlogan" maxlength="40" placeholder="F.eks. 'Gadens bedste tilbud i dag!'" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-xs font-bold shadow-sm">
+          <input id="inpSlogan" maxlength="40" placeholder="F.eks. 'Gadens bedste tilbud i dag!'" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-bold shadow-sm">
         </div>
       </div>
 
-      <div class="pt-4 border-t border-stone-200 flex flex-wrap justify-between items-center gap-4">
+      <div class="pt-4 border-t border-slate-200 flex flex-wrap justify-between items-center gap-4">
         <span class="text-xs font-bold text-slate-600">Samlet udlæg nu: <b id="lblOutlay" class="text-base text-slate-900">500 kr.</b></span>
-        <button type="button" id="btnLock" onclick="nextTeamTurn()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition">Lås valg og gå videre →</button>
+        <button type="button" id="btnLock" onclick="nextTeamTurn()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/25 transition">Lås valg og gå videre →</button>
       </div>
     </div>
 
@@ -343,7 +350,7 @@
             <p class="text-xs text-slate-600 mt-0.5">Kunder på gaden: <b id="resCust" class="text-emerald-700">40</b> • Basis maks-pris: <b id="resMaxP" class="text-amber-800">65 kr.</b></p>
           </div>
         </div>
-        <button type="button" id="btnNextWk" onclick="advanceWeek()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition">Næste uge →</button>
+        <button type="button" id="btnNextWk" onclick="advanceWeek()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/25 transition">Næste uge →</button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -371,7 +378,7 @@
   <section id="scrEnd" class="hidden game-card p-8 md:p-12 shadow-2xl space-y-6 text-center">
     <h2 class="text-3xl font-extrabold text-slate-900">Slutstilling på Handelsgaden</h2>
     <div id="podium" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left"></div>
-    <button type="button" onclick="location.reload()" class="px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base cursor-pointer shadow-lg shadow-emerald-600/20 transition">Spil igen</button>
+    <button type="button" onclick="location.reload()" class="px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-base cursor-pointer shadow-lg shadow-emerald-600/25 transition">Spil igen</button>
   </section>
 
 </main>
@@ -448,12 +455,12 @@ const UPGRADES = [
 const TRICKS_COST = { '':0, insp:120, sign:90, poach:110, smear:150, block:130 };
 
 const EVENTS = [
-  { title:"Normal handelsuge", desc:"Stabil handel på gaden.", costMod:0, rentMod:0, dMult:1, pMod:0, icon:"🌤️" },
-  { title:"Råvaremangel", desc:"Råvarer koster +7 kr. ekstra i denne uge.", costMod:7, rentMod:0, dMult:1, pMod:0, icon:"📦" },
-  { title:"Byfest & Festival", desc:"+45% flere kunder og +10 kr. betalingsvilje!", costMod:0, rentMod:0, dMult:1.45, pMod:10, icon:"🎪" },
-  { title:"Dyrere husleje & el", desc:"Faste udgifter stiger med +100 kr.", costMod:0, rentMod:100, dMult:1, pMod:0, icon:"⚡" },
-  { title:"Billigt råvare-indkøb", desc:"Råvareprisen falder med -4 kr. pr. stk.", costMod:-4, rentMod:0, dMult:1, pMod:0, icon:"📉" },
-  { title:"Sidst på måneden", desc:"Kunderne sparer: -10 kr. i maks. pris.", costMod:0, rentMod:0, dMult:0.85, pMod:-10, icon:"🌧️" }
+  { title:"Normal handelsuge", desc:"Stabil handel på gaden.", costMod:0, rentMod:0, dMult:1, pMod:0, icon:"🌤️", bg:"from-sky-300 via-sky-100 to-amber-50" },
+  { title:"Råvaremangel", desc:"Råvarer koster +7 kr. ekstra i denne uge.", costMod:7, rentMod:0, dMult:1, pMod:0, icon:"📦", bg:"from-amber-300 via-amber-100 to-stone-100" },
+  { title:"Byfest & Festival", desc:"+45% flere kunder og +10 kr. betalingsvilje!", costMod:0, rentMod:0, dMult:1.45, pMod:10, icon:"🎪", bg:"from-pink-300 via-purple-100 to-amber-100" },
+  { title:"Dyrere husleje & el", desc:"Faste udgifter stiger med +100 kr.", costMod:0, rentMod:100, dMult:1, pMod:0, icon:"⚡", bg:"from-yellow-300 via-orange-100 to-stone-200" },
+  { title:"Billigt råvare-indkøb", desc:"Råvareprisen falder med -4 kr. pr. stk.", costMod:-4, rentMod:0, dMult:1, pMod:0, icon:"📉", bg:"from-emerald-300 via-teal-100 to-sky-100" },
+  { title:"Sidst på måneden", desc:"Kunderne sparer: -10 kr. i maks. pris.", costMod:0, rentMod:0, dMult:0.85, pMod:-10, icon:"🌧️", bg:"from-slate-400 via-sky-200 to-slate-200" }
 ];
 
 const FATE_CARDS = [
@@ -506,7 +513,7 @@ function buildTeamInputs(cnt) {
   const list = document.getElementById('teamInputsList'); list.innerHTML = '';
   const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
   for(let i=0;i<cnt;i++) {
-    list.innerHTML += `<div class="bg-white p-3 rounded-xl border space-y-1"><div class="text-xs font-extrabold text-emerald-800">Hold ${i+1}</div><input id="tn_${i}" value="${def[i][0]}" class="w-full bg-stone-50 border rounded-lg px-3 py-1.5 text-xs font-bold"><input id="tp_${i}" value="${def[i][1]}" class="w-full bg-stone-50 border rounded-lg px-3 py-1.5 text-xs font-bold"></div>`;
+    list.innerHTML += `<div class="bg-white p-3 rounded-xl border space-y-1"><div class="text-xs font-extrabold text-emerald-800">Hold ${i+1}</div><input id="tn_${i}" value="${def[i][0]}" class="w-full bg-slate-50 border rounded-lg px-3 py-1.5 text-xs font-bold"><input id="tp_${i}" value="${def[i][1]}" class="w-full bg-slate-50 border rounded-lg px-3 py-1.5 text-xs font-bold"></div>`;
   }
   list.dataset.cnt = cnt;
 }
@@ -528,12 +535,10 @@ function startGame() {
       cash:1000, stock:0, stars:1, unlockedLvl:1, upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
     });
 
-    // Tilfældige AI navne og produkter
     const randPrefixes = ["Turbo", "City", "Smart", "Budget", "Gourmet", "Super", "Mega", "Klip-Fisk", "Night", "Lucky", "Bio", "Retro"];
     const randSuffixes = ["Bixen", "Bazar", "Corner", "Kiosk", "Shoppen", "Hjørnet", "Pusheren", "Centralen", "Marked", "Biksen"];
     const randProds = ["Snacks", "Sodavand", "Frugt", "Slik", "Kaffe", "Is", "Kager", "Smoothies", "Smykker", "T-shirts", "Plakater", "Hatte"];
 
-    // Sørg for unikke tilfældige navne
     const usedNames = new Set([sName]);
     for(let i=0; i<aiCount; i++) {
       let aiName = "";
@@ -596,6 +601,10 @@ function updateStreetUI() {
   document.getElementById('stCost').textContent = (20 + curEv.costMod) + " kr.";
   document.getElementById('stRent').textContent = (200 + curEv.rentMod) + " kr.";
   
+  // Opdater vejr-baggrund gradient dynamisk
+  const streetBox = document.getElementById('streetBox');
+  streetBox.className = `rounded-3xl overflow-hidden border border-slate-200 shadow-lg bg-gradient-to-b ${curEv.bg} transition-all duration-700`;
+
   const curT = teams[activeTeamIdx];
   document.getElementById('activeTeamIndicator').textContent = curT.isAI ? `AI tænker... (${curT.name})` : `Din tur: ${curT.name}`;
 
@@ -603,13 +612,13 @@ function updateStreetUI() {
     const isActive = idx === activeTeamIdx;
     const dispStars = getEffectiveStars(t, 'norm', t.upgs);
     return `
-      <div class="flex flex-col items-center ${isActive ? 'scale-105 transition-transform' : 'opacity-80'}">
-        <div class="bg-white border-2 ${isActive ? 'border-emerald-600 shadow-md' : 'border-stone-200'} px-2 py-1 rounded-t-xl text-center w-11/12">
+      <div class="flex flex-col items-center ${isActive ? 'scale-105 pulse-booth' : 'opacity-85'} transition-all duration-300">
+        <div class="bg-white border-2 ${isActive ? 'border-emerald-600 shadow-lg ring-4 ring-emerald-500/20' : 'border-slate-200'} px-3 py-1.5 rounded-t-xl text-center w-11/12">
           <div class="font-extrabold text-xs truncate text-slate-900">${t.name} ${isActive ? '👉' : ''}</div>
           <div class="text-[10px] text-amber-600 font-bold">${starStr(dispStars)} • Niv.${t.unlockedLvl}</div>
         </div>
-        <div class="w-full h-5 rounded-t stripes shadow-inner" style="background:${t.color}"></div>
-        <div class="w-11/12 bg-white border-x border-b border-stone-200 p-2 text-center space-y-1 rounded-b-xl shadow-sm">
+        <div class="w-full h-6 rounded-t stripes shadow-inner" style="background:${t.color}"></div>
+        <div class="w-11/12 bg-white border-x border-b border-slate-200 p-2.5 text-center space-y-1 rounded-b-xl shadow-sm">
           <span class="bg-amber-100 text-amber-900 font-extrabold text-[11px] px-2 py-0.5 rounded">Lager: ${t.stock}</span>
           <div class="font-extrabold text-sm ${t.cash<0?'text-rose-600':'text-emerald-700'}">${t.cash} kr.</div>
         </div>
@@ -650,8 +659,8 @@ function startTeamTurn() {
   document.getElementById('dilText').textContent = curDil.txt;
   document.getElementById('btnDilA').textContent = "🅰️ " + curDil.A.l;
   document.getElementById('btnDilB').textContent = "🅱️ " + curDil.B.l;
-  document.getElementById('btnDilA').className = "p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm";
-  document.getElementById('btnDilB').className = "p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm";
+  document.getElementById('btnDilA').className = "p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm hover:bg-amber-50";
+  document.getElementById('btnDilB').className = "p-3.5 rounded-xl border-2 border-amber-300 bg-white text-left text-xs font-bold cursor-pointer transition shadow-sm hover:bg-amber-50";
   document.getElementById('dilStatus').textContent = "Vælg A eller B";
 
   supChoice = 'norm';
@@ -673,7 +682,6 @@ function startTeamTurn() {
   calc();
 }
 
-// MERE VARIERET OG TILFÆLDIG AI
 function runAiTurn(ai) {
   const supList = ['disc', 'norm', 'norm', 'lux', 'disc'];
   const chosenSup = supList[Math.floor(Math.random() * supList.length)];
@@ -720,7 +728,7 @@ function setSupplier(s, silent=false) {
   ['disc','norm','lux'].forEach(k => {
     document.getElementById('sup_'+k).className = k===s
       ? "p-3.5 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-left cursor-pointer transition shadow-sm"
-      : "p-3.5 rounded-2xl border-2 border-stone-200 bg-stone-50 text-left cursor-pointer transition shadow-sm";
+      : "p-3.5 rounded-2xl border-2 border-slate-200 bg-slate-50 text-left cursor-pointer transition shadow-sm hover:border-slate-300";
   });
   calc();
 }
@@ -746,12 +754,12 @@ function renderUpgradesGrid(t) {
     const locked = t.unlockedLvl < u.lvl;
 
     if (locked) {
-      return `<div class="p-3.5 rounded-2xl bg-stone-100 border border-stone-200 opacity-60 flex flex-col justify-between shadow-sm"><div class="flex justify-between font-bold text-slate-500"><span>🔒 ${u.name}</span><span>Niv. ${u.lvl}</span></div><span class="text-[11px] text-slate-400 mt-1">${u.desc}</span></div>`;
+      return `<div class="p-3.5 rounded-2xl bg-slate-100 border border-slate-200 opacity-60 flex flex-col justify-between shadow-sm"><div class="flex justify-between font-bold text-slate-500"><span>🔒 ${u.name}</span><span>Niv. ${u.lvl}</span></div><span class="text-[11px] text-slate-400 mt-1">${u.desc}</span></div>`;
     }
     if (ownedWks > 0) {
-      return `<div onclick="toggleUpg('${u.key}')" class="p-3.5 rounded-2xl ${action==='sell'?'bg-rose-50 border-2 border-rose-400':'bg-emerald-50 border-2 border-emerald-500'} cursor-pointer flex flex-col justify-between transition shadow-sm"><div class="flex justify-between font-extrabold text-slate-900"><span>${u.icon} ${u.name}</span><span>${action==='sell'?'Sælges':('Aktiv ('+ownedWks+' uger)')}</span></div><span class="text-[11px] text-slate-600 mt-1">${u.desc}</span></div>`;
+      return `<div onclick="toggleUpg('${u.key}')" class="p-3.5 rounded-2xl ${action==='sell'?'bg-rose-50 border-2 border-rose-400':'bg-emerald-50 border-2 border-emerald-500'} cursor-pointer flex flex-col justify-between transition shadow-sm hover:scale-[1.01]"><div class="flex justify-between font-extrabold text-slate-900"><span>${u.icon} ${u.name}</span><span>${action==='sell'?'Sælges':('Aktiv ('+ownedWks+' uger)')}</span></div><span class="text-[11px] text-slate-600 mt-1">${u.desc}</span></div>`;
     } else {
-      return `<div onclick="toggleUpg('${u.key}')" class="p-3.5 rounded-2xl ${action==='buy'?'bg-amber-50 border-2 border-amber-500':'bg-stone-50 border-2 border-stone-200'} cursor-pointer flex flex-col justify-between transition shadow-sm"><div class="flex justify-between font-extrabold text-slate-900"><span>${u.icon} ${u.name}</span><span class="text-amber-700">${u.cost} kr.</span></div><span class="text-[11px] text-slate-500 mt-1">${u.desc}</span></div>`;
+      return `<div onclick="toggleUpg('${u.key}')" class="p-3.5 rounded-2xl ${action==='buy'?'bg-amber-50 border-2 border-amber-500':'bg-slate-50 border-2 border-slate-200'} cursor-pointer flex flex-col justify-between transition shadow-sm hover:scale-[1.01]"><div class="flex justify-between font-extrabold text-slate-900"><span>${u.icon} ${u.name}</span><span class="text-amber-700">${u.cost} kr.</span></div><span class="text-[11px] text-slate-500 mt-1">${u.desc}</span></div>`;
     }
   }).join('');
 }
@@ -773,8 +781,8 @@ function toggleUpg(key) {
 
 function pickDil(c) {
   dilChoice = c;
-  document.getElementById('btnDilA').className = c==='A' ? "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer transition shadow-sm" : "p-3.5 rounded-xl border border-stone-200 bg-white/60 text-left text-xs text-slate-400 cursor-pointer transition";
-  document.getElementById('btnDilB').className = c==='B' ? "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer transition shadow-sm" : "p-3.5 rounded-xl border border-stone-200 bg-white/60 text-left text-xs text-slate-400 cursor-pointer transition";
+  document.getElementById('btnDilA').className = c==='A' ? "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer transition shadow-sm" : "p-3.5 rounded-xl border border-slate-200 bg-white/60 text-left text-xs text-slate-400 cursor-pointer transition";
+  document.getElementById('btnDilB').className = c==='B' ? "p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-left text-xs font-extrabold cursor-pointer transition shadow-sm" : "p-3.5 rounded-xl border border-slate-200 bg-white/60 text-left text-xs text-slate-400 cursor-pointer transition";
   document.getElementById('dilStatus').textContent = "✓ Valgt";
   playTone(500, 0.04);
   calc();
@@ -1104,18 +1112,18 @@ function showResultsUI(sum) {
 
       let shelf = '';
       for(let i=0;i<Math.min(c.avail,30);i++) {
-        shelf += `<span class="w-3 h-3 rounded-sm ${i<curSold?'bg-emerald-500':(isFinal?'bg-rose-400':'bg-stone-300')} inline-block shadow-sm"></span>`;
+        shelf += `<span class="w-3 h-3 rounded-sm ${i<curSold?'bg-emerald-500':(isFinal?'bg-rose-400':'bg-slate-300')} inline-block shadow-sm"></span>`;
       }
 
       return `
-        <div class="bg-stone-50 border border-stone-200 rounded-2xl p-4 space-y-2 shadow-sm">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 shadow-sm">
           <div class="flex justify-between items-center">
             <div><b class="text-sm text-slate-900">${c.name}</b> <span class="text-xs">${starStr(c.stars)}</span> <span class="text-xs font-bold text-amber-700">(${c.price} kr.)</span></div>
             ${badge}
           </div>
           <div class="text-xs text-slate-700">Solgt nu: <b>${curSold}</b> af ${c.avail} stk. ${c.tooExpensive?`<span class="text-rose-600 font-bold">(For dyrt!)</span>`:''} ${isFinal?`• Gemt (❄️): <b>${c.saved}</b> • Spild: <b>${c.waste}</b>`:''}</div>
           <div class="flex flex-wrap gap-1">${shelf}</div>
-          <div class="text-xs text-slate-500 flex justify-between pt-1 border-t border-stone-200"><span>Salg: ${curRev} kr. | Udgift: ${c.exp} kr.</span><b>Kasse: ${isFinal ? c.cash+' kr.' : '...'}</b></div>
+          <div class="text-xs text-slate-500 flex justify-between pt-1 border-t border-slate-200"><span>Salg: ${curRev} kr. | Udgift: ${c.exp} kr.</span><b>Kasse: ${isFinal ? c.cash+' kr.' : '...'}</b></div>
         </div>
       `;
     }).join('');
@@ -1169,7 +1177,7 @@ function showEnd() {
   document.getElementById('scrEnd').classList.remove('hidden');
   const sorted = [...teams].sort((a,b)=>b.cash-a.cash);
   document.getElementById('podium').innerHTML = sorted.map((t,i) => `
-    <div class="p-5 rounded-2xl border-2 ${i===0?'border-amber-400 bg-amber-50':'border-stone-200 bg-stone-50'} shadow-sm">
+    <div class="p-5 rounded-2xl border-2 ${i===0?'border-amber-400 bg-amber-50':'border-slate-200 bg-slate-50'} shadow-sm">
       <div class="text-xs font-extrabold uppercase text-amber-700">${i+1}. Plads • ${starStr(t.stars)} • Niv.${t.unlockedLvl}</div>
       <div class="text-xl font-extrabold mt-1 text-slate-900">${t.name} ${upgIcons(t.upgs)}</div>
       <div class="text-sm font-extrabold text-emerald-700 mt-2">Slutkasse: ${t.cash} kr.</div>
