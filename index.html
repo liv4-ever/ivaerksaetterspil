@@ -62,7 +62,7 @@
         Handelsgaden
       </h2>
       <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium relative z-10">
-        Start i det små med 1 stjerne (⭐) og 1.000 kr. Konkurrer mod skiftende AI-modstandere, vælg leverandører, opgrader boden over 3 niveauer, og spil dine kort klogt!
+        Start i det små med 1 stjerne (⭐) og 1.000 kr. Konkurrer mod tilfældige AI-modstandere, vælg leverandører, opgrader boden over 3 niveauer, og spil dine kort klogt!
       </p>
     </div>
 
@@ -601,7 +601,6 @@ function updateStreetUI() {
   document.getElementById('stCost').textContent = (20 + curEv.costMod) + " kr.";
   document.getElementById('stRent').textContent = (200 + curEv.rentMod) + " kr.";
   
-  // Opdater vejr-baggrund gradient dynamisk
   const streetBox = document.getElementById('streetBox');
   streetBox.className = `rounded-3xl overflow-hidden border border-slate-200 shadow-lg bg-gradient-to-b ${curEv.bg} transition-all duration-700`;
 
