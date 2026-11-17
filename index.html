@@ -21,14 +21,16 @@
   .f5 { transform: rotateX(90deg) translateZ(44px); }
   .f6 { transform: rotateX(-90deg) translateZ(44px); }
   .stripes { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.3) 0 12px, transparent 12px 24px); }
-  .game-card { background: #ffffff; border: 1px solid #e7e5e4; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); border-radius: 1.5rem; }
+  .game-card { background: #ffffff; border: 1px solid #e7e5e4; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); border-radius: 1.75rem; }
+  @keyframes floatCloud { 0% { transform: translateX(0px); } 50% { transform: translateX(10px); } 100% { transform: translateX(0px); } }
+  .floating { animation: floatCloud 4s ease-in-out infinite; }
 </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col">
 
 <header class="bg-white/90 backdrop-blur border-b border-stone-200 px-6 py-3.5 flex justify-between items-center sticky top-0 z-30 shadow-sm">
   <div class="flex items-center gap-3 cursor-pointer" onclick="showWelcomeScreen()">
-    <div class="bg-emerald-600 text-white font-extrabold px-3.5 py-1.5 rounded-xl text-sm shadow-sm">HANDELSGADEN</div>
+    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold px-3.5 py-1.5 rounded-xl text-sm shadow-md">🏪 HANDELSGADEN</div>
     <h1 class="font-extrabold text-base md:text-lg text-slate-900 tracking-tight">Iværksætterspillet</h1>
   </div>
   <div class="flex items-center gap-2.5">
@@ -42,29 +44,32 @@
 
   <!-- SCREEN 0: WELCOME -->
   <section id="scrWelcome" class="game-card overflow-hidden shadow-xl my-auto">
-    <div class="bg-gradient-to-b from-sky-200 via-sky-100 to-amber-50 p-8 md:p-12 text-center relative border-b border-stone-200">
-      <div class="flex justify-center gap-4 text-4xl md:text-5xl mb-4">
-        <span>🏪</span><span>🌤️</span><span>🕵️</span><span>🎲</span>
+    <div class="bg-gradient-to-br from-sky-200 via-teal-100 to-amber-100 p-8 md:p-12 text-center relative border-b border-stone-200">
+      <div class="flex justify-center gap-4 text-4xl md:text-5xl mb-4 floating">
+        <span>🏪</span><span>🚀</span><span>💎</span><span>🎲</span>
       </div>
       <span class="bg-white text-emerald-800 text-xs font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full border border-emerald-200 shadow-sm inline-block">
-        Markedssimulator & Forretningsspil
+        Levende Markedssimulator & Forretningsspil
       </span>
       <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mt-3 tracking-tight">
         Handelsgaden
       </h2>
-      <p class="text-slate-600 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium">
-        Start i det små med 1 stjerne (⭐) og 1.000 kr. Vælg leverandører, opgrader boden over 3 niveauer, og pas på Klaus KRAMs råd og rivalernes beskidte kneb!
+      <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium">
+        Start i det små med 1 stjerne (⭐) og 1.000 kr. Konkurrer mod tilfældige AI-modstandere, vælg leverandører, opgrader boden over 3 niveauer, og spil dine kort klogt!
       </p>
     </div>
 
     <div class="p-6 md:p-10 bg-white">
       <div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <button type="button" onclick="openRulesModal()" class="py-4 px-6 rounded-2xl border-2 border-amber-300 bg-amber-50/70 hover:bg-amber-100 text-slate-900 font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-sm">
-          <span>📖</span> <span>Sådan spiller du spillet</span>
+        <button type="button" onclick="openModeSelect('solo')" class="py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-indigo-600/25">
+          <span>🤖</span> <span>Spil Solo vs. Tilfældig AI</span>
         </button>
-        <button type="button" onclick="goToSetupScreen()" class="py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/20">
-          <span>🚀</span> <span>Start spillet</span>
+        <button type="button" onclick="openModeSelect('multi')" class="py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-base flex items-center justify-center gap-2.5 transition cursor-pointer shadow-lg shadow-emerald-600/25">
+          <span>👥</span> <span>Flere hold på 1 PC</span>
         </button>
+      </div>
+      <div class="mt-4 text-center">
+        <button type="button" onclick="openRulesModal()" class="text-xs font-bold text-amber-800 hover:underline cursor-pointer">Læs spilleregler og vejledning →</button>
       </div>
     </div>
   </section>
@@ -95,20 +100,45 @@
   <section id="scrSetup" class="hidden game-card p-6 md:p-8 space-y-6">
     <div class="flex justify-between items-center flex-wrap gap-2">
       <div>
-        <h2 class="text-2xl font-extrabold text-slate-900">Spilopsætning</h2>
-        <p class="text-sm text-slate-600">Indtast navn og produkt for holdene i klassen (op til 6 hold).</p>
+        <h2 id="setupTitle" class="text-2xl font-extrabold text-slate-900">Spilopsætning</h2>
+        <p id="setupDesc" class="text-sm text-slate-600">Tilpas spillet før I starter.</p>
       </div>
       <button type="button" onclick="showWelcomeScreen()" class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-stone-100 px-3.5 py-2 rounded-xl cursor-pointer transition">← Tilbage</button>
     </div>
 
-    <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 space-y-3">
-      <div class="font-extrabold text-sm text-indigo-950">Vælg antal hold (2 til 6 hold)</div>
+    <!-- SOLO CONFIG -->
+    <div id="setupSoloDiv" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl p-5 space-y-4">
+      <div class="font-extrabold text-sm text-indigo-950">🤖 Din virksomhed</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-bold text-slate-600">Dit hold- / firmanavn</label>
+          <input id="soloName" value="InnovateLab" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-xs font-bold mt-1">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600">Hvad sælger du?</label>
+          <input id="soloProd" value="Gadgets" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-xs font-bold mt-1">
+        </div>
+      </div>
+      <div class="font-extrabold text-sm text-indigo-950 pt-2">Antal tilfældige AI-modstandere på gaden (1 til 6)</div>
+      <div class="flex items-center gap-2 flex-wrap" id="aiCountBtns">
+        <button type="button" onclick="setAiCount(1)" class="ai-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">1 AI</button>
+        <button type="button" onclick="setAiCount(2)" class="ai-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">2 AI</button>
+        <button type="button" onclick="setAiCount(3)" class="ai-btn px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm" id="aic3">3 AI</button>
+        <button type="button" onclick="setAiCount(4)" class="ai-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">4 AI</button>
+        <button type="button" onclick="setAiCount(5)" class="ai-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">5 AI</button>
+        <button type="button" onclick="setAiCount(6)" class="ai-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">6 AI</button>
+      </div>
+    </div>
+
+    <!-- MULTI CONFIG -->
+    <div id="setupMultiDiv" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-5 space-y-3">
+      <div class="font-extrabold text-sm text-emerald-950">👥 Vælg antal hold i klassen (2 til 6 hold)</div>
       <div class="flex items-center gap-2 flex-wrap">
-        <button type="button" onclick="buildTeamInputs(2)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">2 hold</button>
-        <button type="button" onclick="buildTeamInputs(3)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">3 hold</button>
-        <button type="button" onclick="buildTeamInputs(4)" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm" id="btnCnt4">4 hold</button>
-        <button type="button" onclick="buildTeamInputs(5)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">5 hold</button>
-        <button type="button" onclick="buildTeamInputs(6)" class="px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">6 hold</button>
+        <button type="button" onclick="buildTeamInputs(2)" class="tc-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">2 hold</button>
+        <button type="button" onclick="buildTeamInputs(3)" class="tc-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">3 hold</button>
+        <button type="button" onclick="buildTeamInputs(4)" class="tc-btn px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm" id="tcn4">4 hold</button>
+        <button type="button" onclick="buildTeamInputs(5)" class="tc-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">5 hold</button>
+        <button type="button" onclick="buildTeamInputs(6)" class="tc-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm">6 hold</button>
       </div>
       <div id="teamInputsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2"></div>
     </div>
@@ -286,7 +316,7 @@
 
       <div class="pt-4 border-t border-stone-200 flex flex-wrap justify-between items-center gap-4">
         <span class="text-xs font-bold text-slate-600">Samlet udlæg nu: <b id="lblOutlay" class="text-base text-slate-900">500 kr.</b></span>
-        <button type="button" id="btnLock" onclick="nextTeamTurn()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition">Lås valg og gå til næste hold →</button>
+        <button type="button" id="btnLock" onclick="nextTeamTurn()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-2xl text-sm cursor-pointer shadow-lg shadow-emerald-600/20 transition">Lås valg og gå videre →</button>
       </div>
     </div>
 
@@ -347,13 +377,29 @@
 </main>
 
 <script>
-// --- NAVIGATION & RULES ---
-function goToSetupScreen() {
+let gameMode = 'solo';
+let aiCount = 3;
+
+function openModeSelect(mode) {
+  gameMode = mode;
   playTone(520, 0.05);
   document.getElementById('scrWelcome').classList.add('hidden');
   document.getElementById('scrSetup').classList.remove('hidden');
-  buildTeamInputs(4);
+
+  if (mode === 'solo') {
+    document.getElementById('setupTitle').textContent = "Spilopsætning: Solo vs. Tilfældig AI";
+    document.getElementById('setupDesc').textContent = "Konfigurer din egen virksomhed og vælg modstandere med helt tilfældige navne og varer.";
+    document.getElementById('setupSoloDiv').classList.remove('hidden');
+    document.getElementById('setupMultiDiv').classList.add('hidden');
+  } else {
+    document.getElementById('setupTitle').textContent = "Spilopsætning: Flere hold på 1 PC";
+    document.getElementById('setupDesc').textContent = "Indtast holdnavne og produkter for holdene i klassen.";
+    document.getElementById('setupSoloDiv').classList.add('hidden');
+    document.getElementById('setupMultiDiv').classList.remove('hidden');
+    buildTeamInputs(4);
+  }
 }
+
 function showWelcomeScreen() {
   playTone(440, 0.04);
   document.getElementById('scrSetup').classList.add('hidden');
@@ -388,7 +434,7 @@ function playTone(freq, dur, type='sine') {
 function toggleSound() { sndOn = !sndOn; document.getElementById('sndBtn').textContent = sndOn ? '🔊 Lyd' : '🔇 Lyd'; }
 
 // --- DATA ---
-const COLORS = ['#059669','#2563eb','#d97706','#db2777','#7c3aed','#0891b2'];
+const COLORS = ['#059669','#2563eb','#d97706','#db2777','#7c3aed','#0891b2','#dc2626','#ca8a04'];
 
 const UPGRADES = [
   { key:'cool', lvl:1, req:0, name:'Køledisk', icon:'❄️', cost:320, upk:35, desc:'Redder 65% usolgte varer (Drift: 35 kr./uge)' },
@@ -448,6 +494,14 @@ const ASSISTANT_TIPS = [
 let maxWks=10, wk=1, teams=[], activeTeamIdx=0, curEv=EVENTS[0], curDice=DICE[2], curFate=FATE_CARDS[5], curDil=DILS[0], dilChoice=null, supChoice='norm', chart=null;
 let buyUpgTemp = {};
 
+function setAiCount(cnt) {
+  aiCount = cnt;
+  document.querySelectorAll('.ai-btn').forEach((b, i) => {
+    b.className = (i+1 === cnt) ? "ai-btn px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold cursor-pointer shadow-sm" : "ai-btn px-4 py-2 bg-white border rounded-xl text-xs font-bold cursor-pointer shadow-sm";
+  });
+  playTone(520, 0.04);
+}
+
 function buildTeamInputs(cnt) {
   const list = document.getElementById('teamInputsList'); list.innerHTML = '';
   const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
@@ -464,19 +518,51 @@ function setWeeks(w) {
 }
 
 function startGame() {
-  const cnt = parseInt(document.getElementById('teamInputsList').dataset.cnt || 4);
   teams = [];
-  const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
-  for(let i=0;i<cnt;i++) {
+  if (gameMode === 'solo') {
+    const sName = document.getElementById('soloName').value.trim() || "InnovateLab";
+    const sProd = document.getElementById('soloProd').value.trim() || "Gadgets";
+    
     teams.push({
-      id:i,
-      name: document.getElementById('tn_'+i).value || def[i][0],
-      prod: document.getElementById('tp_'+i).value || def[i][1],
-      color: COLORS[i%COLORS.length],
-      cash: 1000, stock: 0, stars: 1, unlockedLvl: 1,
-      upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
+      id:0, name:sName, prod:sProd, color:COLORS[0], isAI:false,
+      cash:1000, stock:0, stars:1, unlockedLvl:1, upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
     });
+
+    // Tilfældige AI navne og produkter
+    const randPrefixes = ["Turbo", "City", "Smart", "Budget", "Gourmet", "Super", "Mega", "Klip-Fisk", "Night", "Lucky", "Bio", "Retro"];
+    const randSuffixes = ["Bixen", "Bazar", "Corner", "Kiosk", "Shoppen", "Hjørnet", "Pusheren", "Centralen", "Marked", "Biksen"];
+    const randProds = ["Snacks", "Sodavand", "Frugt", "Slik", "Kaffe", "Is", "Kager", "Smoothies", "Smykker", "T-shirts", "Plakater", "Hatte"];
+
+    // Sørg for unikke tilfældige navne
+    const usedNames = new Set([sName]);
+    for(let i=0; i<aiCount; i++) {
+      let aiName = "";
+      do {
+        const p = randPrefixes[Math.floor(Math.random() * randPrefixes.length)];
+        const s = randSuffixes[Math.floor(Math.random() * randSuffixes.length)];
+        aiName = p + s + " [AI]";
+      } while(usedNames.has(aiName));
+      usedNames.add(aiName);
+
+      const prod = randProds[Math.floor(Math.random() * randProds.length)];
+
+      teams.push({
+        id: i+1, name: aiName, prod: prod, color: COLORS[(i+1)%COLORS.length], isAI: true,
+        cash:1000, stock:0, stars:1, unlockedLvl:1, upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
+      });
+    }
+  } else {
+    const cnt = parseInt(document.getElementById('teamInputsList').dataset.cnt || 4);
+    const def = [["Nordic Wear","T-shirts"],["BoostLab","Energidrik"],["ByteBite","Toast"],["UrbanCase","Covers"],["KaffeKutter","Iskaffe"],["EcoBag","Stofnet"]];
+    for(let i=0;i<cnt;i++) {
+      teams.push({
+        id:i, name: document.getElementById('tn_'+i).value || def[i][0], prod: document.getElementById('tp_'+i).value || def[i][1],
+        color: COLORS[i%COLORS.length], isAI:false,
+        cash:1000, stock:0, stars:1, unlockedLvl:1, upgs:{}, slogan:"", hist:[1000], sold:0, waste:0, lastP:null, lastS:null, dec:null, resTemp:false
+      });
+    }
   }
+
   wk = 1;
   activeTeamIdx = 0;
   document.getElementById('scrSetup').classList.add('hidden');
@@ -509,7 +595,9 @@ function updateStreetUI() {
   document.getElementById('stWeek').textContent = wk;
   document.getElementById('stCost').textContent = (20 + curEv.costMod) + " kr.";
   document.getElementById('stRent').textContent = (200 + curEv.rentMod) + " kr.";
-  document.getElementById('activeTeamIndicator').textContent = `Turs tur: ${teams[activeTeamIdx].name}`;
+  
+  const curT = teams[activeTeamIdx];
+  document.getElementById('activeTeamIndicator').textContent = curT.isAI ? `AI tænker... (${curT.name})` : `Din tur: ${curT.name}`;
 
   document.getElementById('boothsRow').innerHTML = teams.map((t, idx) => {
     const isActive = idx === activeTeamIdx;
@@ -531,8 +619,20 @@ function updateStreetUI() {
 }
 
 function startTeamTurn() {
-  updateStreetUI();
   const t = teams[activeTeamIdx];
+
+  if (t.isAI) {
+    runAiTurn(t);
+    activeTeamIdx++;
+    if (activeTeamIdx < teams.length) {
+      setTimeout(startTeamTurn, 350);
+    } else {
+      runMarket();
+    }
+    return;
+  }
+
+  updateStreetUI();
   updateTeamTier(t);
 
   const lvlNames = { 1:"Niveau 1: Gadebod", 2:"Niveau 2: Etableret Butik", 3:"Niveau 3: Flagship Store" };
@@ -571,6 +671,47 @@ function startTeamTurn() {
   buyUpgTemp = {};
   renderUpgradesGrid(t);
   calc();
+}
+
+// MERE VARIERET OG TILFÆLDIG AI
+function runAiTurn(ai) {
+  const supList = ['disc', 'norm', 'norm', 'lux', 'disc'];
+  const chosenSup = supList[Math.floor(Math.random() * supList.length)];
+  const qty = Math.floor(Math.random() * 35) + 10;
+  const price = Math.floor(Math.random() * 45) + 35;
+  
+  const dilKey = Math.random() < 0.5 ? 'A' : 'B';
+  const dilRes = curDil[dilKey];
+
+  const upgAct = {};
+  UPGRADES.forEach(cfg => {
+    if (ai.unlockedLvl >= cfg.lvl && ai.cash >= cfg.cost + 300 && !ai.upgs[cfg.key] && Math.random() < 0.3) {
+      upgAct[cfg.key] = 'buy';
+      ai.upgs[cfg.key] = 3;
+      ai.cash -= cfg.cost;
+    }
+  });
+
+  let targetId = null;
+  let trick = "";
+  if (Math.random() < 0.4) {
+    const rivals = teams.filter(x => x.id !== ai.id);
+    if (rivals.length > 0) {
+      const victim = rivals[Math.floor(Math.random() * rivals.length)];
+      targetId = victim.id;
+      const tricks = ['insp', 'sign', 'poach', 'smear', 'block'];
+      trick = tricks[Math.floor(Math.random() * tricks.length)];
+    }
+  }
+
+  const slogans = ["Bedst i test!", "Kæmpe tilbud i dag!", "Kvalitet frem for alt", "Halv pris!", "Kom glad!"];
+  const chosenSlogan = Math.random() < 0.5 ? slogans[Math.floor(Math.random() * slogans.length)] : "";
+
+  ai.dec = {
+    qty, price, sup: chosenSup, upgAct,
+    target: targetId, trick, res: false,
+    dil: dilRes, slogan: chosenSlogan
+  };
 }
 
 function setSupplier(s, silent=false) {
@@ -724,7 +865,6 @@ function nextTeamTurn() {
   if (activeTeamIdx < teams.length) {
     startTeamTurn();
   } else {
-    // Alle hold har valgt – kør markedet
     runMarket();
   }
 }
