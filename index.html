@@ -62,7 +62,7 @@
         Handelsgaden
       </h2>
       <p class="text-slate-700 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium relative z-10">
-        Start i det små med 1 stjerne (⭐) og 1.000 kr. Konkurrer mod tilfældige AI-modstandere, vælg leverandører, opgrader boden over 3 niveauer, og træf strategiske valg!
+        Start i det små med 1 stjerne (⭐) og 1.000 kr. Konkurrer mod tilfældige AI-modstandere, vælg leverandører, opgrader boden over 3 niveauer, og træf skarpe forretningsvalg!
       </p>
     </div>
 
@@ -486,7 +486,7 @@ const DILS = [
   {
     t: "Priskrig vs. Luksusprofil",
     txt: "Rivalerne dumper priserne på gaden. Skal I følge med for at holde volumen, eller positionere jer som det dyre luksusvalg?",
-    A: { l: "Damp prisen og sælg masser af enheder (-1 ⭐ omdømme, men +10 ekstra kunder)", cMod:0, def:0, cash:0, pBon:10, dBon:10, starMod:-1 },
+    A: { l: "Dump prisen og sælg masser af enheder (-1 ⭐ omdømme, men +10 ekstra kunder)", cMod:0, def:0, cash:0, pBon:10, dBon:10, starMod:-1 },
     B: { l: "Gå mod strømmen og sats på eksklusivitet (Kostpris stiger +5 kr./stk, men +1 ⭐ omdømme)", cMod:5, def:0, cash:0, pBon:0, dBon:0, starMod:1 }
   },
   {
@@ -503,7 +503,7 @@ const DILS = [
   },
   {
     t: "Miljøvenlig emballage",
-    txt: "I kan skifte til dyr, bæredygtig emballage, som tiltræder kvalitetskøberne, eller vælge den billige plastik.",
+    txt: "I kan skifte til dyr, bæredygtig emballage, som tiltrækker kvalitetskøberne, eller vælge den billige plastik.",
     A: { l: "Vælg grøn emballage (-90 kr. i ekstraomkostning, men +1 ⭐ permanent omdømme)", cMod:0, def:0, cash:-90, pBon:0, dBon:0, starMod:1 },
     B: { l: "Vælg billig plastik (0 kr., men risikerer sure miner fra miljøbevidste kunder)", cMod:0, def:0, cash:0, pBon:0, dBon:0, starMod:0 }
   },
@@ -596,7 +596,6 @@ function startGame() {
 
   wk = 1;
   activeTeamIdx = 0;
-  // Forudsig første uges næste vejr
   nextDice = DICE[Math.floor(Math.random()*DICE.length)];
   document.getElementById('scrSetup').classList.add('hidden');
   document.getElementById('scrGame').classList.remove('hidden');
@@ -860,7 +859,7 @@ function calc() {
   document.getElementById('lblOutlay').textContent = (qty*uCost + extras) + " kr.";
 }
 
-// VEJRUDESIGT FOR NÆSTE UGE (ÆGTE PROGNOSE)
+// ÆGTE PROGNOSE FOR NÆSTE UGE
 function buyRes() {
   playTone(800, 0.1);
   const t = teams[activeTeamIdx]; t.resTemp = true;
