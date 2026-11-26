@@ -66,7 +66,7 @@
   }
   .stall-signboard {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     background: #fffdf9;
     border: 2px solid #10202b;
     box-shadow: 0 3px 0 #10202b;
@@ -80,12 +80,23 @@
   }
   .stall-roof {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     width: 100%;
     height: 22px;
     margin-top: -2px;
     border: 2px solid #10202b;
     clip-path: polygon(5% 0%, 95% 0%, 100% 100%, 0% 100%);
+  }
+  .stall-valance {
+    position: relative;
+    z-index: 2;
+    width: 96%;
+    height: 7px;
+    margin-top: -2px;
+    background: repeating-linear-gradient(90deg, #fffdf9 0 8px, #10202b 8px 10px);
+    border-left: 2px solid #10202b;
+    border-right: 2px solid #10202b;
+    border-bottom: 2px solid #10202b;
   }
   .stall-body {
     position: relative;
@@ -97,7 +108,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 74px;
+    min-height: 78px;
   }
   .stall-counter {
     background: #7c5832;
@@ -320,7 +331,7 @@
         </div>
       </div>
 
-      <!-- KLAUS KRAM NOTE -->
+      <!-- KLAUS KRAM NOTE (KONKRET TIL BODENS TAL OG VALG) -->
       <div class="bg-[#ebe5d8] border-l-4 border-[#1d3547] p-3.5 rounded-r-lg flex items-start gap-3">
         <span class="text-xl leading-none mt-0.5">🗣️</span>
         <div class="text-xs">
@@ -525,6 +536,9 @@ function openModeSelect(mode) {
 function showWelcomeScreen() {
   playTone(440, 0.04);
   document.getElementById('scrSetup').classList.add('hidden');
+  document.getElementById('scrGame').classList.add('hidden');
+  document.getElementById('scrEnd').classList.add('hidden');
+  document.getElementById('rndBadge').classList.add('hidden');
   document.getElementById('scrWelcome').classList.remove('hidden');
 }
 function openRulesModal() {
@@ -627,13 +641,30 @@ const DILS = [
   }
 ];
 
-const ASSISTANT_TIPS = [
-  "Køb næste uges vejrudsigt, hvis du vil planlægge lageret forud for næste runde.",
-  "Billige discount-råvarer sparer penge nu, men giver større risiko ved kontrol.",
-  "Kvalitetskøbere kigger først på boder med mindst 3 stjerner.",
-  "Hold øje med break-even, så faste udgifter og udstyr ikke æder hele avancen.",
-  "Et gade-råb virker bedst, når det passer til din faktiske pris eller stjerner."
-];
+function buildKlausComment(t, qty, price, uCost, ready, margin, effStars, trickKey, targetVal, prevUpgs) {
+  if (t.cash < 260) {
+    return `Kassen er tynd (${t.cash} kr.). Hold igen med dyre kneb og større udlæg, så du ikke ryger i minus på faste udgifter.`;
+  }
+  if (margin < 0) {
+    return `Du sætter prisen (${price} kr.) under råvareprisen (${uCost} kr.). Det giver minus på hvert eneste solgt styk.`;
+  }
+  if (ready > 35 && !prevUpgs.cool) {
+    return `Du har ${ready} stk. klar på disken uden køledisk. Rammer ugen lav kundestrøm, risikerer du spild ved lukketid.`;
+  }
+  if (effStars < 3 && price > 60) {
+    return `Med ${effStars} stjerne(r) og en pris på ${price} kr. er kvalitetskøberne svære at få i tale. Overvej prisen eller omdømmet.`;
+  }
+  if (targetVal !== "" && trickKey === "smear") {
+    return `Smædekampagner kan svække rivalen, men opdages de, koster det både bøde og stjerner. Hav dækning i kassen.`;
+  }
+  if (supChoice === "disc") {
+    return `Discount-leverandøren holder råvareprisen nede (${uCost} kr.), men hold øje med kontrol og fejlvarer.`;
+  }
+  if (supChoice === "lux") {
+    return `Luksus-leverandøren løfter omdømmet i denne uge, men kræver, at prisen også bærer den højere indkøbspris.`;
+  }
+  return `Du har ${ready} stk. klar til ${price} kr. pr. stk. (avance ${margin >= 0 ? '+' : ''}${margin} kr.). Tjek break-even, før du låser.`;
+}
 
 let maxWks=10, wk=1, teams=[], activeTeamIdx=0, curEv=EVENTS[0], curDice=DICE[2], nextDice=DICE[2], curFate=FATE_CARDS[5], curDil=DILS[0], dilChoice=null, supChoice='norm', chart=null;
 let buyUpgTemp = {};
@@ -738,9 +769,9 @@ function renderStallGoods(t) {
   const crateDots = Array.from({length: crates}, () => `<span class="w-2 h-2 bg-[#c88a2b] border border-[#10202b] inline-block"></span>`).join('');
   return `
     <div class="flex items-center gap-1 min-h-[14px]">
-      ${crateDots || `<span class="text-[10px] text-slate-500 font-semibold">Tom disk</span>`}
+      ${crateDots || `<span class="text-[10px] text-amber-100 font-semibold">Tom disk</span>`}
     </div>
-    <div class="text-xs leading-none">${gear || `<span class="text-[10px] text-slate-500">Niv.${t.unlockedLvl}</span>`}</div>
+    <div class="text-xs leading-none">${gear || `<span class="text-[10px] text-amber-100">Niv.${t.unlockedLvl}</span>`}</div>
   `;
 }
 
@@ -764,7 +795,12 @@ function updateStreetUI() {
           <div class="text-[10px] text-[#8f5d12] font-bold leading-tight">${starStr(dispStars)} <span class="text-slate-600 font-semibold">• ${t.prod}</span></div>
         </div>
         <div class="stall-roof awning-stripes" style="background:${t.color}"></div>
+        <div class="stall-valance"></div>
         <div class="stall-body">
+          <div class="flex justify-between items-center text-[10px] font-extrabold text-[#5a4328]">
+            <span>Niv.${t.unlockedLvl}</span>
+            <span>${upgIcons(t.upgs) || '—'}</span>
+          </div>
           <div class="stall-counter">
             ${renderStallGoods(t)}
           </div>
@@ -798,7 +834,6 @@ function startTeamTurn() {
   document.getElementById('wbLevelBadge').textContent = lvlNames[t.unlockedLvl];
   document.getElementById('wbTeamName').textContent = `${t.name} — Uge ${wk}`;
   document.getElementById('wbSub').textContent = `Vare: ${t.prod} • Kasse: ${t.cash} kr. • Lager fra sidst: ${t.stock} stk.`;
-  document.getElementById('assistantAdviceText').textContent = ASSISTANT_TIPS[Math.floor(Math.random()*ASSISTANT_TIPS.length)];
 
   curDil = DILS[Math.floor(Math.random()*DILS.length)];
   dilChoice = null;
@@ -971,6 +1006,10 @@ function calc() {
   document.getElementById('lblMargin').textContent = (margin>=0?'+':'') + margin + " kr.";
   document.getElementById('lblBE').textContent = margin>0 ? Math.max(0, Math.ceil(extras/margin)) + " stk." : "Umuligt";
   document.getElementById('lblOutlay').textContent = (qty*uCost + extras) + " kr.";
+
+  document.getElementById('assistantAdviceText').textContent = buildKlausComment(
+    t, qty, price, uCost, ready, margin, effStars, trickKey, targetVal, prevUpgs
+  );
 }
 
 function buyRes() {
